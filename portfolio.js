@@ -12,16 +12,16 @@
   var PROJETS = [
     { nom: 'M\u00e9dia Connexion', secteur: 'Musique & booking',
       url: 'https://www.m\u00e9diaconnexion.com/fr',
-      image: 'assets/work/mediaconnexion1.png' },
+      image: 'assets/work/mediaconnexionhero.png' },
     { nom: 'Seiko Loyalty', secteur: 'Mode & e-commerce',
       url: 'https://seikoloyalty.vercel.app',
-      image: 'assets/work/seikoloyalty1.png' },
+      image: 'assets/work/seikohero.png' },
     { nom: 'X.Vision', secteur: 'Studio audiovisuel',
       url: 'https://xvision-flame.vercel.app',
-      image: 'assets/work/xvision1.png' },
+      image: 'assets/work/xvisionhero.png' },
     { nom: 'Pose ta Pierre', secteur: 'Photographie',
       url: 'https://symphonious-seahorse-b42192.netlify.app/#accueil',
-      image: null }
+      image: 'assets/work/Posetapierrehero.png' }
   ];
 
   var liste = document.querySelector('.index-proj');
@@ -33,23 +33,21 @@
 
   liste.innerHTML = '';
 
-  PROJETS.forEach(function (p, i) {
+  PROJETS.forEach(function (p) {
     var a = document.createElement('a');
     a.className = 'proj';
     a.href = p.url;
     a.target = '_blank';
     a.rel = 'noopener';
 
-    var num = String(i + 1).padStart(2, '0');
     var apercu = p.image
       ? '<img class="proj__image" src="' + racine + p.image + '" alt="" ' +
-        'width="1770" height="600" loading="lazy">'
+        'width="2880" height="1640" loading="lazy">'
       : '<span class="proj__gabarit"><span class="proj__gabarit-texte">' +
         manquante + '</span></span>';
 
     a.innerHTML =
       '<span class="proj__rangee">' +
-        '<span class="proj__num">' + num + '</span>' +
         '<span class="proj__nom">' + p.nom + '</span>' +
         '<span class="proj__secteur">' + p.secteur + '</span>' +
         '<span class="proj__visiter">' + etiquette + '&nbsp;&rarr;</span>' +
