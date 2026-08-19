@@ -1,0 +1,2516 @@
+/* ==========================================================================
+   S-WEB — feuille de style unique
+   Tokens : spec-sheet.md §02 (couleurs), §03 (typographie), §04 (espacement
+   et grille), §05 (rayons, bordures, ombres), §14 (mouvement).
+   Aucune valeur hexadécimale hors de :root.
+   ========================================================================== */
+
+:root {
+  /* --- §02 Palette charte ------------------------------------------------ */
+  --encre:           #14161A;  /* texte, fonds sombres, logo */
+  --blanc-casse:     #F6F5F1;  /* fond de page */
+  --gris-structure:  #6B6E76;  /* bordures fortes, texte secondaire */
+  --gris-brume:      #E8E7E2;  /* bordures légères, fonds de section */
+  --ambre:           #C23A00;  /* accent unique — la couleur du mot accentué */
+
+  /* --- §02 Tokens dérivés ------------------------------------------------ */
+  --blanc:           #FFFFFF;  /* surface des cartes */
+  --ambre-texte:     var(--ambre);  /* alias : il n'y a plus qu'un seul ambre */
+
+  /* --- §02 Ombre (seule valeur colorée non tokenisable) ------------------ */
+  --encre-rgb:       20, 22, 26;
+  --ambre-rgb:       194, 58, 0;
+  --gris-brume-rgb:  232, 231, 226;
+  --blanc-casse-rgb: 246, 245, 241;
+
+  /* ÉCART DEMANDÉ (Maé) — §05 pose --radius-ui: 0 « sans exception ».
+     Les tranches sont légèrement arrondies. Rien d'autre ne l'est. */
+  --radius-tranche:  8px;
+
+  /* --- §03 Fontes -------------------------------------------------------- */
+  --font-display: "29LT Zaria Serif", Georgia, serif;
+  --font-corps:   Arial, "Helvetica Neue", sans-serif;
+  --font-mono:    "IBM Plex Mono", "Courier New", monospace;
+
+  /* --- §04 Échelle d'espacement (base 8 px) ------------------------------ */
+  --sp-1: 4px;   --sp-2: 8px;   --sp-3: 12px;  --sp-4: 16px;
+  --sp-5: 24px;  --sp-6: 32px;  --sp-7: 48px;  --sp-8: 64px;
+  --sp-9: 96px;  --sp-10: 128px;
+
+  /* --- §04 Grille -------------------------------------------------------- */
+  --conteneur-max: 1200px;
+  --marge-ext:     var(--sp-8);   /* 64 px desktop ; redéfini plus bas */
+  --gouttiere:     var(--sp-5);
+
+  /* --- §05 Rayons, bordures, ombres -------------------------------------- */
+  --radius-ui:   0;
+  --radius-icone: 2px;
+  --bordure-legere: 1px solid var(--gris-brume);
+  --bordure-forte:  1px solid var(--gris-structure);
+  --ombre-plate: 0 1px 0 rgba(var(--encre-rgb), 0.06);
+
+  /* --- §14 Mouvement ----------------------------------------------------- */
+  --duree-micro:   160ms;   /* couleurs, bordures, soulignés */
+  --duree-panneau: 240ms;   /* menu mobile */
+  --courbe: cubic-bezier(0.2, 0, 0, 1);
+
+  /* --- §08 En-tête ------------------------------------------------------- */
+  --entete-h:        72px;
+  --entete-h-compact: 64px;
+
+  /* --- Lockup : proportions relevées sur le logo complet (assets:/1.svg).
+     badge = 363.957 u ; capitales du wordmark = 126.984 u ; largeur du
+     wordmark = 607.277 u ; écart badge→wordmark = 85.725 u.
+     Le wordmark est donc entièrement piloté par la taille du badge : la
+     proportion de la marque ne peut pas dériver. ---------------------------- */
+  --badge-taille: 28px;
+  --logo-cap:   calc(var(--badge-taille) * 0.348899);
+  --logo-larg:  calc(var(--badge-taille) * 1.668541);
+  --logo-ecart: calc(var(--badge-taille) * 0.235535);
+}
+
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--blanc-casse);
+  color: var(--encre);
+  font: 400 17px/1.6 var(--font-corps);
+}
+
+/* Filet de sécurité : sans cette règle, tout lien dont la classe ne pose pas
+   de couleur retombe sur le bleu du navigateur. Les classes de lien qui
+   suivent la surchargent toutes. */
+a { color: inherit; }
+
+/* §15 — focus visible sur tout élément interactif, sans décalage de mise en
+   page (outline, jamais border). */
+:focus-visible {
+  outline: 2px solid var(--encre);
+  outline-offset: 2px;
+}
+
+
+/* --------------------------------------------------------------------------
+   §06 Boutons
+   -------------------------------------------------------------------------- */
+
+.bouton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--sp-7);                 /* 48 px */
+  padding-inline: var(--sp-5);         /* 24 px */
+  border: 1px solid transparent;
+  border-radius: var(--radius-ui);
+  font: 500 16px/1 var(--font-corps);
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color var(--duree-micro) var(--courbe),
+    color            var(--duree-micro) var(--courbe),
+    border-color     var(--duree-micro) var(--courbe);
+}
+
+.bouton--primaire {
+  position: relative;
+  overflow: hidden;                    /* borne le balayage aux angles droits */
+  gap: var(--sp-2);
+  background-color: var(--ambre);
+  /* Sur #C23A00 l'Encre tombe à 3,18:1 — sous le seuil. Le Blanc cassé
+     donne 4,93:1. Écart assumé par rapport à §06 (« fond Ambre, texte
+     Encre »), imposé par le changement de teinte. */
+  color: var(--blanc-casse);
+}
+
+/* ÉCART ASSUMÉ (décision Maé, 2026-08-06) — adaptation du bouton animé.
+   Le repos et l'arrivée restent ceux de la spec §06 : Ambre/Encre au repos,
+   Encre/Blanc cassé au survol. Seule la MANIÈRE change : au lieu d'un fondu
+   de couleur, l'Encre balaie depuis la gauche et la flèche avance de 4 px.
+   Cela contrevient à §06 (« pas de translation ... au hover ») et à §14
+   (« hover qui déplace ou agrandit »). Retenu : angles droits, 160 ms,
+   Ambre en fond uniquement, largeur du bouton constante (aucun décalage). */
+.bouton--primaire::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--encre);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--duree-micro) var(--courbe);
+}
+
+/* Le libellé et la flèche sont positionnés : ils peignent au-dessus du
+   balayage sans recourir à un z-index. */
+.bouton__texte,
+.bouton__fleche {
+  position: relative;
+}
+
+.bouton__fleche {
+  display: block;
+  flex: none;
+  transition: transform var(--duree-micro) var(--courbe);
+}
+
+.bouton--primaire:hover::before,
+.bouton--primaire:focus-visible::before {
+  transform: scaleX(1);
+}
+
+.bouton--primaire:hover,
+.bouton--primaire:focus-visible {
+  color: var(--blanc-casse);
+}
+
+.bouton--primaire:hover .bouton__fleche,
+.bouton--primaire:focus-visible .bouton__fleche {
+  transform: translateX(4px);
+}
+
+
+/* --------------------------------------------------------------------------
+   §08 En-tête
+   -------------------------------------------------------------------------- */
+
+.entete {
+  position: relative;                  /* ancre le panneau — pas de sticky */
+  /* Le voile est ici : c'est le seul élément pleine largeur. La barre, elle,
+     est limitée au conteneur de 1200 px. */
+  background: rgba(var(--encre-rgb), 0.75);
+  border-bottom: 1px solid var(--gris-structure);
+  color: var(--blanc-casse);
+}
+
+/* §15 — sur fond Encre l'anneau de focus passe en Blanc cassé. */
+.entete :focus-visible { outline-color: var(--blanc-casse); }
+
+.entete__barre {
+  position: relative;
+  z-index: 2;                          /* le panneau glisse depuis derrière */
+  /* Exactement la couleur composée du voile, mais opaque : la barre doit
+     masquer le panneau qui glisse derrière elle, sinon on le verrait au
+     travers pendant les 240 ms d'ouverture. Poser rgba() ici composerait
+     le voile deux fois. */
+  background: color-mix(in srgb, var(--encre) 75%, var(--blanc-casse));
+  width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
+  margin-inline: auto;
+  height: var(--entete-h);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-6);
+}
+
+
+/* --- Lockup badge + wordmark --------------------------------------------- */
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--logo-ecart);
+  padding-block: var(--sp-2);          /* 28 + 16 = 44 px de cible (§15) */
+  margin-inline-end: auto;             /* pousse le reste à droite */
+  text-decoration: none;
+  flex: none;
+}
+
+/* Le lockup se retourne pour l'en-tête sombre. */
+.logo__forme     { fill: var(--blanc-casse); }
+.logo__lettre    { fill: var(--encre); }
+.logo__mot-encre { fill: var(--blanc-casse); }
+.logo__mot-ambre { fill: var(--ambre); }
+
+.logo__badge {
+  display: block;
+  width: var(--badge-taille);
+  height: var(--badge-taille);
+  flex: none;
+}
+
+/* Le viewBox du wordmark est calé exactement sur la hauteur de capitale :
+   la hauteur CSS EST la hauteur de capitale. `overflow: visible` évite que
+   l'anticrénelage rogne le bord droit du B. */
+.logo__mot {
+  display: block;
+  width: var(--logo-larg);
+  height: var(--logo-cap);
+  overflow: visible;
+  flex: none;
+}
+
+
+/* --- Liens de navigation -------------------------------------------------- */
+
+.nav__liste {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-7) 40px;               /* §08 : 40 px entre les liens */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav__lien {
+  display: inline-block;
+  padding-block: 14px;                 /* 16 + 28 = 44 px de cible tactile */
+  color: var(--blanc-casse);
+  font: 500 16px/1 var(--font-corps);
+  letter-spacing: 0.01em;
+  /* Le souligné existe en permanence mais transparent : la couleur seule
+     s'anime, donc rien ne bouge au survol. */
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+  transition: text-decoration-color var(--duree-micro) var(--courbe);
+}
+
+.nav__lien:hover,
+.nav__lien[aria-current="page"] {
+  text-decoration-color: var(--ambre);
+}
+
+
+/* --- Commutateur FR / EN -------------------------------------------------- */
+
+.langues {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin: 0;
+  font: 400 13px/1 var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  flex: none;
+}
+
+.langues__actif { color: var(--blanc-casse); }
+
+.langues__separateur { color: rgba(var(--blanc-casse-rgb), 0.78); }
+
+.langues__lien {
+  display: inline-block;
+  line-height: 14px;
+  padding-block: 15px;                 /* 14 + 30 = 44 px de cible (§15) */
+  /* Sur l'en-tête composé (77,78,80) le 0,65 tombait à 4,34:1. */
+  color: rgba(var(--blanc-casse-rgb), 0.78);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+  transition: text-decoration-color var(--duree-micro) var(--courbe);
+}
+
+.langues__lien:hover { text-decoration-color: var(--ambre); }
+
+
+/* --- Téléphone ------------------------------------------------------------ */
+
+.telephone {
+  margin: 0;
+  color: rgba(var(--blanc-casse-rgb), 0.78);
+  font: 400 15px/1 var(--font-mono);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  flex: none;
+}
+
+
+/* --- CTA d'en-tête -------------------------------------------------------- */
+
+.entete__cta {
+  height: 40px;                        /* §08 : version 40 px du primaire */
+  flex: none;
+  /* §06 : sur fond Encre le secondaire passe en bordure Blanc cassé. */
+  border-color: var(--blanc-casse);
+  color: var(--blanc-casse);
+}
+
+
+/* --------------------------------------------------------------------------
+   §08 Bouton menu (masqué au-dessus du point de bascule)
+   -------------------------------------------------------------------------- */
+
+.menu-bouton {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;                         /* §15 : cible tactile ≥ 44 px */
+  height: 44px;
+  margin-inline-start: auto;
+  margin-inline-end: -10px;            /* aligne l'icône sur la marge */
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: var(--radius-ui);
+  color: var(--blanc-casse);
+  cursor: pointer;
+}
+
+.menu-bouton__etiquette {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.menu-bouton__icone { display: block; }
+
+.menu-bouton__icone--fermer { display: none; }
+
+.menu-bouton[aria-expanded="true"] .menu-bouton__icone--ouvrir { display: none; }
+
+.menu-bouton[aria-expanded="true"] .menu-bouton__icone--fermer { display: block; }
+
+
+/* --------------------------------------------------------------------------
+   §08 Panneau mobile
+   -------------------------------------------------------------------------- */
+
+.panneau {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  padding: var(--sp-2) var(--marge-ext) var(--sp-5);
+  background: var(--encre);
+  border-bottom: 1px solid var(--gris-structure);
+  box-shadow: var(--ombre-plate);
+  /* Fermé : glissé vers le haut, derrière la barre (translation verticale
+     seule). `visibility` retire le panneau de l'ordre de tabulation. */
+  transform: translateY(-100%);
+  visibility: hidden;
+  transition:
+    transform  var(--duree-panneau) var(--courbe),
+    visibility 0s linear var(--duree-panneau);
+}
+
+.entete.est-ouvert .panneau {
+  transform: translateY(0);
+  visibility: visible;
+  transition:
+    transform  var(--duree-panneau) var(--courbe),
+    visibility 0s linear 0s;
+}
+
+.panneau__liste {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.panneau__lien {
+  display: block;
+  padding-block: var(--sp-4);
+  border-bottom: 1px solid var(--gris-structure);
+  color: var(--blanc-casse);
+  font: 500 20px/1.2 var(--font-corps);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+  transition: text-decoration-color var(--duree-micro) var(--courbe);
+}
+
+.panneau__lien:hover,
+.panneau__lien[aria-current="page"] {
+  text-decoration-color: var(--ambre);
+}
+
+.panneau__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  padding-block: var(--sp-2) var(--sp-5);
+}
+
+.panneau__cta {
+  display: flex;
+  width: 100%;
+  border-color: var(--blanc-casse);
+  color: var(--blanc-casse);
+}
+
+
+/* --------------------------------------------------------------------------
+   Points de bascule
+   §04 : marges 64 desktop / 40 tablette / 24 mobile.
+
+   Point de bascule mesuré, pas choisi : la barre complète (lockup 81,31 +
+   nav 457,06 pour 5 liens + FR/EN 60,22 + téléphone 111,63 + CTA 207,47
+   flèche comprise + 3 écarts de 32 px) demande 1013,69 px de contenu même
+   sans écart entre le lockup et la nav. À 1024 px, les marges de 64 px
+   imposées par §04 ne laissent que 896 px. Avec un écart de 32 px, le seuil
+   réel est 1173,69 px. On bascule donc sur la barre compacte + panneau
+   sous 1176 px.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 1175.98px) {
+  :root { --marge-ext: 40px; }
+
+  .entete__barre { height: var(--entete-h-compact); }
+
+  .nav,
+  .entete__barre > .langues,
+  .entete__barre > .telephone,
+  .entete__cta { display: none; }
+
+  .menu-bouton { display: inline-flex; }
+}
+
+@media (min-width: 1176px) {
+  .panneau { display: none; }
+}
+
+@media (max-width: 639.98px) {
+  :root { --marge-ext: 24px; }
+
+  body { font-size: 16px; }
+
+  .telephone { font-size: 14px; }
+}
+
+
+/* --------------------------------------------------------------------------
+   §14 prefers-reduced-motion
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .bouton,
+  .nav__lien,
+  .langues__lien,
+  .panneau__lien { transition: none; }
+
+  .panneau,
+  .entete.est-ouvert .panneau { transition: none; }
+
+  /* Sans mouvement, le bouton primaire revient exactement au comportement
+     de la spec §06 : simple inversion de couleur, flèche immobile. */
+  .bouton--primaire::before { display: none; }
+
+  .bouton--primaire:hover,
+  .bouton--primaire:focus-visible { background-color: var(--encre); }
+
+  .bouton__fleche { transition: none; }
+
+  .bouton--primaire:hover .bouton__fleche,
+  .bouton--primaire:focus-visible .bouton__fleche { transform: none; }
+}
+
+
+/* ==========================================================================
+   HÉRO — colonne centrée : eyebrow, H1, sous-titre, CTA primaire.
+   PRD §09 F1 : promesse + CTA. Le bloc statistique a quitté le héro ;
+   sa règle §10 est conservée plus bas pour la page Résultats.
+   ========================================================================== */
+
+main { display: block; }
+
+.hero {
+  /* Le héro occupe au moins un écran : la section suivante n'apparaît pas
+     sur la première vue. */
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;               /* contenu centré, pas collé en haut */
+
+  position: relative;                    /* ancre le décor de vagues */
+
+  padding-block: var(--sp-9) calc(var(--sp-9) * 3);   /* place pour la bande */
+  overflow: hidden;                      /* borne le décor */
+}
+
+.hero__contenu {
+  position: relative;                    /* passe au-dessus du décor */
+  z-index: 1;
+  width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
+  margin-inline: auto;
+  text-align: center;
+}
+
+
+.hero__titre {
+  margin: 0 0 var(--sp-6);               /* H1 -> sous-titre : 32 px */
+  font-family: var(--font-display);
+  font-weight: 700;
+  /* Titre agrandi : la colonne passe de 900 px au conteneur (1200 px), ce qui
+     laisse le titre monter à 4,375rem tout en tenant sur deux lignes. Ligne la
+     plus large des deux langues : « We deliver what it takes to grow. » =
+     16,437 em, soit 73,0 px au maximum à 1200 px de colonne.
+     Le minimum reste à 1,75rem : §03 interdit Zaria sous 28 px (il faudrait
+     19,9 px pour tenir deux lignes à 375 px). Deux lignes jusqu'à ~508 px. */
+  font-size: clamp(1.75rem, 6vw - 0.75rem, 4.375rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--encre);
+  text-wrap: balance;
+}
+
+/* Le seul mot accentué. --ambre-texte (4,9:1) — jamais --ambre sur fond clair. */
+.hero__accent { color: var(--ambre-texte); }
+
+.hero__sous {
+  margin: 0 auto var(--sp-7);            /* sous-titre -> CTA : 48 px */
+  max-width: 60ch;
+  font: 400 17px/1.6 var(--font-corps);
+  color: var(--gris-structure);
+}
+
+
+/* --- Décor : vagues épaisses en fond de héro -------------------------------
+   D'après la référence fournie (Bullo, Dribbble) : un ruban épais balaie le
+   BAS du héro, le titre gardant du blanc autour de lui. On garde la
+   composition et le mouvement, pas le rendu 3D : simples traits gris.
+
+   ÉCART ASSUMÉ — §14 n'autorise « qu'un fondu d'entrée unique sur le H1 au
+   chargement (≤ 400 ms), et uniquement lui », et pose que « le mouvement est
+   un accusé de réception, pas un spectacle ». Cette dérive est perpétuelle.
+   §01 (« angles droits, grille stricte ») cadre mal avec des courbes.
+
+   La bande est ancrée en bas et ne remonte jamais derrière le sous-titre :
+   celui-ci est en --gris-structure (4,7:1), il ne reste aucune marge de
+   contraste pour lui passer une trame dessous.
+   -------------------------------------------------------------------------- */
+
+.decor-vagues {
+  position: absolute;
+  left: 0;
+  width: 200%;                 /* la boucle translate d'exactement -50 % */
+  pointer-events: none;
+}
+
+/* Dans le héro : sous le texte, remontée de 96 px. */
+.decor-vagues--hero { bottom: var(--sp-9); height: 300px; }
+
+/* Dans les piliers : plus haut, DERRIÈRE les tranches — leurs fonds étant
+   translucides, les vagues transparaissent au travers. */
+.decor-vagues--piliers { top: 18%; height: 320px; z-index: 0; }
+
+.decor-vagues svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.vague {
+  fill: none;
+  stroke: var(--gris-structure);
+  opacity: 0.16;
+  vector-effect: non-scaling-stroke;   /* épaisseur constante malgré l'étirement */
+  animation: derive linear infinite;
+}
+
+/* 1200 unités = une, deux ou trois périodes entières selon la vague : la
+   boucle se referme sans raccord visible. */
+@keyframes derive {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-1200px); }
+}
+
+.vague--1 { stroke-width: 6;   animation-duration: 38s; }
+.vague--2 { stroke-width: 4;   animation-duration: 26s; }
+.vague--3 { stroke-width: 2.5; animation-duration: 31s; }
+.vague--4 { stroke-width: 3;   animation-duration: 21s; }
+
+/* Deux traits ambre. §02 autorise l'Ambre sur fond clair comme « trait
+   graphique épais » — c'est un tracé, jamais du texte. Opacité un cran
+   au-dessus du gris : l'ambre saturé disparaît plus vite en transparence.
+   §01 (« l'Ambre pointe, il ne décore pas ») reste en tension ; voir rapport. */
+.vague--2 { stroke: var(--ambre); opacity: 0.30; }
+.vague--4 { stroke: var(--ambre); opacity: 0.24; }
+
+@media (max-width: 639.98px) {
+  .decor-vagues--hero { bottom: 56px; height: 200px; }
+  .decor-vagues--piliers { top: 10%; height: 220px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vague { animation: none; }
+}
+
+
+/* --- §10 Carte statistique (conservée pour Résultats, hors du héro) -------
+   Le symbole en --ambre ne tient que sur --blanc (3,12:1 ≥ 3:1 en grand
+   texte) ; il échouerait sur --blanc-casse (2,86:1).
+   -------------------------------------------------------------------------- */
+
+.stat {
+  margin: 0;
+  max-width: 26rem;
+  padding: var(--sp-6);
+  background: var(--blanc);
+  border: var(--bordure-legere);
+  border-radius: var(--radius-ui);
+}
+
+.stat__label {
+  margin: 0 0 var(--sp-3);
+  font: 400 13px/1.4 var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gris-structure);
+}
+
+.stat__chiffre {
+  margin: 0 0 var(--sp-3);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.75rem, 3vw + 1.5rem, 4.5rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--encre);
+}
+
+.stat__unite { color: var(--ambre); }
+
+.stat__legende {
+  margin: 0;
+  font: 400 15px/1.5 var(--font-mono);
+  letter-spacing: 0.02em;
+  color: var(--gris-structure);
+}
+
+
+/* --- §06 Bouton secondaire ------------------------------------------------ */
+
+.bouton--secondaire {
+  background-color: transparent;
+  border-color: var(--encre);
+  color: var(--encre);
+}
+
+/* §06 — sur fond Encre, le secondaire passe en bordure Blanc cassé. Placé
+   ici, après la règle générique, pour l'emporter sur elle. */
+.entete .bouton--secondaire {
+  border-color: var(--blanc-casse);
+  color: var(--blanc-casse);
+}
+
+.entete .bouton--secondaire:hover {
+  background-color: transparent;
+  border-color: var(--ambre);
+}
+
+/* Le focus ne pose que l'anneau ; l'état de survol est réservé au survol (§06).
+   ÉCART : §06 donne au secondaire un survol « fond --encre, texte --blanc cassé ».
+   Demande Maé : c'est le contour qui passe en ambre, le fond reste transparent.
+   À noter aussi, §02 veut l'ambre sur fond clair en trait « épais » (≥ 2 px) ;
+   la bordure du bouton fait 1 px. Voir rapport. */
+.bouton--secondaire:hover {
+  border-color: var(--ambre);
+}
+
+
+@media (max-width: 639.98px) {
+  .hero { padding-block: 56px 232px; }   /* §04 : 56 px + bande */
+  .hero__sous { font-size: 16px; }
+}
+
+
+/* ==========================================================================
+   PILIERS — trois tranches séparées, colorées et légèrement translucides.
+   D'après la référence Figma fournie : des cartes distinctes avec des écarts,
+   pas un bloc continu. Contenu tiré de PRD §02, §07 et §12.
+
+   ÉCARTS ASSUMÉS, tous demandés :
+   · §05 « angles droits, sans exception » -> rayon de 8 px sur les tranches.
+   · §01 « ≤ 5 % Ambre » et « l'Ambre pointe, il ne décore pas » -> une tranche
+     entière en Ambre. Le dépassement est mesuré, voir rapport.
+   · §14 interdit « les apparitions au scroll généralisées » -> la section
+     recouvre le héro au défilement (héro collant).
+   ========================================================================== */
+
+.piliers {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;                    /* borne le décor de vagues (200 % de large) */
+  background: var(--blanc-casse);      /* opaque : c'est elle qui recouvre */
+  padding-block: var(--sp-9);
+}
+
+main { position: relative; }
+
+.piliers__entete {
+  position: relative;
+  z-index: 1;
+  width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
+  margin-inline: auto;
+  margin-bottom: var(--sp-6);
+}
+
+.piliers__titre {
+  margin: 0 0 var(--sp-4);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 3vw + 0.5rem, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  color: var(--encre);
+}
+
+.piliers__sous {
+  margin: 0;
+  max-width: 60ch;
+  font: 400 17px/1.6 var(--font-corps);
+  color: var(--gris-structure);        /* même gris que le sous-titre du héro */
+}
+
+.piliers__rangee {
+  position: relative;
+  z-index: 1;
+  width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
+  margin-inline: auto;
+  display: flex;
+  align-items: stretch;
+  gap: var(--sp-5);                    /* les tranches ne se touchent pas */
+}
+
+
+/* --- Une tranche ----------------------------------------------------------
+   Chaque tranche porte sa couleur en composantes RVB : le fond est posé en
+   rgba() pour rester légèrement transparent sur le fond de section.
+   -------------------------------------------------------------------------- */
+
+.pilier {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-tranche);
+  background: rgba(var(--tranche-fond), 0.75);
+  color: var(--tranche-texte);
+  overflow: hidden;
+  transition:
+    flex-grow  400ms var(--courbe),
+    background-color 400ms var(--courbe);
+}
+
+/* 2,545 / 1 / 1 -> 56 % / 22 % / 22 % de l'espace distribuable. */
+.pilier[data-ouvert="true"] { flex-grow: 2.545; }
+
+.pilier--1 { --tranche-fond: var(--encre-rgb);      --tranche-texte: var(--blanc-casse); --tranche-ligne: rgba(var(--blanc-casse-rgb), 0.6); }
+.pilier--2 { --tranche-fond: var(--ambre-rgb);      --tranche-texte: var(--encre);       --tranche-ligne: var(--encre); }
+.pilier--3 { --tranche-fond: var(--gris-brume-rgb); --tranche-texte: var(--encre);       --tranche-ligne: var(--gris-structure); }
+
+
+/* --- Le déclencheur -------------------------------------------------------- */
+
+.pilier__entete { margin: 0; }
+
+.pilier__declencheur {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-5);
+  width: 100%;
+  padding: var(--sp-6) var(--sp-5);
+  background: none;
+  border: 0;
+  border-radius: var(--radius-ui);
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.pilier[data-ouvert="true"] .pilier__declencheur {
+  align-items: flex-start;
+  cursor: default;
+}
+
+.pilier__numero {
+  font: 400 13px/1 var(--font-mono);
+  letter-spacing: 0.08em;
+  color: inherit;
+}
+
+.pilier__titre {
+  margin: 0;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font: 700 40px/1.1 var(--font-display);    /* même fonte qu'à l'ouverture */
+  letter-spacing: -0.005em;
+  color: inherit;
+}
+
+.pilier[data-ouvert="true"] .pilier__titre {
+  writing-mode: horizontal-tb;
+  transform: none;
+  font-size: 32px;
+  line-height: 1.15;
+}
+
+
+/* --- Le corps -------------------------------------------------------------- */
+
+.pilier__corps {
+  padding: 0 var(--sp-5) var(--sp-6);
+  display: none;
+}
+
+.pilier[data-ouvert="true"] .pilier__corps { display: block; }
+
+.pilier__desc {
+  margin: 0 0 var(--sp-5);
+  max-width: 46ch;
+  font: 400 17px/1.6 var(--font-corps);
+  color: inherit;
+}
+
+.pilier__liste {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--tranche-ligne);
+}
+
+.pilier__liste li {
+  padding-block: var(--sp-3);
+  border-bottom: 1px solid var(--tranche-ligne);
+  font: 400 14px/1.5 var(--font-mono);
+  letter-spacing: 0.02em;
+  color: inherit;
+}
+
+
+/* --- Les icônes ------------------------------------------------------------
+   Dessinées à la main sur la grille 24. Fermé : contour 1,5 px, 28 px.
+   Ouvert : aplat, 64 px, le fond passant en négatif. Jamais d'ambre.
+   -------------------------------------------------------------------------- */
+
+.icone {
+  display: block;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  color: inherit;
+  transition:
+    width  400ms var(--courbe),
+    height 400ms var(--courbe);
+}
+
+.pilier[data-ouvert="true"] .icone { width: 64px; height: 64px; }
+
+.icone__trait {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  transition: opacity 400ms var(--courbe);
+}
+
+.icone__plein {
+  fill: currentColor;
+  stroke: none;
+  opacity: 0;
+  transition: opacity 400ms var(--courbe);
+}
+
+.pilier[data-ouvert="true"] .icone__trait { opacity: 0; }
+.pilier[data-ouvert="true"] .icone__plein { opacity: 1; }
+
+
+/* --- Mobile : tout est déplié, aucune interaction ------------------------- */
+
+@media (max-width: 767.98px) {
+  .piliers { padding-block: 56px; }
+
+  .piliers__rangee { flex-direction: column; }
+
+  .pilier,
+  .pilier[data-ouvert="true"] { flex: 1 1 auto; }
+
+  .pilier__declencheur,
+  .pilier[data-ouvert="true"] .pilier__declencheur {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--sp-4);
+    cursor: default;
+    padding: var(--sp-5);
+  }
+
+  /* Même fonte display que sur desktop, à une taille qui tient dans le bloc. */
+  .pilier__titre,
+  .pilier[data-ouvert="true"] .pilier__titre {
+    writing-mode: horizontal-tb;
+    transform: none;
+    font: 700 24px/1.15 var(--font-display);
+  }
+
+  .pilier__corps,
+  .pilier[data-ouvert="true"] .pilier__corps { display: block; padding: 0 var(--sp-5) var(--sp-5); }
+
+  .icone,
+  .pilier[data-ouvert="true"] .icone { width: 32px; height: 32px; }
+
+  .icone__trait { opacity: 0; }
+  .icone__plein { opacity: 1; }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .hero { position: relative; }        /* pas de recouvrement au défilement */
+
+  .pilier,
+  .icone,
+  .icone__trait,
+  .icone__plein { transition: none; }
+}
+
+
+/* ==========================================================================
+   IMPACT — la preuve chiffrée, en deux colonnes asymétriques.
+   Section normale : pas de recouvrement au défilement. Le héro reste collant
+   sous les piliers, mais la chaîne s'arrête là.
+   ========================================================================== */
+
+.impact {
+  position: relative;
+  background: var(--blanc-casse);
+  padding-block: var(--sp-9);          /* §04 : 96 px */
+}
+
+.impact__grille {
+  width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gouttiere);
+  row-gap: var(--sp-7);
+  align-items: start;                  /* les deux colonnes calées en haut */
+}
+
+.impact__gauche { grid-column: 1 / span 5; }   /* 5 colonnes */
+.impact__droite { grid-column: 7 / span 6; }   /* 6 colonnes, une de gouttière */
+
+
+/* --- Attribution — requise et permanente (§03 eyebrow) ------------------- */
+
+.impact__source {
+  margin: 0 0 var(--sp-5);             /* 24 px sous l'attribution */
+  font: 400 13px/1.4 var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gris-structure);
+}
+
+
+/* --- Le chiffre ----------------------------------------------------------
+   C'est un multiplicateur, jamais un pourcentage. Le signe × porte seul
+   l'accent — l'application canonique de §10 (« l'Ambre marque la donnée »).
+   -------------------------------------------------------------------------- */
+
+.impact__figure {
+  margin: 0 0 var(--sp-5);             /* 24 px sous le chiffre */
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(5rem, 10vw, 9rem);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--encre);
+  /* Rien ne doit bouger horizontalement pendant le brassage. tabular-nums
+     ne suffit pas : la police de repli (Georgia) n'expose pas la fonte
+     tabulaire. On fige donc aussi la largeur de la boîte des chiffres. */
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.impact__valeur {
+  display: inline-block;
+  /* Boîte calée sur la largeur exacte de « 2,7 » (1,479 em, mesuré sur la
+     fonte de repli à 144 px) : le × ne bouge donc jamais et se pose au plus
+     près du 7. La plus large des 81 combinaisons fait 1,651 em, soit
+     0,172 em de débordement : l'écart de 0,18 em l'absorbe sans que les
+     chiffres touchent jamais le symbole.
+     À recalibrer si 29LT Zaria Serif est installée. */
+  width: 1.48em;
+  margin-right: 0.18em;                /* em du chiffre, pas du symbole */
+  text-align: left;
+}
+
+/* Le × est une unité accrochée au nombre, comme « % » ou « kg » : un tiers de
+   sa taille, en Encre, sur la même ligne de base. Jamais d'ambre ici — sur une
+   statistique de crédibilité, un X orange se lit « erreur ». */
+.impact__signe {
+  font-size: 0.3333em;                 /* 9rem -> 3rem */
+  color: var(--encre);
+  vertical-align: baseline;
+}
+
+
+/* --- L'énoncé ------------------------------------------------------------- */
+
+.impact__enonce {
+  margin: 0;
+  max-width: 24ch;
+  font: 400 17px/1.6 var(--font-corps);
+  color: var(--encre);
+}
+
+
+/* --- Colonne de droite ---------------------------------------------------- */
+
+.impact__titre {
+  margin: 0 0 var(--sp-5);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 3vw + 0.5rem, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  color: var(--encre);
+}
+
+.impact__texte {
+  margin: 0 0 var(--sp-6);
+  max-width: 60ch;
+  font: 400 17px/1.6 var(--font-corps);
+  color: var(--encre);
+}
+
+.impact__items {
+  margin: 0;
+  padding: 0;
+  list-style: none;                    /* aucune puce */
+}
+
+/* Un filet entre les items, pas au-dessus ni en dessous. */
+.impact__items li + li { border-top: 1px solid var(--gris-brume); }
+
+.impact__items li {
+  padding-block: var(--sp-3);
+  font: 400 14px/1.5 var(--font-mono);
+  letter-spacing: 0.02em;
+  color: var(--encre);
+}
+
+
+/* --- Utilitaire : lisible par les lecteurs d'écran seulement -------------- */
+
+.visuellement-cache {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+
+/* Mobile : une seule colonne — attribution, chiffre, énoncé, puis la droite. */
+@media (max-width: 1023.98px) {
+  .impact__gauche,
+  .impact__droite { grid-column: 1 / -1; }
+}
+
+@media (max-width: 639.98px) {
+  .impact { padding-block: 56px; }     /* §04 : 56 px mobile */
+}
+
+
+/* ==========================================================================
+   POUR QUI — le cadrage, entre le héro et les piliers.
+   Colonne unique centrée, rien d'autre : pas d'image, pas de carte, pas de CTA.
+
+   ÉCART ASSUMÉ — §14 interdit « les apparitions au scroll généralisées » et
+   ne tolère « qu'un fondu d'entrée unique sur le H1 au chargement (≤ 400 ms),
+   et uniquement lui ». La révélation mot à mot est déclenchée au défilement et
+   dure 600 ms par mot. Voir le rapport.
+   ========================================================================== */
+
+.pourqui {
+  position: relative;
+  z-index: 1;                          /* passe par-dessus le héro collant */
+  background: var(--blanc-casse);      /* opaque : c'est elle qui recouvre */
+  padding-block: var(--sp-9);          /* §04 : 96 px */
+}
+
+.pourqui__contenu {
+  width: min(900px, 100% - var(--marge-ext) * 2);
+  margin-inline: auto;
+  text-align: center;
+}
+
+
+.pourqui__titre {
+  margin: 0 0 var(--sp-6);             /* 32 px sous le titre */
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 4vw + 0.5rem, 3rem);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  color: var(--encre);
+}
+
+.pourqui__texte {
+  margin: 0 auto;
+  max-width: 60ch;
+  font: 400 17px/1.6 var(--font-corps);
+  color: var(--gris-structure);
+}
+
+
+/* --- La révélation mot à mot ---------------------------------------------
+   Les <span> sont dans la source ; les espaces restent DEHORS, dans le parent,
+   pour que la sélection et le copier-coller rendent un texte normal.
+   L'état de repos n'est posé que si le JS tourne : le <noscript> plus bas le
+   neutralise, donc sans JS tout est lisible d'emblée.
+   -------------------------------------------------------------------------- */
+
+.pourqui .word {
+  display: inline-block;               /* sans quoi transform ne s'applique pas */
+  opacity: 0;
+  filter: blur(6px);                   /* 6 px, pas plus */
+  transform: translateY(14px);
+  transition:
+    opacity   600ms var(--courbe),
+    filter    600ms var(--courbe),
+    transform 600ms var(--courbe);
+}
+
+.pourqui.est-revele .word {
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+}
+
+
+@media (max-width: 639.98px) {
+  .pourqui { padding-block: 56px; }    /* §04 : 56 px mobile */
+}
+
+/* Rien ne bouge : tout est déjà à l'état révélé, et le JS n'observe rien. */
+@media (prefers-reduced-motion: reduce) {
+  .pourqui .word {
+    opacity: 1;
+    filter: none;
+    transform: none;
+    transition: none;
+  }
+}
+
+
+/* ==========================================================================
+   PROCESSUS — cinq étapes en alternance autour d'un axe central.
+
+   ÉCARTS ASSUMÉS :
+   · Pas de border-top : règle permanente (aucune section n'en porte), même si
+     le brief la demande. §04 : « l'espace blanc fait le travail de séparation ».
+   · §14 interdit « les apparitions au scroll généralisées » ; l'axe et les
+     étapes sont pilotés au défilement.
+   · §05 pose --radius-ui: 0 « sans exception » ; nœuds et image prennent 4 px,
+     en écho aux tranches des piliers.
+   ========================================================================== */
+
+.process {
+  position: relative;
+  z-index: 3;                          /* au-dessus de l'impact épinglé */
+  background: var(--blanc-casse);      /* opaque : c'est elle qui recouvre */
+  padding-block: var(--sp-9);          /* §04 : 96 px */
+  --axe-pos: 50%;                      /* axe centré sur le conteneur */
+}
+
+.process__contenu {
+  width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
+  margin-inline: auto;
+}
+
+
+/* --- En-tête -------------------------------------------------------------- */
+
+.process__eyebrow {
+  margin: 0 0 var(--sp-3);
+  font: 400 13px/1.4 var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gris-structure);
+}
+
+.process__titre {
+  margin: 0 0 var(--sp-5);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 3vw + 0.5rem, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  color: var(--encre);
+}
+
+.process__intro {
+  margin: 0;
+  max-width: 60ch;
+  font: 400 17px/1.6 var(--font-corps);
+  color: var(--encre);
+}
+
+
+
+/* Aucune animation ici : l'image est posée, point. */
+
+/* --- La frise -------------------------------------------------------------
+   L'axe est un seul élément : il reste continu à travers les 72 px d'écart.
+   Sa hauteur va du nœud 01 au nœud 05 — jamais au-delà (voir process.js,
+   qui pose --fin-axe). Sans JS, il descend jusqu'en bas : tracé complet.
+   -------------------------------------------------------------------------- */
+
+.process__frise {
+  position: relative;
+  margin-top: var(--sp-8);             /* 64 px sous l'intro */
+}
+
+.process__axe {
+  position: absolute;
+  left: calc(var(--axe-pos) - 0.5px);  /* le trait de 1 px centré sur l'axe */
+  top: 10px;                           /* centre du premier nœud */
+  bottom: var(--fin-axe, 0px);
+  width: 1px;
+  background: var(--ambre);
+  transform: scaleY(var(--avancee, 0));
+  transform-origin: top;               /* il descend depuis l'étape 01 */
+  transition:
+    transform 400ms var(--courbe),
+    filter    400ms var(--courbe);
+}
+
+.process__etapes {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.process__etape {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gouttiere);
+}
+
+.process__etape + .process__etape { margin-top: 72px; }
+
+/* Carré de 20 px centré sur l'axe : le trait occupe [x, x+1], centre x+0,5. */
+.process__noeud {
+  position: absolute;
+  left: calc(var(--axe-pos) - 10px);
+  top: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background: var(--blanc-casse);
+  border: 1px solid var(--ambre);
+  transition:
+    background-color 200ms var(--courbe),
+    border-color     200ms var(--courbe);
+}
+
+.process__etape.est-revele .process__noeud {
+  background: var(--ambre);
+  border-color: transparent;           /* la boîte ne bouge pas */
+}
+
+/* Alternance : 01 à gauche, 02 à droite, 03 à gauche… */
+.process__bloc {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity   500ms var(--courbe),
+    transform 500ms var(--courbe);
+}
+
+.process__etape:nth-child(odd)  .process__bloc { grid-column: 2 / span 4; }
+.process__etape:nth-child(even) .process__bloc { grid-column: 8 / span 4; }
+
+.process__etape.est-revele .process__bloc {
+  opacity: 1;
+  transform: none;
+}
+
+.process__num {
+  margin: 0 0 var(--sp-2);
+  font: 400 13px/1.4 var(--font-mono);
+  letter-spacing: 0.08em;
+  color: var(--ambre-texte);           /* seul ambre de la section */
+}
+
+.process__etape-titre {
+  margin: 0 0 var(--sp-3);
+  font: 700 20px/1.3 var(--font-corps);
+  color: var(--encre);
+}
+
+.process__desc {
+  margin: 0 0 var(--sp-4);
+  max-width: 40ch;
+  font: 400 15px/1.55 var(--font-corps);
+  color: var(--gris-structure);
+}
+
+.process__cote {
+  margin: 0;
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--gris-brume);
+  font: 400 13px/1.5 var(--font-mono);
+  letter-spacing: 0.02em;
+  color: var(--gris-structure);
+}
+
+
+/* --- Mobile : axe à gauche, plus d'alternance ---------------------------- */
+
+@media (max-width: 767.98px) {
+  .process { --axe-pos: 24px; }        /* 24 px du bord du conteneur */
+
+  .process__etape:nth-child(odd)  .process__bloc,
+  .process__etape:nth-child(even) .process__bloc {
+    grid-column: 1 / -1;
+    padding-left: calc(var(--axe-pos) + 34px);
+  }
+}
+
+@media (max-width: 639.98px) {
+  .process { padding-block: 56px; }
+}
+
+
+/* --- Rien ne bouge : tout est en place au repos --------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .process__axe {
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+
+  .process__noeud {
+    background: var(--ambre);
+    border-color: transparent;
+    transition: none;
+  }
+
+  .process__bloc {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+
+/* ==========================================================================
+   CTA FLOTTANT — visible partout SAUF sur le héro.
+   Un observateur sur le héro le montre dès qu'on l'a dépassé. C'est une
+   commande permanente, pas une apparition décorative.
+   ========================================================================== */
+
+.cta-flottant {
+  position: fixed;
+  right: var(--sp-5);
+  bottom: calc(var(--sp-5) + env(safe-area-inset-bottom, 0px));
+  z-index: 20;                         /* au-dessus de toutes les sections */
+
+  /* Caché tant que le héro est à l'écran. `visibility` le sort aussi de
+     l'ordre de tabulation : on ne tabule pas vers un bouton invisible. */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition:
+    opacity    var(--duree-panneau) var(--courbe),
+    transform  var(--duree-panneau) var(--courbe),
+    visibility 0s linear var(--duree-panneau);
+}
+
+.cta-flottant.est-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition:
+    opacity    var(--duree-panneau) var(--courbe),
+    transform  var(--duree-panneau) var(--courbe),
+    visibility 0s linear 0s;
+}
+
+@media (max-width: 639.98px) {
+  .cta-flottant {
+    right: var(--sp-4);
+    bottom: calc(var(--sp-4) + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-flottant,
+  .cta-flottant.est-visible {
+    transform: none;
+    transition: none;
+  }
+}
+
+
+/* ==========================================================================
+   §06 — Lien tertiaire (lien-action) : texte Encre, trait inférieur 2 px
+   Ambre. Au survol le texte passe en Ambre-texte, le trait reste.
+   Aucun bouton, aucune boîte, aucune bordure.
+   ========================================================================== */
+
+.lien-action {
+  display: inline-block;
+  font: 500 16px/1.4 var(--font-corps);
+  letter-spacing: 0.01em;
+  color: var(--encre);
+  text-decoration: underline;
+  text-decoration-color: var(--ambre);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  transition: color var(--duree-micro) var(--courbe);
+}
+
+.lien-action:hover { color: var(--ambre-texte); }
+
+/* Aligné sur le bord gauche du panneau 01, jamais centré. */
+.piliers__suite {
+  width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
+  margin-inline: auto;
+  margin-top: var(--sp-7);             /* 48 px sous les trois panneaux */
+}
+
+
+/* ==========================================================================
+   PAGE SERVICES
+   Réemploi strict des tokens : aucune couleur ni taille nouvelle.
+   Fonds alternés — blanc cassé, gris brume, blanc cassé, gris brume.
+   Aucun recouvrement au défilement sur cette page.
+   ========================================================================== */
+
+.sect { padding-block: var(--sp-9); }
+.sect--brume { background: var(--gris-brume); }
+
+.sect__contenu {
+  width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
+  margin-inline: auto;
+}
+
+.sect__eyebrow {
+  margin: 0 0 var(--sp-3);
+  font: 400 13px/1.4 var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gris-structure);
+}
+
+.sect__titre {
+  margin: 0 0 var(--sp-5);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 3vw + 0.5rem, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  color: var(--encre);
+}
+
+.sect__intro {
+  margin: 0;
+  max-width: 60ch;
+  font: 400 17px/1.6 var(--font-corps);
+  color: var(--encre);
+}
+
+
+/* --- 1. En-tête de page --------------------------------------------------- */
+
+.page-tete__h1 {
+  margin: 0 0 var(--sp-5);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 4vw + 0.5rem, 3rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--encre);
+}
+
+
+/* --- 2. Les trois services ------------------------------------------------ */
+
+.service {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gouttiere);
+  padding-block: 72px;
+  border-top: 1px solid var(--gris-brume);   /* filet entre services, pas en tête de section */
+}
+
+.service:first-of-type { padding-top: var(--sp-8); border-top: 0; }
+
+.service__tete { grid-column: 1 / span 5; }
+.service__liste-col { grid-column: 7 / span 6; }
+
+.service__label {
+  margin: 0 0 var(--sp-3);
+  font: 400 13px/1.4 var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ambre-texte);
+}
+
+.service__titre {
+  margin: 0 0 var(--sp-4);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 3vw + 0.5rem, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  color: var(--encre);
+}
+
+.service__pourquoi {
+  margin: 0;
+  max-width: 55ch;
+  font: 400 17px/1.6 var(--font-corps);
+  color: var(--encre);
+}
+
+.service__liste {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.service__liste li + li { border-top: 1px solid var(--gris-brume); }
+
+.service__liste li {
+  padding-block: var(--sp-3);
+  font: 400 14px/1.5 var(--font-mono);
+  letter-spacing: 0.02em;
+  color: var(--encre);
+}
+
+.service__nest {
+  margin: var(--sp-5) 0 0;
+  font: 400 15px/1.55 var(--font-corps);
+  color: var(--gris-structure);
+}
+
+.sect__suite { margin-top: var(--sp-7); }
+
+
+/* --- 3 et 4. Tableaux ----------------------------------------------------- */
+
+.tableau {
+  width: 100%;
+  margin-top: var(--sp-6);
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.tableau th,
+.tableau td {
+  padding-block: var(--sp-3);
+  border-bottom: 1px solid var(--gris-brume);
+  vertical-align: top;
+}
+
+.tableau thead th {
+  font: 400 13px/1.4 var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gris-structure);
+  border-bottom-color: var(--gris-structure);
+}
+
+.tableau__item {
+  font: 400 15px/1.55 var(--font-corps);
+  color: var(--encre);
+  font-weight: 400;
+}
+
+.tableau__service,
+.tableau__prix {
+  font: 400 14px/1.5 var(--font-mono);
+  letter-spacing: 0.02em;
+  color: var(--gris-structure);
+  white-space: nowrap;
+}
+
+.tableau__prix { text-align: right; color: var(--encre); }
+.tableau th.tableau__prix { color: var(--gris-structure); }
+
+.prix-total {
+  margin: var(--sp-6) 0 0;
+  text-align: right;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 40px;
+  line-height: 1.1;
+  color: var(--encre);
+}
+
+.prix-note {
+  margin: var(--sp-2) 0 0;
+  text-align: right;
+  font: 400 13px/1.5 var(--font-mono);
+  letter-spacing: 0.02em;
+  color: var(--gris-structure);
+}
+
+
+/* --- 4. Modules : liste non chiffrée, deux colonnes -----------------------
+   Le flux est en colonnes (1-4 à gauche, 5-8 à droite) : on lit vers le bas.
+   Les rangées de la grille sont partagées, donc les filets s'alignent d'une
+   colonne à l'autre sans calcul.
+   -------------------------------------------------------------------------- */
+
+.modules__liste {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(4, auto);
+  grid-auto-flow: column;
+  column-gap: var(--gouttiere);
+  margin: var(--sp-6) 0 0;
+  padding: 0;
+  list-style: none;                    /* aucune puce */
+}
+
+.modules__liste li {
+  padding-block: var(--sp-3);
+  font: 400 15px/1.5 var(--font-mono);
+  letter-spacing: 0.02em;
+  color: var(--encre);
+}
+
+.modules__liste li + li { border-top: 1px solid var(--gris-brume); }
+
+/* Premier item de la seconde colonne : pas de filet au-dessus. */
+.modules__liste li:nth-child(5) { border-top: 0; }
+
+.modules__fin {
+  margin: var(--sp-6) 0 0;             /* 32 px sous la liste */
+  max-width: 55ch;
+  font: 400 17px/1.6 var(--font-corps);
+  color: var(--encre);
+}
+
+@media (max-width: 767.98px) {
+  .modules__liste {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    grid-auto-flow: row;
+  }
+
+  /* Une seule colonne : le filet revient sur le 5e item. */
+  .modules__liste li:nth-child(5) { border-top: 1px solid var(--gris-brume); }
+}
+
+
+/* --- 5. Grille des paliers ------------------------------------------------
+   Une colonne de libellés + trois colonnes de paliers sur desktop.
+   Sous 768 px : trois cartes empilées, chacune reprenant ses huit libellés.
+   Aucun défilement horizontal, aucun JS.
+   -------------------------------------------------------------------------- */
+
+.paliers {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
+  /* Une rangee d'en-tete + les huit options. Les colonnes heritent de ces
+     rangees par subgrid : chaque option se retrouve donc sur la meme ligne
+     que son libelle, quelle que soit la hauteur du texte. */
+  grid-template-rows: auto repeat(8, auto);
+  column-gap: var(--gouttiere);
+  margin-top: var(--sp-6);
+}
+
+.paliers__libelles,
+.palier {
+  grid-row: 1 / -1;
+  display: grid;
+  grid-template-rows: subgrid;
+}
+
+.palier__tete { grid-row: 1; }
+
+.palier__lignes {
+  grid-row: 2 / -1;
+  display: grid;
+  grid-template-rows: subgrid;
+  margin: 0;
+}
+
+.paliers__libelles span,
+.palier__ligne {
+  display: flex;
+  align-items: flex-start;
+  min-height: 56px;
+  padding-block: var(--sp-3);
+  border-top: 1px solid var(--gris-brume);
+  font: 400 14px/1.4 var(--font-corps);
+  color: var(--encre);
+}
+
+.paliers__libelles span:first-child,
+.palier__ligne:first-child { border-top: 1px solid var(--gris-structure); }
+
+.paliers__libelles .paliers__vide {
+  border: 0;
+  min-height: 0;
+  padding: 0;
+}
+
+.palier {
+  position: relative;
+  /* Surface claire pour les trois colonnes : l'ambre d'emphase ne passe le
+     seuil AA que sur Blanc cassé (4,94:1). Sur le gris brume de la section il
+     tombe à 4,35:1. La colonne vedette reste signalée par son étiquette. */
+  background: var(--blanc-casse);
+}
+
+/* La colonne recommandée se signale par son étiquette et un filet Encre. */
+/* Filet Ambre : trait graphique de 2 px, pas du texte — la seule forme
+   d'ambre autorisee sur fond clair (4,9:1 sur Blanc casse). */
+.palier--vedette { outline: 2px solid var(--ambre); outline-offset: 0; }
+
+/* Ecart assume : la charte dit « pas de transformation au survol ». */
+.palier { transition: transform var(--duree-micro) var(--courbe); }
+
+.palier:hover {
+  transform: scale(1.02);
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .palier { transition: none; }
+  .palier:hover { transform: none; }
+}
+
+.palier__tete {
+  padding: var(--sp-4) var(--sp-4) var(--sp-3);
+  text-align: center;
+}
+
+.palier__tag {
+  display: inline-block;
+  margin-bottom: var(--sp-2);
+  padding: 2px var(--sp-2);
+  background: var(--ambre);            /* seul aplat ambre de la page */
+  color: var(--blanc-casse);
+  font: 400 11px/1.6 var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.palier__nom {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.2;
+  color: var(--encre);
+}
+
+.palier__prix {
+  margin: var(--sp-1) 0 0;
+  font: 400 14px/1.5 var(--font-mono);
+  letter-spacing: 0.02em;
+  color: var(--gris-structure);
+}
+
+.palier__ligne {
+  justify-content: center;
+  padding-inline: var(--sp-3);
+  text-align: center;
+  color: var(--gris-structure);
+}
+
+.palier__ligne--fort { color: var(--ambre-texte); font-weight: 700; }
+.palier__ligne dt { display: none; }    /* desktop : libellés dans la colonne */
+.palier__ligne dd { margin: 0; }
+
+.paliers__note {
+  margin-top: var(--sp-6);
+  padding: var(--sp-5);
+  border: 1px solid var(--gris-structure);
+}
+
+.paliers__note p {
+  margin: 0 0 var(--sp-3);
+  font: 400 15px/1.6 var(--font-corps);
+  color: var(--encre);
+}
+
+.paliers__note p:last-child { margin-bottom: 0; }
+
+.paliers__note strong { font-weight: 700; }
+
+.paliers__note .note-fine {
+  font-size: 14px;
+  color: var(--gris-structure);
+}
+
+
+/* --- 6. CTA de fin -------------------------------------------------------- */
+
+.cta-fin {
+  background: var(--encre);
+  color: var(--blanc-casse);
+  padding-block: var(--sp-9);
+}
+
+.cta-fin :focus-visible { outline-color: var(--blanc-casse); }
+
+.cta-fin__titre {
+  margin: 0 0 var(--sp-4);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 3vw + 0.5rem, 2.5rem);
+  line-height: 1.15;
+  color: var(--blanc-casse);
+}
+
+.cta-fin__texte {
+  margin: 0 0 var(--sp-7);
+  max-width: 60ch;
+  font: 400 17px/1.6 var(--font-corps);
+  color: var(--blanc-casse);
+}
+
+.cta-fin__tel {
+  margin: var(--sp-5) 0 0;
+  font: 400 15px/1.5 var(--font-mono);
+  letter-spacing: 0.02em;
+  color: rgba(var(--blanc-casse-rgb), 0.78);
+}
+
+
+/* --- Repli mobile --------------------------------------------------------- */
+
+@media (max-width: 1023.98px) {
+  .service__tete,
+  .service__liste-col { grid-column: 1 / -1; }
+  .service__liste-col { margin-top: var(--sp-5); }
+}
+
+@media (max-width: 767.98px) {
+  .paliers { grid-template-columns: 1fr; row-gap: var(--sp-6); }
+  .paliers__libelles { display: none; }         /* les libellés reviennent dans chaque carte */
+
+  .paliers__libelles,
+  .palier,
+  .palier__lignes {
+    display: block;                             /* plus de subgrid empile */
+    grid-row: auto;
+  }
+
+  .palier {
+    border: 1px solid var(--gris-structure);
+    padding-bottom: var(--sp-2);
+  }
+
+  .palier__ligne {
+    justify-content: space-between;
+    text-align: left;
+    gap: var(--sp-4);
+  }
+
+  .palier__ligne dt {
+    display: block;
+    flex: 1 1 auto;
+    color: var(--encre);
+  }
+
+  .palier__ligne dd { flex: 0 0 auto; text-align: right; }
+}
+
+@media (max-width: 639.98px) {
+  .sect, .cta-fin { padding-block: 56px; }
+  .service { padding-block: 48px; }
+  .prix-total { font-size: 32px; }
+}
+
+
+/* ==========================================================================
+   §09 — PIED DE PAGE
+   Fond Encre, texte Blanc cassé : la page est tenue par deux barres sombres,
+   l'en-tête et le pied. Grille 12 colonnes, blocs alignés en haut.
+   Le lockup réutilise .logo__forme / .logo__lettre / .logo__mot-encre, déjà
+   inversés pour l'en-tête sombre — badge blanc, S encre, wordmark blanc cassé.
+   ========================================================================== */
+
+.pied {
+  background: var(--encre);
+  color: var(--blanc-casse);
+  border-top: 1px solid color-mix(in srgb, var(--gris-structure) 20%, transparent);
+  padding-block: var(--sp-9) var(--sp-7);   /* 96 px / 48 px */
+}
+
+.pied__contenu {
+  width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
+  margin-inline: auto;
+
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--gouttiere);
+  align-items: start;                       /* aligné en haut, pas centré */
+}
+
+.pied__identite            { grid-column: 1 / 7;   }
+.pied__colonne--services   { grid-column: 8 / 10;  }
+.pied__colonne--entreprise { grid-column: 10 / 13; }
+
+/* --- Identité ------------------------------------------------------------- */
+
+/* Badge à 32 px. --logo-cap et --logo-larg sont redéclarés ici : déclarés au
+   :root ils se résolvent contre le --badge-taille du :root (28 px) et ne
+   suivraient pas la redéfinition locale. */
+.pied__logo {
+  --badge-taille: 32px;
+  --logo-cap:   calc(var(--badge-taille) * 0.348899);
+  --logo-larg:  calc(var(--badge-taille) * 1.668541);
+  --logo-ecart: calc(var(--badge-taille) * 0.235535);
+
+  display: flex;
+  align-items: center;
+  gap: var(--logo-ecart);
+  margin: 0;
+}
+
+.pied__citation {
+  margin: 40px 0 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--blanc-casse);                /* aucun accent ambre ici */
+}
+
+.pied__sous {
+  margin: var(--sp-5) 0 0;
+  font-family: var(--font-corps);
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--gris-brume);
+  max-width: 45ch;
+}
+
+/* --- Colonnes de liens ---------------------------------------------------- */
+
+.pied__colonne { margin: 0; }
+
+.pied__titre {
+  margin: 0 0 var(--sp-5);
+  font-family: var(--font-corps);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.3;
+  letter-spacing: 0;
+  color: var(--blanc-casse);
+}
+
+.pied__liste {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);                         /* 16 px entre les liens */
+}
+
+/* §07 variante fond sombre : gris brume au repos (14,6:1), blanc cassé au
+   survol, souligné ambre 2 px. L'ambre n'est jamais la couleur du texte. */
+.pied__lien {
+  font-family: var(--font-corps);
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--gris-brume);
+  text-decoration: none;
+  transition: color var(--duree-micro) var(--courbe);
+}
+
+.pied__lien:hover {
+  color: var(--blanc-casse);
+  text-decoration: underline;
+  text-decoration-color: var(--ambre);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.pied a:focus-visible {
+  outline: 2px solid var(--blanc-casse);
+  outline-offset: 2px;
+}
+
+/* --- Barre du bas --------------------------------------------------------- */
+
+.pied__bas {
+  grid-column: 1 / -1;
+  margin-top: var(--sp-8);                  /* 64 px */
+  border-top: 1px solid color-mix(in srgb, var(--gris-structure) 20%, transparent);
+  padding-top: var(--sp-5);                 /* 24 px */
+
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--sp-5);
+  flex-wrap: wrap;
+}
+
+.pied__copyright,
+.pied__coordonnees {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: var(--gris-structure);
+}
+
+.pied__legal {
+  grid-column: 1 / -1;
+  margin: var(--sp-4) 0 0;
+}
+
+.pied__lien--legal {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: var(--gris-structure);
+}
+
+.pied__lien--legal:hover { color: var(--blanc-casse); }
+
+/* --- Tablette ------------------------------------------------------------- */
+
+@media (max-width: 1023.98px) {
+  .pied__identite            { grid-column: 1 / 8;   }
+  .pied__colonne--services   { grid-column: 8 / 11;  }
+  .pied__colonne--entreprise { grid-column: 11 / 13; }
+}
+
+/* --- Mobile : une seule colonne, 40 px entre les blocs -------------------- */
+
+@media (max-width: 767.98px) {
+  .pied { padding-block: var(--sp-8) 40px; }   /* 64 px / 40 px */
+
+  .pied__contenu {
+    display: block;                         /* logo, citation, Services,
+                                               Entreprise, barre du bas */
+  }
+
+  .pied__contenu > * + * { margin-top: 40px; }
+
+  .pied__bas {
+    margin-top: 40px;                       /* pas les 64 px du desktop */
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sp-3);
+  }
+
+  .pied__legal { margin-top: var(--sp-4); }
+
+  .pied__sous { font-size: 16px; }
+}
+
+/* ==========================================================================
+   RÉSERVER UN APPEL — deux colonnes asymétriques, la gauche collante.
+   Formulaire conforme au §11 : champs 48 px, fond Blanc, bordure forte,
+   angles droits, label au-dessus, aide en mono. Erreurs en Ambre-texte
+   avec un marqueur × — la palette ne contient pas de rouge.
+   ========================================================================== */
+
+.reserver { padding-block: var(--sp-9); }
+
+.reserver__contenu {
+  width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--gouttiere);
+  /* Pas d'align-items: start — les colonnes doivent s'étirer sur la hauteur
+     de la section, sinon le bloc collant n'a aucune course. */
+}
+
+.reserver__gauche { grid-column: 1 / 6;  }
+.reserver__droite { grid-column: 7 / 13; }
+
+/* Le parent étiré borne la course : le bloc s'arrête au bas de la section. */
+.reserver__colle {
+  position: sticky;
+  top: 120px;
+}
+
+/* --- Colonne gauche ------------------------------------------------------- */
+
+.reserver__eyebrow {
+  margin: 0 0 var(--sp-3);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gris-structure);
+}
+
+.reserver__h1 {
+  margin: 0 0 var(--sp-5);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--encre);
+}
+
+.reserver__intro {
+  margin: 0;
+  font-family: var(--font-corps);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--encre);
+  max-width: 45ch;
+}
+
+/* --- Coordonnées ---------------------------------------------------------- */
+
+.coord {
+  margin: var(--sp-7) 0 0;               /* 48 px */
+  font-family: var(--font-mono);
+}
+
+.coord__bloc { padding-block: var(--sp-4); }
+
+.coord__bloc + .coord__bloc { border-top: 1px solid var(--gris-brume); }
+
+.coord__label {
+  margin: 0 0 var(--sp-1);
+  font-size: 13px;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gris-structure);
+}
+
+.coord__valeur {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: var(--encre);
+}
+
+/* --- Champs (§11) --------------------------------------------------------- */
+
+.champ {
+  display: block;
+  margin: 0 0 var(--sp-5);
+  border: 0;
+  padding: 0;
+}
+
+.champ__label {
+  display: block;
+  margin: 0 0 var(--sp-2);               /* 8 px */
+  padding: 0;
+  font-family: var(--font-corps);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--encre);
+}
+
+.champ__facultatif {
+  font-weight: 400;
+  color: var(--gris-structure);
+}
+
+.champ__saisie {
+  display: block;
+  width: 100%;
+  height: var(--sp-7);                   /* 48 px */
+  padding: 0 var(--sp-4);
+  background: var(--blanc);
+  border: 1px solid var(--gris-structure);
+  border-radius: var(--radius-ui);
+  font-family: var(--font-corps);
+  font-size: 16px;                       /* plancher : en dessous, iOS zoome */
+  line-height: 1.4;
+  color: var(--encre);
+  transition: border-color var(--duree-micro) var(--courbe);
+}
+
+.champ__saisie:hover { border-color: var(--encre); }
+.champ__saisie:focus { border-color: var(--encre); }
+
+.champ__zone {
+  height: auto;
+  min-height: 140px;
+  padding: var(--sp-3) var(--sp-4);
+  resize: vertical;
+}
+
+.champ__aide {
+  margin: var(--sp-2) 0 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--gris-structure);
+}
+
+/* Erreur : jamais avant que la personne ait saisi quelque chose — d'où
+   :user-invalid et non :invalid, qui signalerait les champs vides au chargement. */
+.champ__erreur {
+  display: none;
+  margin: var(--sp-2) 0 0;
+  font-family: var(--font-corps);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ambre-texte);
+}
+
+.champ__croix { padding-inline-end: var(--sp-1); }
+
+.champ__saisie:user-invalid { border-color: var(--ambre-texte); }
+.champ__saisie:user-invalid ~ .champ__erreur { display: block; }
+
+/* --- Groupe de boutons radio ---------------------------------------------- */
+
+.champ--groupe { min-inline-size: 0; }   /* le fieldset ne force pas sa largeur */
+
+.radios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-5);
+}
+
+.radio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-height: 44px;                      /* §15 : cible tactile */
+  font-family: var(--font-corps);
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--encre);
+  cursor: pointer;
+}
+
+/* Carré, jamais un cercle. L'input lui-même est la marque visible : le
+   contour de focus tombe donc sur le contrôle. */
+.radio__saisie {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  flex: none;
+  margin: 0;
+  background: var(--blanc);
+  border: 1px solid var(--encre);
+  border-radius: var(--radius-ui);
+  cursor: pointer;
+  transition: background-color var(--duree-micro) var(--courbe);
+}
+
+.radio__saisie:checked { background: var(--ambre); }
+
+/* --- Envoi ---------------------------------------------------------------- */
+
+.form__envoi { margin-top: var(--sp-6); }
+
+.form button.bouton {
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+
+.form__delai {
+  margin: var(--sp-3) 0 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--gris-structure);
+}
+
+.form__vie-privee {
+  margin: var(--sp-5) 0 0;               /* 24 px */
+  font-family: var(--font-corps);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--gris-structure);
+  max-width: 50ch;
+}
+
+/* --- Sous 1024 px : une seule colonne, plus de collant ------------------- */
+
+@media (max-width: 1023.98px) {
+  .reserver__contenu { display: block; }
+
+  .reserver__colle { position: static; }
+
+  .reserver__droite { margin-top: var(--sp-8); }
+}
+
+@media (max-width: 639.98px) {
+  .reserver { padding-block: 56px; }
+
+  .form button.bouton { width: 100%; }
+
+  .radios { gap: var(--sp-4) var(--sp-5); }
+}
+
+/* --- Courriel dans les coordonnées ---------------------------------------- */
+
+.coord__lien {
+  color: var(--encre);
+  text-decoration: underline;
+  text-decoration-color: var(--ambre);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+.coord__lien:hover { color: var(--ambre-texte); }
+
+/* --- Aide en bulle sur « ? » ---------------------------------------------- */
+
+.champ__tete {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-2);
+}
+
+.champ__tete .champ__label { margin-bottom: 0; }
+
+.aide {
+  position: relative;
+  display: inline-flex;
+  line-height: 0;
+}
+
+/* Carré, comme tout le reste. La cible tactile est portée à 44 px par le
+   pseudo-élément — §15 — sans grossir la marque. */
+.aide__bouton {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  background: var(--blanc);
+  border: 1px solid var(--gris-structure);
+  border-radius: var(--radius-ui);
+  font: 400 13px/1 var(--font-mono);
+  color: var(--gris-structure);
+  cursor: help;
+  transition:
+    border-color var(--duree-micro) var(--courbe),
+    color        var(--duree-micro) var(--courbe);
+}
+
+.aide__bouton::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  transform: translate(-50%, -50%);
+}
+
+.aide__bouton:hover { border-color: var(--encre); color: var(--encre); }
+
+.aide__bulle {
+  position: absolute;
+  bottom: calc(100% + var(--sp-2));
+  left: 0;
+  z-index: 5;
+  width: max-content;
+  max-width: 32ch;
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--blanc);
+  border: 1px solid var(--gris-structure);
+  border-radius: var(--radius-ui);
+  font: 400 13px/1.5 var(--font-mono);
+  color: var(--gris-structure);
+  text-align: left;
+
+  /* opacity et non visibility : la bulle reste dans l'arbre d'accessibilité,
+     donc aria-describedby la lit même sans survol. */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duree-micro) var(--courbe);
+}
+
+/* Survol du groupe — donc la bulle reste ouverte quand le curseur passe
+   dessus (WCAG 1.4.13, « survolable ») — et focus clavier sur le marqueur. */
+.aide:hover .aide__bulle,
+.aide__bouton:focus-visible + .aide__bulle {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aide__bulle { transition: none; }
+}
+
+@media (max-width: 639.98px) {
+  .aide__bulle { left: auto; right: 0; max-width: min(32ch, 78vw); }
+}
+
+/* --- Tête de page centrée -------------------------------------------------
+   Modificateur : .sect__eyebrow, .page-tete__h1 et .sect__intro servent aussi
+   aux sections suivantes de la page, qui restent alignées à gauche. */
+
+.sect--centre .sect__contenu { text-align: center; }
+
+.sect--centre .sect__intro { margin-inline: auto; }   /* la colonne de 60ch se recentre */
+
+/* --- Apparition en fondu des trois services -------------------------------
+   §14 proscrit les apparitions au defilement generalisees ; ecart demande.
+   Fondu seul, 400 ms, une seule fois par bloc. */
+
+.service.est-masque { opacity: 0; will-change: opacity; }
+
+.service.est-revele {
+  opacity: 1;
+  transition: opacity 400ms var(--courbe);
+}
+
+/* --- Numéro de téléphone cliquable ----------------------------------------
+   Le numéro est une donnée avant d'être un lien : il garde la couleur de sa
+   surface et ne se souligne qu'au survol. Le pseudo-élément porte la cible
+   tactile à 44 px (§15) sans rien déplacer dans la mise en page. */
+
+.lien-tel {
+  position: relative;
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--duree-micro) var(--courbe);
+}
+
+.lien-tel::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 44px;
+  transform: translateY(-50%);
+}
+
+.lien-tel:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--ambre);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+/* Sur les surfaces sombres le numéro est posé à 78 % : le survol le ramène
+   au plein contraste. */
+.telephone .lien-tel:hover,
+.cta-fin__tel .lien-tel:hover,
+.pied__tel .lien-tel:hover { color: var(--blanc-casse); }
