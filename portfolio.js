@@ -1,41 +1,61 @@
-/* S-WEB — recouvrement des cas au defilement. Chaque cas se fige quand sa fin
-   atteint le bas de l'ecran, et le suivant remonte par-dessus.
+/* S-WEB — index des realisations.
 
-   Le decalage vaut (hauteur d'ecran - hauteur du cas). Il ne peut pas s'ecrire
-   en CSS : `top: calc(100vh - 100%)` se resout a 0 parce qu'un pourcentage de
-   `top` ne se calcule pas contre un conteneur de hauteur automatique. Avec
-   top: 0 un cas de plusieurs milliers de pixels se figerait des sa premiere
-   ligne et le reste ne serait jamais lisible.
+   Source unique : pour ajouter un projet, ajouter un objet a ce tableau.
+   `image: null` fait basculer la ligne sur le gabarit raye automatiquement.
 
-   Le collant est pose par le script, pas par la feuille de style : sans JS la
-   page defile normalement. Le bloc conteneur est <main> : un element collant
-   ne se deplace que dans son conteneur, et il faut ici qu'un cas reste fige
-   pendant que les suivants defilent par-dessus. */
+   L'ouverture de l'apercu est faite en CSS (:hover et :focus-within) plutot
+   qu'en suivant un index en JS : le resultat est le meme — un seul apercu
+   ouvert a la fois — et le clavier en beneficie aussi. */
 (function () {
   'use strict';
 
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var PROJETS = [
+    { nom: 'M\u00e9dia Connexion', secteur: 'Musique & booking',
+      url: 'https://www.m\u00e9diaconnexion.com/fr',
+      image: 'assets/work/mediaconnexion1.png' },
+    { nom: 'Seiko Loyalty', secteur: 'Mode & e-commerce',
+      url: 'https://seikoloyalty.vercel.app',
+      image: 'assets/work/seikoloyalty1.png' },
+    { nom: 'X.Vision', secteur: 'Studio audiovisuel',
+      url: 'https://xvision-flame.vercel.app',
+      image: 'assets/work/xvision1.png' },
+    { nom: 'Pose ta Pierre', secteur: 'Photographie',
+      url: 'https://symphonious-seahorse-b42192.netlify.app/#accueil',
+      image: null }
+  ];
 
-  var cas = [].slice.call(document.querySelectorAll('.cas'));
-  if (!cas.length) return;
+  var liste = document.querySelector('.index-proj');
+  if (!liste) return;
 
-  function caler() {
-    cas.forEach(function (c) {
-      c.style.top = Math.min(0, innerHeight - c.offsetHeight) + 'px';
-      c.classList.add('est-cale');
-    });
-  }
-  caler();
+  var racine = liste.getAttribute('data-racine') || '';
+  var etiquette = liste.getAttribute('data-visiter') || 'Visiter';
+  var manquante = liste.getAttribute('data-manquante') || '';
 
-  /* Les captures arrivent en differe : la hauteur d'un cas change apres coup. */
-  if (window.ResizeObserver) {
-    var ro = new ResizeObserver(caler);
-    cas.forEach(function (c) { ro.observe(c); });
-  }
+  liste.innerHTML = '';
 
-  var minuteur;
-  addEventListener('resize', function () {
-    clearTimeout(minuteur);
-    minuteur = setTimeout(caler, 150);
+  PROJETS.forEach(function (p, i) {
+    var a = document.createElement('a');
+    a.className = 'proj';
+    a.href = p.url;
+    a.target = '_blank';
+    a.rel = 'noopener';
+
+    var num = String(i + 1).padStart(2, '0');
+    var apercu = p.image
+      ? '<img class="proj__image" src="' + racine + p.image + '" alt="" ' +
+        'width="1770" height="600" loading="lazy">'
+      : '<span class="proj__gabarit"><span class="proj__gabarit-texte">' +
+        manquante + '</span></span>';
+
+    a.innerHTML =
+      '<span class="proj__rangee">' +
+        '<span class="proj__num">' + num + '</span>' +
+        '<span class="proj__nom">' + p.nom + '</span>' +
+        '<span class="proj__secteur">' + p.secteur + '</span>' +
+        '<span class="proj__visiter">' + etiquette + '&nbsp;&rarr;</span>' +
+      '</span>' +
+      '<span class="proj__apercu">' + apercu + '</span>';
+
+    liste.appendChild(a);
   });
 })();

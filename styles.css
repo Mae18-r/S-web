@@ -2520,177 +2520,6 @@ main { position: relative; }
 .pied__tel .lien-tel:hover { color: var(--blanc-casse); }
 
 /* ==========================================================================
-   RÉSULTATS — quatre cas empilés, texte collant à gauche, captures à droite.
-   Fonds alternés Blanc cassé / Gris brume : c'est le changement de fond qui
-   sépare les cas, pas un filet (voir la note sur les bordures ci-dessous).
-   ========================================================================== */
-
-/* Recouvrement au defilement : `bottom: 0` fige le cas une fois sa fin
-   arrivee en bas de l'ecran, et le suivant remonte par-dessus. C'est
-   `bottom` et non `top` parce que ces sections font plusieurs milliers de
-   pixels : avec `top: 0` elles se figeraient des leur premiere ligne et le
-   reste du contenu ne serait jamais atteignable. */
-/* Recouvrement au defilement. La piste ne sert qu'a donner la hauteur de
-   reference : dans `calc(100vh - 100%)`, le 100% se resout sur le bloc
-   conteneur, donc sur la piste, donc sur la hauteur du cas lui-meme. Le
-   decalage est negatif et vaut (hauteur du cas - hauteur d'ecran) : le cas
-   defile normalement, se fige quand sa fin touche le bas de l'ecran, et le
-   suivant remonte par-dessus.
-   C'est `top` et non `bottom` : une contrainte `bottom` remonterait aussi
-   les cas encore hors champ et les empilerait tous des le chargement. */
-/* Le collant n'est arme que par le script, qui pose aussi le `top` : sans JS
-   la page defile normalement au lieu de se figer sur sa premiere ligne.
-   Le bloc conteneur est <main> et non une enveloppe par cas : un element
-   collant ne se deplace que dans son conteneur, donc une enveloppe a la
-   hauteur exacte du cas lui laisserait une course nulle. */
-.cas.est-cale { position: sticky; }
-
-.cas { padding-block: var(--sp-9); }
-
-.cas--clair { background: var(--blanc-casse); }
-.cas--brume { background: var(--gris-brume); }
-
-.cas__contenu {
-  width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
-  margin-inline: auto;
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  column-gap: var(--gouttiere);
-  /* Pas d'align-items: start — la colonne de texte doit s'étirer sur la
-     hauteur du cas, sinon le bloc collant n'a aucune course. */
-}
-
-.cas__texte { grid-column: 1 / 5;  }
-.cas__media { grid-column: 6 / 13; }
-
-/* Le parent étiré borne la course : le texte s'arrête au bas de SON cas et
-   ne peut pas déborder sur le suivant. */
-.cas__colle {
-  position: sticky;
-  top: 120px;
-}
-
-/* --- Colonne de texte ----------------------------------------------------- */
-
-.cas__secteur {
-  margin: 0 0 var(--sp-3);
-  font-family: var(--font-mono);
-  font-size: 13px;
-  line-height: 1.4;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ambre-texte);
-}
-
-.cas__nom {
-  margin: 0 0 var(--sp-5);
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.75rem, 3vw + 0.5rem, 2.5rem);
-  line-height: 1.15;
-  letter-spacing: -0.005em;
-  color: var(--encre);
-}
-
-.cas__corps {
-  margin: 0 0 var(--sp-7);
-  font-family: var(--font-corps);
-  font-size: 16px;
-  line-height: 1.6;
-  color: var(--encre);
-  max-width: 42ch;
-}
-
-.cas__label {
-  margin: 0 0 var(--sp-3);
-  font-family: var(--font-mono);
-  font-size: 12px;
-  line-height: 1.4;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--gris-structure);
-}
-
-.cas__liste {
-  margin: 0 0 var(--sp-6);
-  padding: 0;
-  list-style: none;
-  max-width: 42ch;
-}
-
-.cas__liste li {
-  padding-block: var(--sp-3);
-  font-family: var(--font-mono);
-  font-size: 14px;
-  line-height: 1.5;
-  letter-spacing: 0.02em;
-  color: var(--encre);
-}
-
-.cas__liste li + li { border-top: 1px solid var(--gris-brume); }
-
-/* Sur le fond Gris brume le filet disparaîtrait : il passe à l'Encre à 12 %. */
-.cas--brume .cas__liste li + li {
-  border-top-color: color-mix(in srgb, var(--encre) 12%, transparent);
-}
-
-.cas__url { margin: 0 0 0; }
-
-.cas__url--vide {
-  font-family: var(--font-mono);
-  font-size: 14px;
-  letter-spacing: 0.02em;
-  color: var(--gris-structure);
-}
-
-/* --- Colonne média -------------------------------------------------------- */
-
-.cas__media {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-6);                      /* 32 px entre les captures */
-  min-width: 0;
-}
-
-.cas__capture {
-  display: block;
-  width: 100%;
-  height: auto;
-  border: 1px solid var(--gris-brume);
-  border-radius: 4px;                    /* le seul rayon en usage sur le site */
-  background: var(--blanc);
-}
-
-.cas--brume .cas__capture { border-color: var(--gris-structure); }
-
-/* Le cadre vidéo réserve son 16:9 : rien ne saute quand le fichier arrivera,
-   et la page reste correcte tant qu'il manque. */
-.cas__video {
-  display: block;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  background: var(--blanc);
-  border: 1px solid var(--gris-brume);
-  border-radius: 4px;
-}
-
-.cas--brume .cas__video { border-color: var(--gris-structure); }
-
-/* --- Sous 1024 px : une seule colonne, plus de collant ------------------- */
-
-@media (max-width: 1023.98px) {
-  .cas__contenu { display: block; }
-
-  .cas__colle { position: static; }
-
-  .cas__media { margin-top: var(--sp-7); }
-}
-
-@media (max-width: 639.98px) {
-  .cas { padding-block: 56px; }
-}
-
-/* ==========================================================================
    CONTACT — colonne centrée, et derrière elle une couche d'icônes qui dérivent
    en ligne droite. La couche est décorative : pointer-events none, aria-hidden,
    --gris-structure à 18 %. Aucune icône ne croise le H1 ni les coordonnées —
@@ -2927,4 +2756,312 @@ main { position: relative; }
   .dec--h.dec--16 { bottom: 40px; }
   .dec--h.dec--17 { bottom: 12px; }
   .dec--h.dec--19 { bottom: 40px; }
+}
+
+/* ==========================================================================
+   === FAQ ===
+   Accordeon multi-ouvert. L'ouverture passe par grid-template-rows 0fr -> 1fr :
+   pas de max-height arbitraire a deviner, pas de hauteur calculee en JS.
+   Le titre de section reprend le traitement des autres sections de l'accueil
+   (Pour qui, Piliers, Impact, Processus) — voir la note du rapport.
+   ========================================================================== */
+
+.faq {
+  background: var(--blanc-casse);
+  padding-block: var(--sp-9);            /* 96 px */
+}
+
+.faq__contenu {
+  width: min(800px, 100% - var(--marge-ext) * 2);
+  margin-inline: auto;
+}
+
+.faq__titre {
+  margin: 0 0 var(--sp-6);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 3vw + 0.5rem, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  color: var(--encre);
+}
+
+.faq__liste {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-bottom: 1px solid var(--gris-structure);
+}
+
+.faq__item { border-top: 1px solid var(--gris-structure); }
+
+.faq__entete { margin: 0; }
+
+/* Le declencheur occupe toute la largeur : la cible tactile est la ligne
+   entiere, jamais le seul texte. 64 px de haut, au-dessus du plancher de
+   44 px du §15. */
+.faq__declencheur {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-5);
+  width: 100%;
+  min-height: 64px;
+  padding: var(--sp-4) 0;
+  background: none;
+  border: 0;
+  border-radius: 0;                      /* aucune exception de rayon ici */
+  font-family: var(--font-corps);
+  font-weight: 500;
+  font-size: 17px;
+  line-height: 1.45;
+  color: var(--encre);
+  text-align: left;
+  cursor: pointer;
+  transition: color var(--duree-micro) var(--courbe);
+}
+
+.faq__declencheur:hover { color: var(--ambre-texte); }
+
+.faq__chevron {
+  flex: none;
+  color: var(--ambre);                   /* trait de 2 px : usage graphique */
+  transition: transform var(--duree-panneau) var(--courbe);
+}
+
+.est-ouvert .faq__chevron { transform: rotate(180deg); }
+
+/* --- Le panneau ----------------------------------------------------------- */
+
+.faq__panneau {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--duree-panneau) var(--courbe);
+}
+
+.est-ouvert .faq__panneau { grid-template-rows: 1fr; }
+
+.faq__reponse { overflow: hidden; }
+
+.faq__reponse p {
+  margin: 0;
+  padding-bottom: var(--sp-5);
+  font-family: var(--font-corps);
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--encre);
+  max-width: 65ch;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq__panneau, .faq__chevron { transition: none; }
+}
+
+@media (max-width: 639.98px) {
+  .faq { padding-block: 56px; }
+
+  .faq__declencheur {
+    font-size: 16px;
+    gap: var(--sp-4);
+    padding: var(--sp-3) 0;
+    min-height: 56px;                    /* > 44 px, §15 */
+  }
+}
+
+/* ==========================================================================
+   PORTFOLIO — heros, index des projets, appel final.
+   L'index est une liste de rangees pleine largeur, pas une grille de cartes.
+   L'apercu s'ouvre sous la rangee survolee, dans la rangee elle-meme.
+   ========================================================================== */
+
+.pf-hero { padding-block: 88px var(--sp-9); }
+
+.pf-hero__contenu {
+  width: min(900px, 100% - var(--marge-ext) * 2);
+  margin-inline: auto;
+}
+
+.pf-hero__eyebrow {
+  margin: 0 0 var(--sp-5);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gris-structure);
+}
+
+/* Plafonne a 64 px : c'est le haut de l'echelle H1 du site (§03). */
+.pf-hero__titre {
+  margin: 0 0 var(--sp-6);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.5rem, 5vw + 1rem, 4rem);
+  line-height: 1.03;
+  letter-spacing: -0.02em;
+  color: var(--encre);
+}
+
+.pf-hero__intro {
+  margin: 0;
+  max-width: 52ch;
+  font-family: var(--font-corps);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--gris-structure);
+}
+
+/* --- L'index -------------------------------------------------------------- */
+
+.pf-index { padding-bottom: var(--sp-9); }
+
+.index-proj {
+  width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
+  margin-inline: auto;
+}
+
+.proj {
+  display: block;
+  border-top: 1px solid var(--gris-brume);
+  text-decoration: none;
+  color: inherit;
+}
+
+.proj:last-child { border-bottom: 1px solid var(--gris-brume); }
+
+.proj__rangee {
+  display: grid;
+  grid-template-columns: 60px 1fr 220px 150px;
+  align-items: center;
+  gap: var(--sp-5);
+  padding-block: 26px;
+}
+
+.proj__num {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: var(--ambre);
+}
+
+.proj__nom {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 2.4vw + 0.5rem, 2.375rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  color: var(--encre);
+}
+
+.proj__secteur {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gris-structure);
+}
+
+.proj__visiter {
+  justify-self: end;
+  font-family: var(--font-corps);
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--ambre);
+  white-space: nowrap;
+}
+
+.proj:hover .proj__visiter { text-decoration: underline; text-underline-offset: 3px; }
+
+/* --- L'apercu ------------------------------------------------------------- */
+
+/* :hover et :focus-within plutot qu'un index suivi en JS : un seul apercu
+   ouvert a la fois par construction, et le clavier y a droit aussi. */
+.proj__apercu {
+  display: block;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height .38s cubic-bezier(.2,.7,.2,1), opacity .28s ease;
+}
+
+.proj:hover .proj__apercu,
+.proj:focus-visible .proj__apercu {
+  max-height: 366px;
+  opacity: 1;
+}
+
+.proj__image,
+.proj__gabarit {
+  display: block;
+  width: 100%;
+  height: 340px;
+  margin-bottom: 26px;
+}
+
+.proj__image { object-fit: cover; object-position: top center; }
+
+/* Gabarit raye, dans les tons de surface existants. */
+.proj__gabarit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--blanc-casse) 0 10px,
+    var(--gris-brume)  10px 20px);
+  border: 1px solid var(--gris-brume);
+}
+
+.proj__gabarit-texte {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: var(--gris-structure);
+  background: var(--blanc-casse);
+  padding: var(--sp-2) var(--sp-4);
+}
+
+.index-proj__sansjs { font-family: var(--font-corps); }
+
+@media (prefers-reduced-motion: reduce) {
+  .proj__apercu { transition: none; }
+}
+
+/* --- Sous 768 px : plus de survol, tout est empile ----------------------- */
+
+@media (max-width: 767.98px) {
+  .pf-hero { padding-block: 56px; }
+
+  .proj__rangee {
+    display: block;
+    padding-block: var(--sp-5);
+  }
+
+  .proj__num,
+  .proj__secteur,
+  .proj__visiter { display: block; }
+
+  .proj__num { margin-bottom: var(--sp-2); }
+  .proj__secteur { margin-top: var(--sp-2); }
+
+  /* Cible tactile : la rangee entiere, et le lien lui-meme au plancher. */
+  .proj__visiter {
+    justify-self: start;
+    margin-top: var(--sp-4);
+    min-height: 44px;
+    line-height: 44px;
+  }
+
+  /* L'apercu ne depend plus du survol : toujours visible, en tete de bloc. */
+  .proj__apercu {
+    max-height: none;
+    opacity: 1;
+    transition: none;
+  }
+
+  .proj__image,
+  .proj__gabarit { height: 200px; margin-bottom: 0; }
+
+  .proj { display: flex; flex-direction: column-reverse; }
 }
