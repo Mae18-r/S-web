@@ -2689,3 +2689,242 @@ main { position: relative; }
 @media (max-width: 639.98px) {
   .cas { padding-block: 56px; }
 }
+
+/* ==========================================================================
+   CONTACT — colonne centrée, et derrière elle une couche d'icônes qui dérivent
+   en ligne droite. La couche est décorative : pointer-events none, aria-hidden,
+   --gris-structure à 18 %. Aucune icône ne croise le H1 ni les coordonnées —
+   les dérives verticales vivent dans les gouttières latérales, les dérives
+   horizontales dans les bandes de padding haute et basse.
+   ========================================================================== */
+
+.contact {
+  position: relative;
+  background: var(--blanc-casse);
+  padding-block: var(--sp-10);           /* 128 px */
+  overflow: hidden;                      /* aucune barre horizontale */
+}
+
+.contact__contenu {
+  position: relative;
+  z-index: 1;                            /* le texte passe devant la couche */
+  width: min(800px, 100% - var(--marge-ext) * 2);
+  margin-inline: auto;
+  text-align: center;
+}
+
+/* --- La couche d'icônes --------------------------------------------------- */
+
+.contact__fond {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* La grille de 12 colonnes sert de repère : chaque icône démarre sur une
+   ligne de colonne, jamais sur un pixel arbitraire. */
+.contact__grille {
+  position: relative;
+  height: 100%;
+  width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
+  margin-inline: auto;
+  --colonne: calc((100% - 11 * var(--gouttiere)) / 12);
+}
+
+.dec {
+  position: absolute;
+  left: calc((var(--col) - 1) * (var(--colonne) + var(--gouttiere)));
+  width: var(--taille);
+  height: var(--taille);
+  /* Ecart demande : le §01 reserve l'ambre a ce qui pointe, et le §12 dit
+     qu'une icone ambre signale un etat, jamais une decoration. */
+  color: var(--ambre);
+  opacity: 0.18;
+  will-change: transform;
+}
+
+.dec[style*="--y:"]  { top: var(--y); }
+.dec[style*="--yb:"] { bottom: var(--yb); }
+
+.dec__svg { display: block; width: 100%; height: 100%; }
+
+/* Course rectiligne, jamais diagonale. Linéaire : l'accélération se lirait
+   comme du flottement, ce qu'on ne veut pas. Sortie d'un bord, rentrée par
+   l'opposé — le retour du cycle se fait hors cadre, donc invisible. */
+@keyframes derive-v {
+  from { transform: translateY(-30vh); }
+  to   { transform: translateY(130vh); }
+}
+
+@keyframes derive-h {
+  from { transform: translateX(-55vw); }
+  to   { transform: translateX(55vw); }
+}
+
+.dec--v { animation: derive-v var(--duree) linear var(--delai) infinite; }
+.dec--h { animation: derive-h var(--duree) linear var(--delai) infinite; }
+
+/* --- Colonne de texte ----------------------------------------------------- */
+
+.contact__eyebrow {
+  margin: 0 0 var(--sp-3);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gris-structure);
+}
+
+.contact__h1 {
+  margin: 0 0 var(--sp-5);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--encre);
+}
+
+.contact__sub {
+  margin: 0 auto;
+  max-width: 50ch;
+  font-family: var(--font-corps);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--gris-structure);
+}
+
+/* --- Coordonnées ---------------------------------------------------------- */
+
+.coord-directe {
+  margin: var(--sp-8) 0 0;               /* 64 px sous le sous-titre */
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.coord-directe__label {
+  margin: 0 0 var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gris-structure);
+}
+
+.coord-directe__valeur {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 32px;                       /* §03 : jamais la display sous 28 px */
+  line-height: 1.2;
+  color: var(--encre);
+  word-break: break-word;                /* le courriel ne déborde pas à 375 px */
+}
+
+.coord-directe__valeur .lien-action {
+  font: inherit;                         /* meme corps que le telephone */
+}
+
+.contact__meta {
+  margin: var(--sp-6) 0 0;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.6;
+  letter-spacing: 0.02em;
+  color: var(--gris-structure);
+}
+
+/* --- Actions -------------------------------------------------------------- */
+
+.contact__actions {
+  margin-top: var(--sp-8);               /* 64 px */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-5);                      /* 24 px */
+  flex-wrap: wrap;
+}
+
+/* --- Réseaux -------------------------------------------------------------- */
+
+.social { margin-top: var(--sp-8); }     /* 64 px */
+
+.social__label {
+  margin: 0 0 var(--sp-5);               /* 24 px */
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gris-structure);
+}
+
+.social__rangee {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--sp-6);                      /* 32 px */
+}
+
+.social__lien {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;                       /* §15 : cible tactile */
+  min-height: 44px;
+  color: var(--gris-structure);
+  transition: color var(--duree-micro) var(--courbe);
+}
+
+.social__lien:hover { color: var(--encre); }
+
+/* Sans lien : ni focusable, ni survolable, ni cliquable en apparence. */
+.social__lien--inactif {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.social__icone { display: block; width: 24px; height: 24px; }
+
+/* --- Mouvement réduit : rien ne bouge, rien ne disparaît ------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+  .dec--v, .dec--h { animation: none; }
+}
+
+/* --- Mobile --------------------------------------------------------------- */
+
+@media (max-width: 639.98px) {
+  .contact { padding-block: 72px; }
+
+  .coord-directe__valeur { font-size: 28px; }
+
+  .contact__actions { flex-direction: column; align-items: stretch; }
+
+  /* Six icônes seulement, et uniquement les dérives horizontales : la colonne
+     de texte prend toute la largeur, il n'y a plus de gouttière où faire
+     passer une dérive verticale sans croiser le texte. Les six restantes
+     tiennent dans les bandes de padding de 72 px, haut et bas. */
+  .dec--v { display: none; }
+
+  .dec { width: 24px; height: 24px; }    /* poids optique unifié */
+
+  /* Double classe : `.dec[style*="--y:"]` vaut 0-2-0 et primerait sur une
+     classe seule. Bande haute et bande basse font 72 px ; une icone de 24 px
+     posee a 40 px s'arrete a 64 px, donc avant le premier texte. */
+  .dec--12, .dec--14, .dec--18, .dec--20 { display: none; }
+
+  .dec--h.dec--9  { top: 12px; }
+  .dec--h.dec--10 { top: 40px; }
+  .dec--h.dec--11 { top: 12px; }
+  .dec--h.dec--13 { top: 40px; }
+  .dec--h.dec--15 { bottom: 12px; }
+  .dec--h.dec--16 { bottom: 40px; }
+  .dec--h.dec--17 { bottom: 12px; }
+  .dec--h.dec--19 { bottom: 40px; }
+}
