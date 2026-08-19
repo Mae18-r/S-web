@@ -1855,6 +1855,8 @@ main { position: relative; }
 /* --- 6. CTA de fin -------------------------------------------------------- */
 
 .cta-fin {
+  position: relative;
+  z-index: 1;                          /* passe au-dessus des cas figes */
   background: var(--encre);
   color: var(--blanc-casse);
   padding-block: var(--sp-9);
@@ -1941,6 +1943,8 @@ main { position: relative; }
    ========================================================================== */
 
 .pied {
+  position: relative;
+  z-index: 1;                          /* idem : jamais recouvert par un cas */
   background: var(--encre);
   color: var(--blanc-casse);
   border-top: 1px solid color-mix(in srgb, var(--gris-structure) 20%, transparent);
@@ -2520,6 +2524,26 @@ main { position: relative; }
    Fonds alternés Blanc cassé / Gris brume : c'est le changement de fond qui
    sépare les cas, pas un filet (voir la note sur les bordures ci-dessous).
    ========================================================================== */
+
+/* Recouvrement au defilement : `bottom: 0` fige le cas une fois sa fin
+   arrivee en bas de l'ecran, et le suivant remonte par-dessus. C'est
+   `bottom` et non `top` parce que ces sections font plusieurs milliers de
+   pixels : avec `top: 0` elles se figeraient des leur premiere ligne et le
+   reste du contenu ne serait jamais atteignable. */
+/* Recouvrement au defilement. La piste ne sert qu'a donner la hauteur de
+   reference : dans `calc(100vh - 100%)`, le 100% se resout sur le bloc
+   conteneur, donc sur la piste, donc sur la hauteur du cas lui-meme. Le
+   decalage est negatif et vaut (hauteur du cas - hauteur d'ecran) : le cas
+   defile normalement, se fige quand sa fin touche le bas de l'ecran, et le
+   suivant remonte par-dessus.
+   C'est `top` et non `bottom` : une contrainte `bottom` remonterait aussi
+   les cas encore hors champ et les empilerait tous des le chargement. */
+/* Le collant n'est arme que par le script, qui pose aussi le `top` : sans JS
+   la page defile normalement au lieu de se figer sur sa premiere ligne.
+   Le bloc conteneur est <main> et non une enveloppe par cas : un element
+   collant ne se deplace que dans son conteneur, donc une enveloppe a la
+   hauteur exacte du cas lui laisserait une course nulle. */
+.cas.est-cale { position: sticky; }
 
 .cas { padding-block: var(--sp-9); }
 

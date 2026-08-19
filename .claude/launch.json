@@ -6,7 +6,7 @@
       "runtimeExecutable": "sh",
       "runtimeArgs": [
         "-c",
-        "cd '/Users/maevaroland/Documents/S-web' && exec python3 -m http.server 4173"
+        "cd /private/tmp && exec python3 -m http.server 4173 -d /private/tmp/s-web-live"
       ],
       "port": 4173
     }
