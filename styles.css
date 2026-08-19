@@ -2514,3 +2514,154 @@ main { position: relative; }
 .telephone .lien-tel:hover,
 .cta-fin__tel .lien-tel:hover,
 .pied__tel .lien-tel:hover { color: var(--blanc-casse); }
+
+/* ==========================================================================
+   RÉSULTATS — quatre cas empilés, texte collant à gauche, captures à droite.
+   Fonds alternés Blanc cassé / Gris brume : c'est le changement de fond qui
+   sépare les cas, pas un filet (voir la note sur les bordures ci-dessous).
+   ========================================================================== */
+
+.cas { padding-block: var(--sp-9); }
+
+.cas--clair { background: var(--blanc-casse); }
+.cas--brume { background: var(--gris-brume); }
+
+.cas__contenu {
+  width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--gouttiere);
+  /* Pas d'align-items: start — la colonne de texte doit s'étirer sur la
+     hauteur du cas, sinon le bloc collant n'a aucune course. */
+}
+
+.cas__texte { grid-column: 1 / 5;  }
+.cas__media { grid-column: 6 / 13; }
+
+/* Le parent étiré borne la course : le texte s'arrête au bas de SON cas et
+   ne peut pas déborder sur le suivant. */
+.cas__colle {
+  position: sticky;
+  top: 120px;
+}
+
+/* --- Colonne de texte ----------------------------------------------------- */
+
+.cas__secteur {
+  margin: 0 0 var(--sp-3);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ambre-texte);
+}
+
+.cas__nom {
+  margin: 0 0 var(--sp-5);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 3vw + 0.5rem, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  color: var(--encre);
+}
+
+.cas__corps {
+  margin: 0 0 var(--sp-7);
+  font-family: var(--font-corps);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--encre);
+  max-width: 42ch;
+}
+
+.cas__label {
+  margin: 0 0 var(--sp-3);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gris-structure);
+}
+
+.cas__liste {
+  margin: 0 0 var(--sp-6);
+  padding: 0;
+  list-style: none;
+  max-width: 42ch;
+}
+
+.cas__liste li {
+  padding-block: var(--sp-3);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: var(--encre);
+}
+
+.cas__liste li + li { border-top: 1px solid var(--gris-brume); }
+
+/* Sur le fond Gris brume le filet disparaîtrait : il passe à l'Encre à 12 %. */
+.cas--brume .cas__liste li + li {
+  border-top-color: color-mix(in srgb, var(--encre) 12%, transparent);
+}
+
+.cas__url { margin: 0 0 0; }
+
+.cas__url--vide {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.02em;
+  color: var(--gris-structure);
+}
+
+/* --- Colonne média -------------------------------------------------------- */
+
+.cas__media {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);                      /* 32 px entre les captures */
+  min-width: 0;
+}
+
+.cas__capture {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--gris-brume);
+  border-radius: 4px;                    /* le seul rayon en usage sur le site */
+  background: var(--blanc);
+}
+
+.cas--brume .cas__capture { border-color: var(--gris-structure); }
+
+/* Le cadre vidéo réserve son 16:9 : rien ne saute quand le fichier arrivera,
+   et la page reste correcte tant qu'il manque. */
+.cas__video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: var(--blanc);
+  border: 1px solid var(--gris-brume);
+  border-radius: 4px;
+}
+
+.cas--brume .cas__video { border-color: var(--gris-structure); }
+
+/* --- Sous 1024 px : une seule colonne, plus de collant ------------------- */
+
+@media (max-width: 1023.98px) {
+  .cas__contenu { display: block; }
+
+  .cas__colle { position: static; }
+
+  .cas__media { margin-top: var(--sp-7); }
+}
+
+@media (max-width: 639.98px) {
+  .cas { padding-block: 56px; }
+}
