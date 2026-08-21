@@ -1962,8 +1962,9 @@ main { position: relative; }
 }
 
 .pied__identite            { grid-column: 1 / 7;   }
-.pied__colonne--services   { grid-column: 8 / 10;  }
-.pied__colonne--entreprise { grid-column: 10 / 13; }
+.pied__colonne--menu       { grid-column: 7 / 9;   }
+.pied__colonne--services   { grid-column: 9 / 11;  }
+.pied__colonne--entreprise { grid-column: 11 / 13; }
 
 /* --- Identité ------------------------------------------------------------- */
 
@@ -2094,9 +2095,12 @@ main { position: relative; }
 /* --- Tablette ------------------------------------------------------------- */
 
 @media (max-width: 1023.98px) {
-  .pied__identite            { grid-column: 1 / 8;   }
-  .pied__colonne--services   { grid-column: 8 / 11;  }
-  .pied__colonne--entreprise { grid-column: 11 / 13; }
+  .pied__identite            { grid-column: 1 / 13;  }
+  .pied__colonne--menu       { grid-column: 1 / 5;   }
+  .pied__colonne--services   { grid-column: 5 / 9;   }
+  .pied__colonne--entreprise { grid-column: 9 / 13;  }
+
+  .pied__colonne { margin-top: 40px; }
 }
 
 /* --- Mobile : une seule colonne, 40 px entre les blocs -------------------- */
