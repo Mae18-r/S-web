@@ -3067,3 +3067,154 @@ main { position: relative; }
 
   .proj { display: flex; flex-direction: column-reverse; }
 }
+
+/* ==========================================================================
+   RETOUR EN HAUT — bouton fixe, en bas a gauche.
+   A gauche volontairement : le CTA flottant occupe le coin bas droit sur les
+   deux accueils, les deux ne se rencontrent jamais.
+   Meme mecanique d'apparition que le CTA flottant — visibility sort le bouton
+   de l'ordre de tabulation tant qu'il est cache.
+   ========================================================================== */
+
+.haut {
+  position: fixed;
+  left: var(--sp-5);
+  bottom: calc(var(--sp-5) + env(safe-area-inset-bottom, 0px));
+  z-index: 20;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--sp-7);                    /* 48 px : au-dessus du plancher §15 */
+  height: var(--sp-7);
+
+  background: var(--blanc-casse);
+  border: 1px solid var(--encre);
+  border-radius: var(--radius-ui);       /* angles droits, §05 */
+  color: var(--encre);
+
+  transition:
+    opacity          var(--duree-panneau) var(--courbe),
+    transform        var(--duree-panneau) var(--courbe),
+    background-color var(--duree-micro)   var(--courbe),
+    color            var(--duree-micro)   var(--courbe),
+    visibility       0s linear            var(--duree-panneau);
+}
+
+/* Un seul endroit decrit l'etat cache, et le selecteur est plus specifique
+   que la regle de base : aucune ambiguite de cascade possible. */
+.haut:not(.est-visible) {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+}
+
+.haut.est-visible {
+  transition:
+    opacity   var(--duree-panneau) var(--courbe),
+    transform var(--duree-panneau) var(--courbe),
+    visibility 0s;
+}
+
+/* Variante secondaire du §06 : le fond s'inverse au survol. */
+.haut:hover {
+  background: var(--encre);
+  color: var(--blanc-casse);
+}
+
+.haut__fleche { display: block; }
+
+@media (prefers-reduced-motion: reduce) {
+  .haut { transition: opacity var(--duree-micro) linear, visibility 0s linear var(--duree-micro); transform: none; }
+  .haut.est-visible { transition: opacity var(--duree-micro) linear, visibility 0s; }
+}
+
+@media (max-width: 639.98px) {
+  .haut { left: var(--sp-4); bottom: calc(var(--sp-4) + env(safe-area-inset-bottom, 0px)); }
+}
+
+/* ==========================================================================
+   AVIS CLIENTS
+   Grille en auto-fit : propre a deux cartes, elle se remplit d'elle-meme a
+   quatre, six ou huit sans qu'on y retouche.
+   Etoiles en Encre et non en Ambre : le §01 plafonne l'ambre a 5 % d'une
+   composition et lui interdit l'usage decoratif. Cinq etoiles repetees sur
+   chaque carte videraient ce budget pour un element qui n'est pas une donnee
+   a pointer.
+   ========================================================================== */
+
+.avis-section {
+  background: var(--blanc-casse);
+  padding-block: var(--sp-9);
+}
+
+.avis-section__contenu {
+  width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
+  margin-inline: auto;
+}
+
+/* Arial et non la display : ecart demande, voir la note du rapport. */
+.avis-section__titre {
+  margin: 0 0 var(--sp-6);
+  font-family: var(--font-corps);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 2vw + 0.5rem, 2rem);
+  line-height: 1.2;
+  color: var(--encre);
+}
+
+.avis__liste {
+  display: grid;
+  /* min(320px, 100%) evite qu'une piste plus large que l'ecran deborde. */
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  gap: var(--sp-5);
+}
+
+.avis {
+  background: var(--gris-brume);
+  border-radius: var(--radius-ui);       /* angles droits, §05 */
+  padding: var(--sp-6);                  /* 32 px, §10 */
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.avis__note {
+  display: flex;
+  gap: 2px;
+  margin: 0;
+  color: var(--encre);
+  line-height: 0;
+}
+
+.avis__etoile { display: block; }
+
+.avis__citation { margin: 0; }
+
+.avis__citation p {
+  margin: 0;
+  font-family: var(--font-corps);
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--encre);
+  max-width: 65ch;
+}
+
+/* Encre et non Gris structure : sur le Gris brume de la carte, le gris
+   tombe a 4,12:1, sous le seuil AA. La hierarchie est portee par la taille
+   et la graisse, pas par le contraste. */
+.avis__etiquette {
+  margin: auto 0 0;                      /* colle en bas, cartes alignees */
+  font-family: var(--font-corps);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.4;
+  color: var(--encre);
+}
+
+@media (max-width: 639.98px) {
+  .avis-section { padding-block: 56px; }
+  .avis { padding: var(--sp-5); }
+  .avis__citation p { font-size: 16px; }
+}
