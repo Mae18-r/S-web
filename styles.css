@@ -519,26 +519,57 @@ a { color: inherit; }
 main { display: block; }
 
 .hero {
-  /* Le héro occupe au moins un écran : la section suivante n'apparaît pas
-     sur la première vue. */
-  min-height: 100vh;
-  min-height: 100svh;
+  position: relative;
+  height: 88vh;
+  min-height: 640px;
+  max-height: 900px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;               /* contenu centré, pas collé en haut */
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;                      /* borne l'image et le voile */
 
-  position: relative;                    /* ancre le décor de vagues */
+  /* Ambre de la charte, uniquement ici : voir .hero__accent. */
+  --ambre-sur-sombre: #FF5A1F;
+}
 
-  padding-block: var(--sp-9) calc(var(--sp-9) * 3);   /* place pour la bande */
-  overflow: hidden;                      /* borne le décor */
+.hero__media,
+.hero__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero__image {
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Plaque de contraste exigee par la charte : aplat Encre a 60 %, sans
+   degrade ni flou. Aucun texte n'est pose sur une photo nue. */
+.hero__voile {
+  position: absolute;
+  inset: 0;
+  background: rgba(var(--encre-rgb), 0.6);
 }
 
 .hero__contenu {
-  position: relative;                    /* passe au-dessus du décor */
+  position: relative;                    /* passe au-dessus du voile */
   z-index: 1;
-  width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
+  width: min(900px, 100% - var(--marge-ext) * 2);
   margin-inline: auto;
   text-align: center;
+}
+
+.hero__eyebrow {
+  margin: 0 0 var(--sp-5);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(var(--blanc-casse-rgb), 0.7);
 }
 
 
@@ -552,21 +583,29 @@ main { display: block; }
      16,437 em, soit 73,0 px au maximum à 1200 px de colonne.
      Le minimum reste à 1,75rem : §03 interdit Zaria sous 28 px (il faudrait
      19,9 px pour tenir deux lignes à 375 px). Deux lignes jusqu'à ~508 px. */
-  font-size: clamp(1.75rem, 6vw - 0.75rem, 4.375rem);
+  /* Plafond a 3,375rem (54 px) et non 4rem : la ligne la plus large est
+     l'anglaise « We deliver what it takes to grow. », mesuree a 16,44 em.
+     A 64 px elle demande 1053 px, la colonne en fait 900 : le titre
+     retombait sur quatre lignes au lieu des deux voulues. */
+  font-size: clamp(2.5rem, 5vw, 3.375rem);
   line-height: 1.05;
   letter-spacing: -0.01em;
-  color: var(--encre);
+  color: var(--blanc-casse);
   text-wrap: balance;
 }
 
 /* Le seul mot accentué. --ambre-texte (4,9:1) — jamais --ambre sur fond clair. */
-.hero__accent { color: var(--ambre-texte); }
+/* Ambre de la charte et non var(--ambre) : sous le voile a 60 % le fond
+   effectif est rgb(43,40,37), ou le #C23A00 du projet tombe a 2,72:1, sous le
+   seuil de 3:1 du grand texte. Le #FF5A1F y donne 4,70:1, ce que le §02
+   sanctionne pour l'ambre sur fond sombre. */
+.hero__accent { color: var(--ambre-sur-sombre); }
 
 .hero__sous {
   margin: 0 auto var(--sp-7);            /* sous-titre -> CTA : 48 px */
-  max-width: 60ch;
+  max-width: 55ch;
   font: 400 17px/1.6 var(--font-corps);
-  color: var(--gris-structure);
+  color: rgba(var(--blanc-casse-rgb), 0.85);
 }
 
 
@@ -3217,4 +3256,195 @@ main { position: relative; }
   .avis-section { padding-block: 56px; }
   .avis { padding: var(--sp-5); }
   .avis__citation p { font-size: 16px; }
+}
+
+/* ==========================================================================
+   A PROPOS
+   Bandeaux alternes : la tete de page et « notre facon de travailler »
+   partagent le Blanc casse et se lisent comme un seul bloc, puis « la
+   structure » passe au Gris brume et « ce qu'on ne fait pas » revient au
+   clair. Jamais deux bandeaux Gris brume adjacents (§10).
+   Aucun numero nulle part : les reperes sont des mots.
+   ========================================================================== */
+
+.ap { padding-block: var(--sp-9); }
+
+.ap--clair { background: var(--blanc-casse); }
+.ap--brume { background: var(--gris-brume); }
+
+.ap--suite { padding-top: 0; }            /* enchaine la tete de page */
+
+.ap__contenu {
+  width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
+  margin-inline: auto;
+}
+
+.ap__eyebrow {
+  margin: 0 0 var(--sp-3);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gris-structure);
+}
+
+.ap__h1 {
+  margin: 0 0 var(--sp-5);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.5rem, 5vw + 1rem, 4rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: var(--encre);
+}
+
+.ap__h2 {
+  margin: 0 0 var(--sp-5);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 3vw + 0.5rem, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  color: var(--encre);
+}
+
+.ap__intro {
+  margin: 0;
+  max-width: 60ch;
+  font-family: var(--font-corps);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--encre);
+}
+
+.ap__texte {
+  margin: 0;
+  max-width: 60ch;
+  font-family: var(--font-corps);
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--encre);
+}
+
+/* --- Notre facon de travailler -------------------------------------------- */
+
+.methode__bloc { padding-block: var(--sp-6); }
+
+.methode__bloc + .methode__bloc { border-top: 1px solid var(--gris-brume); }
+
+.methode__titre {
+  margin: 0 0 var(--sp-3);
+  font-family: var(--font-corps);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.3;
+  color: var(--encre);
+}
+
+.methode__texte {
+  margin: 0;
+  max-width: 65ch;
+  font-family: var(--font-corps);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--encre);
+}
+
+/* --- La structure : role a gauche, couverture a droite -------------------- */
+
+.roles {
+  margin: var(--sp-7) 0 0;
+  font-family: var(--font-mono);
+}
+
+.roles__ligne {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: var(--sp-5);
+  padding-block: var(--sp-4);
+}
+
+/* Le filet interne passe a l'Encre a 12 % : sur le Gris brume du bandeau,
+   un filet Gris brume serait invisible. */
+.roles__ligne + .roles__ligne {
+  border-top: 1px solid color-mix(in srgb, var(--encre) 12%, transparent);
+}
+
+.roles__role {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--encre);
+}
+
+.roles__couvre {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: var(--encre);
+}
+
+/* --- Ce qu'on ne fait pas ------------------------------------------------- */
+
+.refus {
+  margin: var(--sp-7) 0 0;
+  padding: 0;
+  list-style: none;                        /* ni puce, ni numero */
+}
+
+.refus li {
+  padding-block: var(--sp-4);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  line-height: 1.55;
+  letter-spacing: 0.02em;
+  color: var(--encre);
+}
+
+.refus li + li { border-top: 1px solid var(--gris-brume); }
+
+@media (max-width: 639.98px) {
+  .ap { padding-block: 56px; }
+  .ap--suite { padding-top: 0; }
+
+  .roles__ligne {
+    grid-template-columns: 1fr;
+    gap: var(--sp-2);
+  }
+}
+
+/* --- Héros : note sous le CTA et crédit de l'image ------------------------ */
+
+.hero__note {
+  margin: var(--sp-4) 0 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: rgba(var(--blanc-casse-rgb), 0.7);
+}
+
+/* L'image montre un chantier client reel : l'attribution est obligatoire. */
+.hero__credit {
+  position: absolute;
+  left: var(--sp-5);
+  bottom: var(--sp-5);
+  z-index: 1;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: rgba(var(--blanc-casse-rgb), 0.6);
+}
+
+/* Surface sombre : l'anneau de focus passe au Blanc cassé (§15). */
+.hero :focus-visible { outline-color: var(--blanc-casse); }
+
+@media (max-width: 639.98px) {
+  .hero__credit { left: var(--sp-4); bottom: var(--sp-4); }
 }

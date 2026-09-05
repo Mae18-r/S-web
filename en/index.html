@@ -86,18 +86,24 @@
 
   <section class="hero">
 
-    <div class="decor-vagues decor-vagues--hero" aria-hidden="true">
-      <svg viewBox="0 0 2400 300" preserveAspectRatio="none" focusable="false">
-        <path vector-effect="non-scaling-stroke" class="vague vague--1" d="M -600.0 150.0 C -381.5 72.0 -218.5 72.0 0.0 150.0 C 218.5 228.0 381.5 228.0 600.0 150.0 C 818.5 72.0 981.5 72.0 1200.0 150.0 C 1418.5 228.0 1581.5 228.0 1800.0 150.0 C 2018.5 72.0 2181.5 72.0 2400.0 150.0 C 2618.5 228.0 2781.5 228.0 3000.0 150.0 C 3218.5 72.0 3381.5 72.0 3600.0 150.0 C 3818.5 228.0 3981.5 228.0 4200.0 150.0"/>
-        <path vector-effect="non-scaling-stroke" class="vague vague--2" d="M -600.0 190.0 C -490.7 248.0 -409.3 248.0 -300.0 190.0 C -190.7 132.0 -109.3 132.0 0.0 190.0 C 109.3 248.0 190.7 248.0 300.0 190.0 C 409.3 132.0 490.7 132.0 600.0 190.0 C 709.3 248.0 790.7 248.0 900.0 190.0 C 1009.3 132.0 1090.7 132.0 1200.0 190.0 C 1309.3 248.0 1390.7 248.0 1500.0 190.0 C 1609.3 132.0 1690.7 132.0 1800.0 190.0 C 1909.3 248.0 1990.7 248.0 2100.0 190.0 C 2209.3 132.0 2290.7 132.0 2400.0 190.0 C 2509.3 248.0 2590.7 248.0 2700.0 190.0 C 2809.3 132.0 2890.7 132.0 3000.0 190.0 C 3109.3 248.0 3190.7 248.0 3300.0 190.0 C 3409.3 132.0 3490.7 132.0 3600.0 190.0 C 3709.3 248.0 3790.7 248.0 3900.0 190.0"/>
-        <path vector-effect="non-scaling-stroke" class="vague vague--3" d="M -300.0 120.0 C -190.7 76.0 -109.3 76.0 0.0 120.0 C 109.3 164.0 190.7 164.0 300.0 120.0 C 409.3 76.0 490.7 76.0 600.0 120.0 C 709.3 164.0 790.7 164.0 900.0 120.0 C 1009.3 76.0 1090.7 76.0 1200.0 120.0 C 1309.3 164.0 1390.7 164.0 1500.0 120.0 C 1609.3 76.0 1690.7 76.0 1800.0 120.0 C 1909.3 164.0 1990.7 164.0 2100.0 120.0 C 2209.3 76.0 2290.7 76.0 2400.0 120.0 C 2509.3 164.0 2590.7 164.0 2700.0 120.0 C 2809.3 76.0 2890.7 76.0 3000.0 120.0 C 3109.3 164.0 3190.7 164.0 3300.0 120.0 C 3409.3 76.0 3490.7 76.0 3600.0 120.0 C 3709.3 164.0 3790.7 164.0 3900.0 120.0"/>
-        <path vector-effect="non-scaling-stroke" class="vague vague--4" d="M -400.0 225.0 C -327.2 259.0 -272.8 259.0 -200.0 225.0 C -127.2 191.0 -72.8 191.0 0.0 225.0 C 72.8 259.0 127.2 259.0 200.0 225.0 C 272.8 191.0 327.2 191.0 400.0 225.0 C 472.8 259.0 527.2 259.0 600.0 225.0 C 672.8 191.0 727.2 191.0 800.0 225.0 C 872.8 259.0 927.2 259.0 1000.0 225.0 C 1072.8 191.0 1127.2 191.0 1200.0 225.0 C 1272.8 259.0 1327.2 259.0 1400.0 225.0 C 1472.8 191.0 1527.2 191.0 1600.0 225.0 C 1672.8 259.0 1727.2 259.0 1800.0 225.0 C 1872.8 191.0 1927.2 191.0 2000.0 225.0 C 2072.8 259.0 2127.2 259.0 2200.0 225.0 C 2272.8 191.0 2327.2 191.0 2400.0 225.0 C 2472.8 259.0 2527.2 259.0 2600.0 225.0 C 2672.8 191.0 2727.2 191.0 2800.0 225.0 C 2872.8 259.0 2927.2 259.0 3000.0 225.0 C 3072.8 191.0 3127.2 191.0 3200.0 225.0 C 3272.8 259.0 3327.2 259.0 3400.0 225.0 C 3472.8 191.0 3527.2 191.0 3600.0 225.0 C 3672.8 259.0 3727.2 259.0 3800.0 225.0"/>
-      </svg>
-    </div>
+    <picture class="hero__media">
+      <!-- TODO: add a WebP source once a converter is available:
+             cwebp -q 80 assets/Heros-web.jpg -o assets/Heros-web.webp
+           then insert above the <img>:
+             <source srcset="../assets/Heros-web.webp" type="image/webp">
+           Not added now: a <source> pointing at a missing file breaks the
+           image, because <picture> selects on MIME support, not on the file
+           existing. -->
+      <img class="hero__image" src="../assets/Heros-web.jpg" alt=""
+           width="928" height="1152" fetchpriority="high" decoding="async">
+    </picture>
+
+    <div class="hero__voile" aria-hidden="true"></div>
 
     <div class="hero__contenu">
+      <p class="hero__eyebrow">Ottawa&ndash;Gatineau &middot; FR / EN</p>
 
-      <h1 class="hero__titre">We don't just deliver a website<br>We deliver what it takes to <span class="hero__accent">grow</span></h1>
+      <h1 class="hero__titre">We don't just deliver a website.<br>We deliver what it takes to <span class="hero__accent">grow</span>.</h1>
 
       <p class="hero__sous">Everything you need to be found and recognized, built deliberately for your business.</p>
 
@@ -107,7 +113,11 @@
           <path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.25"/>
         </svg>
       </a>
+
+      <p class="hero__note">Thirty minutes, no preparation.</p>
     </div>
+
+    <p class="hero__credit">Am&eacute;nagement Rivard &mdash; landscaping, Gatineau</p>
   </section>
 
   <section class="pourqui">
