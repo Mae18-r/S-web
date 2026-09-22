@@ -1032,14 +1032,22 @@ main { position: relative; }
   align-items: start;                  /* les deux colonnes calées en haut */
 }
 
-.impact__gauche { grid-column: 1 / span 5; }   /* 5 colonnes */
+/* Attribution, chiffre et enonce partagent un meme axe vertical : les boites
+   sont centrees dans la colonne, le texte reste alignes a gauche a l'interieur.
+   Le nombre, plus large que le paragraphe, deborde alors symetriquement sans
+   jamais sortir de la colonne. */
+.impact__gauche {
+  grid-column: 1 / span 5;
+  position: relative;                  /* ancre les anneaux */
+}
 .impact__droite { grid-column: 7 / span 6; }   /* 6 colonnes, une de gouttière */
 
 
 /* --- Attribution — requise et permanente (§03 eyebrow) ------------------- */
 
 .impact__source {
-  margin: 0 0 var(--sp-5);             /* 24 px sous l'attribution */
+  max-width: 24ch;
+  margin: 0 auto var(--sp-5);          /* meme axe que le chiffre */
   font: 400 13px/1.4 var(--font-mono);
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -1053,8 +1061,22 @@ main { position: relative; }
    -------------------------------------------------------------------------- */
 
 .impact__figure {
-  margin: 0 0 var(--sp-5);             /* 24 px sous le chiffre */
-  font-family: var(--font-display);
+  position: relative;                  /* ancre les anneaux */
+  white-space: nowrap;                 /* le signe ne passe jamais a la ligne */
+  /* Le nombre est plus large que le paragraphe : text-align ne suffit pas,
+     une ligne trop longue reste ancree a gauche. On lui donne sa largeur
+     naturelle, on pousse son bord gauche au milieu du paragraphe, puis on
+     le recule de sa demi-largeur. Les deux centres coincident alors
+     exactement, et les anneaux, centres sur la meme boite, aussi. */
+  width: max-content;
+  margin: 0 auto var(--sp-5);          /* centre dans la colonne */
+  /* Pile propre a ce chiffre : Georgia rend des chiffres a l'ancienne, ou le
+     « 7 » descend sous la ligne de base et n'a pas la hauteur du « 2 ».
+     Mesure au canvas : 2 = 78 px d'ascendante / 0 de descendante, 7 = 75,7 / 25,9.
+     Palatino et Iowan Old Style ont des chiffres alignes (2 et 7 a la meme
+     hauteur, aucune descendante). Georgia est volontairement exclue ici. */
+  font-family: "29LT Zaria Serif", Palatino, "Palatino Linotype",
+               "Iowan Old Style", serif;
   font-weight: 700;
   font-size: clamp(5rem, 10vw, 9rem);
   line-height: 1;
@@ -1067,6 +1089,8 @@ main { position: relative; }
 }
 
 .impact__valeur {
+  position: relative;
+  z-index: 1;
   display: inline-block;
   /* Boîte calée sur la largeur exacte de « 2,7 » (1,479 em, mesuré sur la
      fonte de repli à 144 px) : le × ne bouge donc jamais et se pose au plus
@@ -1083,17 +1107,29 @@ main { position: relative; }
    sa taille, en Encre, sur la même ligne de base. Jamais d'ambre ici — sur une
    statistique de crédibilité, un X orange se lit « erreur ». */
 .impact__signe {
-  font-size: 0.3333em;                 /* 9rem -> 3rem */
+  /* Signe aux trois quarts des chiffres : ceux-ci mesurent 95,1 px d'encre a
+     144 px de corps ; a 1,077 em le × en rend 71,4, soit un rapport de 0,751. */
+  font-size: 1.077em;
   color: var(--encre);
-  vertical-align: baseline;
+  /* Le glyphe × est dessine entierement au-dessus de la ligne de base : son
+     encre va de 113,5 px au-dessus a 8,1 px au-dessus, quand celle des
+     chiffres va de 78 px au-dessus a 27,4 px en dessous (le 7 et la virgule
+     descendent). Sans correction il flotte. On descend donc le signe de
+     35,5 px, soit 0,164 em de son propre corps : les deux encres partagent
+     alors le meme axe horizontal. */
+  /* Le × reste dessine au-dessus de la ligne de base : son centre d'encre
+     tombe 2 px sous celui des chiffres. On le remonte d'autant. */
+  vertical-align: 0.013em;
+  position: relative;
+  z-index: 1;
 }
 
 
 /* --- L'énoncé ------------------------------------------------------------- */
 
 .impact__enonce {
-  margin: 0;
   max-width: 24ch;
+  margin: 0 auto;                      /* boite centree, texte a gauche */
   font: 400 17px/1.6 var(--font-corps);
   color: var(--encre);
 }
@@ -3447,4 +3483,52 @@ main { position: relative; }
 
 @media (max-width: 639.98px) {
   .hero__credit { left: var(--sp-4); bottom: var(--sp-4); }
+}
+
+/* --- Impact : anneaux ondules derriere le chiffre -------------------------
+   Meme vocabulaire que les vagues des piliers — memes epaisseurs, memes deux
+   traits ambre, meme opacite — mais referme en cercle autour du nombre.
+   Le mouvement est une rotation : c'est la translation des vagues, portee
+   en coordonnees polaires. */
+
+.impact__anneaux {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  /* Assez large pour englober le chiffre ET le paragraphe qui le suit. */
+  width: 118%;
+  aspect-ratio: 1;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.impact__anneaux svg { display: block; width: 100%; height: 100%; }
+
+.anneau {
+  fill: none;
+  stroke: var(--gris-structure);
+  opacity: 0.16;
+  vector-effect: non-scaling-stroke;
+  transform-box: view-box;
+  transform-origin: 200px 200px;
+  animation: tourne linear infinite;
+}
+
+@keyframes tourne {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.anneau--1 { stroke-width: 6;   animation-duration: 38s; }
+.anneau--2 { stroke-width: 4;   animation-duration: 26s; animation-direction: reverse; }
+.anneau--3 { stroke-width: 2.5; animation-duration: 31s; }
+.anneau--4 { stroke-width: 3;   animation-duration: 21s; animation-direction: reverse; }
+
+/* Les deux memes traits ambre que les piliers. */
+.anneau--2 { stroke: var(--ambre); opacity: 0.30; }
+.anneau--4 { stroke: var(--ambre); opacity: 0.24; }
+
+@media (prefers-reduced-motion: reduce) {
+  .anneau { animation: none; }
 }
