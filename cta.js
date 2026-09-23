@@ -3,10 +3,12 @@
 (function () {
   'use strict';
   var b = document.querySelector('.cta-flottant');
-  var h = document.querySelector('.hero');
-  if (!b || !h || !window.IntersectionObserver) return;
+  /* On observe le jalon place apres le heros, pas le heros lui-meme : celui-ci
+     est collant, il ne quitte jamais l'ecran et resterait toujours intersecte. */
+  var jalon = document.querySelector('.hero__fin');
+  if (!b || !jalon || !window.IntersectionObserver) return;
 
   new IntersectionObserver(function (e) {
     b.classList.toggle('est-visible', !e[0].isIntersecting);
-  }, { threshold: 0 }).observe(h);
+  }, { threshold: 0 }).observe(jalon);
 })();

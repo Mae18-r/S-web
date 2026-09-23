@@ -5,6 +5,32 @@
    Aucune valeur hexadécimale hors de :root.
    ========================================================================== */
 
+/* --------------------------------------------------------------------------
+   Fonte display : Alegreya 700, auto-hebergee.
+   Auto-hebergee et non servie par Google : le CDN de Google transmet l'IP de
+   chaque visiteur, ce que la NF4 du PRD (Loi 25, LPRPDE) n'autorise pas pour
+   une clientele clinique. Deux sous-ensembles seulement, latin et latin-ext,
+   suffisants pour le francais et l'anglais.
+   -------------------------------------------------------------------------- */
+
+@font-face {
+  font-family: 'Alegreya';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('assets/fonts/alegreya-700-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Alegreya';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('assets/fonts/alegreya-700-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
   /* --- §02 Palette charte ------------------------------------------------ */
   --encre:           #14161A;  /* texte, fonds sombres, logo */
@@ -15,7 +41,11 @@
 
   /* --- §02 Tokens dérivés ------------------------------------------------ */
   --blanc:           #FFFFFF;  /* surface des cartes */
-  --ambre-texte:     var(--ambre);  /* alias : il n'y a plus qu'un seul ambre */
+  --ambre-texte:     var(--ambre);
+  /* Ambre de la charte, reserve aux surfaces sombres. Sur l'Encre le
+     --ambre du projet (#C23A00) tombe a 3,36:1, sous le seuil AA de 4,5 ;
+     le #FF5A1F y donne 5,81:1. Jamais sur fond clair, ou il chute a 2,9:1. */
+  --ambre-sur-sombre: #FF5A1F;  /* alias : il n'y a plus qu'un seul ambre */
 
   /* --- §02 Ombre (seule valeur colorée non tokenisable) ------------------ */
   --encre-rgb:       20, 22, 26;
@@ -28,7 +58,7 @@
   --radius-tranche:  8px;
 
   /* --- §03 Fontes -------------------------------------------------------- */
-  --font-display: "29LT Zaria Serif", Georgia, serif;
+  --font-display: 'Alegreya', Georgia, serif;
   --font-corps:   Arial, "Helvetica Neue", sans-serif;
   --font-mono:    "IBM Plex Mono", "Courier New", monospace;
 
@@ -183,6 +213,10 @@ a { color: inherit; }
 
 .entete {
   position: relative;                  /* ancre le panneau — pas de sticky */
+  /* Au-dessus de tout le reste : sans ca le heros, positionne et place plus
+     loin dans le DOM, se peint par-dessus le panneau ouvert et son titre
+     traverse les liens du menu. Le CTA flottant et la fleche sont a 20. */
+  z-index: 30;
   /* Le voile est ici : c'est le seul élément pleine largeur. La barre, elle,
      est limitée au conteneur de 1200 px. */
   background: rgba(var(--encre-rgb), 0.75);
@@ -192,6 +226,15 @@ a { color: inherit; }
 
 /* §15 — sur fond Encre l'anneau de focus passe en Blanc cassé. */
 .entete :focus-visible { outline-color: var(--blanc-casse); }
+
+/* Menu ouvert : le voile et la barre passent en Encre plein. Le gris compose
+   de la barre est cale sur le Blanc casse de la page ; au-dessus d'une photo
+   il ne masque plus rien et le panneau semble fondre dans l'image. Ouvert,
+   la barre et le panneau doivent lire comme un seul bloc opaque. */
+.entete.est-ouvert,
+.entete.est-ouvert .entete__barre {
+  background: var(--encre);
+}
 
 .entete__barre {
   position: relative;
@@ -519,7 +562,10 @@ a { color: inherit; }
 main { display: block; }
 
 .hero {
-  position: relative;
+  /* Collant : la section suivante remonte et le recouvre par le bas. C'est
+     .pourqui qui passe par-dessus, opaque et en z-index 1. */
+  position: sticky;
+  top: 0;
   height: 88vh;
   min-height: 640px;
   max-height: 900px;
@@ -528,8 +574,6 @@ main { display: block; }
   justify-content: center;
   overflow: hidden;                      /* borne l'image et le voile */
 
-  /* Ambre de la charte, uniquement ici : voir .hero__accent. */
-  --ambre-sur-sombre: #FF5A1F;
 }
 
 .hero__media,
@@ -1036,18 +1080,15 @@ main { position: relative; }
    sont centrees dans la colonne, le texte reste alignes a gauche a l'interieur.
    Le nombre, plus large que le paragraphe, deborde alors symetriquement sans
    jamais sortir de la colonne. */
-.impact__gauche {
-  grid-column: 1 / span 5;
-  position: relative;                  /* ancre les anneaux */
-}
+.impact__gauche { grid-column: 1 / span 5; }
 .impact__droite { grid-column: 7 / span 6; }   /* 6 colonnes, une de gouttière */
 
 
 /* --- Attribution — requise et permanente (§03 eyebrow) ------------------- */
 
 .impact__source {
-  max-width: 24ch;
-  margin: 0 auto var(--sp-5);          /* meme axe que le chiffre */
+  margin: 0 0 var(--sp-5);
+  text-align: center;                  /* meme axe que le chiffre */
   font: 400 13px/1.4 var(--font-mono);
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -1069,14 +1110,12 @@ main { position: relative; }
      le recule de sa demi-largeur. Les deux centres coincident alors
      exactement, et les anneaux, centres sur la meme boite, aussi. */
   width: max-content;
-  margin: 0 auto var(--sp-5);          /* centre dans la colonne */
-  /* Pile propre a ce chiffre : Georgia rend des chiffres a l'ancienne, ou le
-     « 7 » descend sous la ligne de base et n'a pas la hauteur du « 2 ».
-     Mesure au canvas : 2 = 78 px d'ascendante / 0 de descendante, 7 = 75,7 / 25,9.
-     Palatino et Iowan Old Style ont des chiffres alignes (2 et 7 a la meme
-     hauteur, aucune descendante). Georgia est volontairement exclue ici. */
-  font-family: "29LT Zaria Serif", Palatino, "Palatino Linotype",
-               "Iowan Old Style", serif;
+  margin: 0 auto var(--sp-5);          /* centre dans la colonne de gauche */
+  /* Alegreya rend elle aussi des chiffres a l'ancienne par defaut — le « 7 »
+     descend de 14,4 px — mais elle expose un jeu aligne. Le
+     font-variant-numeric plus bas l'active : le 2 et le 7 montent alors tous
+     deux a la hauteur de capitale, 93,5 px a 144 px de corps, sans descendante. */
+  font-family: var(--font-display);
   font-weight: 700;
   font-size: clamp(5rem, 10vw, 9rem);
   line-height: 1;
@@ -1092,14 +1131,12 @@ main { position: relative; }
   position: relative;
   z-index: 1;
   display: inline-block;
-  /* Boîte calée sur la largeur exacte de « 2,7 » (1,479 em, mesuré sur la
-     fonte de repli à 144 px) : le × ne bouge donc jamais et se pose au plus
-     près du 7. La plus large des 81 combinaisons fait 1,651 em, soit
-     0,172 em de débordement : l'écart de 0,18 em l'absorbe sans que les
-     chiffres touchent jamais le symbole.
-     À recalibrer si 29LT Zaria Serif est installée. */
-  width: 1.48em;
-  margin-right: 0.18em;                /* em du chiffre, pas du symbole */
+  /* Largeur exacte de « 2,7 » en Alegreya avec chiffres alignes et tabulaires :
+     1,1688 em, mesure identique pour les cent combinaisons « X,Y ». La boite
+     est donc juste, et le × ne bouge pas d'un pixel pendant le brassage.
+     L'ancienne valeur de 1,48 em laissait 45 px de vide a 144 px de corps. */
+  width: 1.169em;
+  margin-right: 0.1em;
   text-align: left;
 }
 
@@ -1107,9 +1144,10 @@ main { position: relative; }
    sa taille, en Encre, sur la même ligne de base. Jamais d'ambre ici — sur une
    statistique de crédibilité, un X orange se lit « erreur ». */
 .impact__signe {
-  /* Signe aux trois quarts des chiffres : ceux-ci mesurent 95,1 px d'encre a
-     144 px de corps ; a 1,077 em le × en rend 71,4, soit un rapport de 0,751. */
-  font-size: 1.077em;
+  /* Trois quarts des chiffres, recalcule pour Alegreya : la capitale fait
+     93,5 px a 144 px de corps, le × rend 0,396 px d'encre par px. A 1,23 em
+     il mesure 70,1 px, soit un rapport de 0,750. */
+  font-size: 1.23em;
   color: var(--encre);
   /* Le glyphe × est dessine entierement au-dessus de la ligne de base : son
      encre va de 113,5 px au-dessus a 8,1 px au-dessus, quand celle des
@@ -1117,22 +1155,15 @@ main { position: relative; }
      descendent). Sans correction il flotte. On descend donc le signe de
      35,5 px, soit 0,164 em de son propre corps : les deux encres partagent
      alors le meme axe horizontal. */
-  /* Le × reste dessine au-dessus de la ligne de base : son centre d'encre
-     tombe 2 px sous celui des chiffres. On le remonte d'autant. */
-  vertical-align: 0.013em;
+  /* Le × est dessine au-dessus de la ligne de base ; son centre d'encre tombe
+     legerement sous celui des chiffres alignes. On le remonte d'autant. */
+  vertical-align: -0.010em;
   position: relative;
   z-index: 1;
 }
 
 
 /* --- L'énoncé ------------------------------------------------------------- */
-
-.impact__enonce {
-  max-width: 24ch;
-  margin: 0 auto;                      /* boite centree, texte a gauche */
-  font: 400 17px/1.6 var(--font-corps);
-  color: var(--encre);
-}
 
 
 /* --- Colonne de droite ---------------------------------------------------- */
@@ -1154,21 +1185,7 @@ main { position: relative; }
   color: var(--encre);
 }
 
-.impact__items {
-  margin: 0;
-  padding: 0;
-  list-style: none;                    /* aucune puce */
-}
-
 /* Un filet entre les items, pas au-dessus ni en dessous. */
-.impact__items li + li { border-top: 1px solid var(--gris-brume); }
-
-.impact__items li {
-  padding-block: var(--sp-3);
-  font: 400 14px/1.5 var(--font-mono);
-  letter-spacing: 0.02em;
-  color: var(--encre);
-}
 
 
 /* --- Utilitaire : lisible par les lecteurs d'écran seulement -------------- */
@@ -2057,6 +2074,8 @@ main { position: relative; }
   gap: var(--logo-ecart);
   margin: 0;
 }
+
+.pied__accent { color: var(--ambre-sur-sombre); }
 
 .pied__citation {
   margin: 40px 0 0;
@@ -3494,10 +3513,13 @@ main { position: relative; }
 .impact__anneaux {
   position: absolute;
   left: 50%;
-  top: 50%;
+  /* Cale verticalement sur l'encre des chiffres, pas sur la boite de ligne :
+     l'offset est mesure a la sonde de ligne de base. */
+  top: calc(50% + 0.076em);
   transform: translate(-50%, -50%);
-  /* Assez large pour englober le chiffre ET le paragraphe qui le suit. */
-  width: 118%;
+  /* Agrandis sans toucher au corps des chiffres : 3,3 em font 475 px a
+     144 px, pour une colonne de 486. Ils restent donc dans la colonne. */
+  width: 3.3em;
   aspect-ratio: 1;
   z-index: 0;
   pointer-events: none;
@@ -3532,3 +3554,8 @@ main { position: relative; }
 @media (prefers-reduced-motion: reduce) {
   .anneau { animation: none; }
 }
+
+/* Jalon de fin de heros : hauteur nulle, il ne rend rien. Il sert uniquement
+   de repere de defilement au CTA flottant, le heros collant ne pouvant plus
+   jouer ce role. */
+.hero__fin { display: block; height: 0; }
