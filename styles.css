@@ -3555,6 +3555,18 @@ main { position: relative; }
   .anneau { animation: none; }
 }
 
+/* Le heros est collant, donc positionne : il se peint au-dessus de tout
+   element statique, quelle que soit sa place dans le DOM. Sans cette regle
+   les sections qui n'ont pas de position propre — les avis, la FAQ — le
+   laissent reapparaitre en bas de page.
+   :where() met la specificite a zero : les sections qui fixent deja leur
+   propre z-index, comme .process a 3, gardent le leur, et toute section
+   ajoutee plus tard est couverte d'office. */
+:where(.hero ~ section) {
+  position: relative;
+  z-index: 1;
+}
+
 /* Jalon de fin de heros : hauteur nulle, il ne rend rien. Il sert uniquement
    de repere de defilement au CTA flottant, le heros collant ne pouvant plus
    jouer ce role. */
