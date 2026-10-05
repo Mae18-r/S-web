@@ -1,4 +1,4 @@
-/* S-WEB — bascule du panneau de navigation mobile.
+/* S-WEB, bascule du panneau de navigation mobile.
    Le panneau est ouvert/fermé par la classe `est-ouvert` sur l'en-tête ;
    toute la transition est en CSS (spec-sheet §14). */
 

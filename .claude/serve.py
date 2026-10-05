@@ -5,11 +5,16 @@ alors seul, et garde styles.css ou cta.js pendant qu'on les modifie. On a
 plusieurs fois cru a un bug du site alors que la page tournait sur une
 ancienne version. Ce serveur force no-store sur tout.
 
+Il reproduit aussi le cleanUrls de vercel.json : les liens internes du site
+s'ecrivent sans .html, et sans cette regle le serveur local renverrait 404 la
+ou la production sert la page.
+
 Rien de ceci ne part en production : Vercel sert le site avec ses propres
-en-teces.
+en-tetes.
 """
 import functools
 import http.server
+import os
 import sys
 
 
@@ -19,6 +24,12 @@ class SansCache(http.server.SimpleHTTPRequestHandler):
         self.send_header("Pragma", "no-cache")
         self.send_header("Expires", "0")
         super().end_headers()
+
+    def translate_path(self, path):
+        chemin = super().translate_path(path)
+        if not os.path.exists(chemin) and os.path.isfile(chemin + ".html"):
+            return chemin + ".html"
+        return chemin
 
 
 if __name__ == "__main__":

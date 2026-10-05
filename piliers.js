@@ -1,6 +1,6 @@
-/* S-WEB — les trois panneaux dépliants.
+/* S-WEB, les trois panneaux dépliants.
    Un seul ouvert à la fois : 56 % + 22 % + 22 %. Sous 768 px tout est déplié
-   et les déclencheurs sont désactivés — la mise en page mobile n'a pas d'états. */
+   et les déclencheurs sont désactivés, la mise en page mobile n'a pas d'états. */
 
 (function () {
   'use strict';

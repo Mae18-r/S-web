@@ -1,4 +1,4 @@
-/* S-WEB — le CTA flottant se montre des qu'on a depasse le hero, et se retire
+/* S-WEB, le CTA flottant se montre des qu'on a depasse le hero, et se retire
    quand on y revient. Un seul observateur, sur le hero. */
 (function () {
   'use strict';

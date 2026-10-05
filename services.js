@@ -1,4 +1,4 @@
-/* S-WEB — les trois services apparaissent en fondu au defilement. L'etat de
+/* S-WEB, les trois services apparaissent en fondu au defilement. L'etat de
    depart est pose par le script, jamais par la feuille de style : sans JS les
    blocs restent simplement visibles, sans surcharge <noscript>. */
 (function () {

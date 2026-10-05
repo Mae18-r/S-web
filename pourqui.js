@@ -1,4 +1,4 @@
-/* S-WEB — revelation mot a mot, une fois. Decalage 45 ms, continu. */
+/* S-WEB, revelation mot a mot, une fois. Decalage 45 ms, continu. */
 (function () {
   'use strict';
   var s = document.querySelector('.pourqui');

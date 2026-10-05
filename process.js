@@ -1,4 +1,4 @@
-/* S-WEB — frise du processus. L'axe descend depuis l'etape 01 : sa hauteur
+/* S-WEB, frise du processus. L'axe descend depuis l'etape 01 : sa hauteur
    suit le nombre d'etapes revelees (N/5), sans ecouteur de defilement. Un flou
    court se dissipe a chaque croissance, sur le trait de 1 px et rien d'autre. */
 (function () {

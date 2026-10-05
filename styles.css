@@ -1988,35 +1988,49 @@ main { position: relative; }
   .service__liste-col { margin-top: var(--sp-5); }
 }
 
+/* --- Paliers sous 768 px --------------------------------------------------
+   ECART DEMANDE (Mae, 2026-10-05) : les trois paliers etaient empiles, chaque
+   carte reprenant ses huit libelles. Ils restent maintenant cote a cote comme
+   sur ordinateur, et le tableau defile lateralement dans son cadre.
+
+   Le commentaire d'origine de ce bloc promettait « aucun defilement
+   horizontal ». C'est ce point-la qui saute, et lui seul : la page, elle, ne
+   defile toujours pas lateralement, seul le tableau le fait.
+
+   La colonne des libelles est collee a gauche, sinon on ne sait plus quelle
+   ligne on lit une fois le tableau pousse. */
+
 @media (max-width: 767.98px) {
-  .paliers { grid-template-columns: 1fr; row-gap: var(--sp-6); }
-  .paliers__libelles { display: none; }         /* les libellés reviennent dans chaque carte */
-
-  .paliers__libelles,
-  .palier,
-  .palier__lignes {
-    display: block;                             /* plus de subgrid empile */
-    grid-row: auto;
+  .paliers-defilement {
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+    /* La zone de defilement part du bord de l'ecran, pas de la marge : on
+       gagne les 24 px de chaque cote pour le tableau. */
+    margin-inline: calc(var(--marge-ext) * -1);
+    padding-inline: var(--marge-ext);
   }
 
-  .palier {
-    border: 1px solid var(--gris-structure);
-    padding-bottom: var(--sp-2);
+  .paliers {
+    min-width: 600px;                  /* 4 colonnes encore lisibles */
+    grid-template-columns: minmax(0, 150px) repeat(3, minmax(0, 1fr));
   }
 
+  .paliers__libelles {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: var(--gris-brume);     /* le fond de la section, sinon les
+                                          colonnes passent dessous */
+  }
+
+  .paliers__libelles span,
   .palier__ligne {
-    justify-content: space-between;
-    text-align: left;
-    gap: var(--sp-4);
+    font-size: 13px;
+    min-height: 52px;
   }
 
-  .palier__ligne dt {
-    display: block;
-    flex: 1 1 auto;
-    color: var(--encre);
-  }
-
-  .palier__ligne dd { flex: 0 0 auto; text-align: right; }
+  .palier__ligne { padding-inline: var(--sp-2); }
 }
 
 @media (max-width: 639.98px) {
@@ -2174,6 +2188,9 @@ main { position: relative; }
 .pied__legal {
   grid-column: 1 / -1;
   margin: var(--sp-4) 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-5);
 }
 
 .pied__lien--legal {
@@ -3014,102 +3031,71 @@ main { position: relative; }
 
 .pf-index { padding-bottom: var(--sp-9); }
 
+/* --- Galerie -------------------------------------------------------------
+   Les captures ne sont plus repliees : les sept sites sont visibles d'un
+   coup, en deux colonnes. Au survol, la carte grandit.
+
+   ECART DEMANDE (Mae, 2026-10-05) : §05 pose « Hover (if clickable) darkens
+   the border only. No lift, no scale » et §14 « no hover transforms ».
+   L'agrandissement au survol a ete demande explicitement. Le reste de la
+   regle tient : pas d'ombre, pas d'angle arrondi, bordure qui fonce. */
 .index-proj {
   width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
   margin-inline: auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-8) var(--sp-7);
 }
 
 .proj {
   display: block;
-  border-top: 1px solid var(--gris-brume);
   text-decoration: none;
   color: inherit;
+  transition: transform var(--duree-panneau) var(--courbe);
 }
 
-.proj:last-child { border-bottom: 1px solid var(--gris-brume); }
-
-.proj__rangee {
-  display: grid;
-  grid-template-columns: 1fr 220px 150px;   /* sans numero */
-  align-items: center;
-  gap: var(--sp-5);
-  padding-block: 26px;
+.proj:hover,
+.proj:focus-visible {
+  transform: scale(1.03);
+  position: relative;
+  z-index: 1;                            /* la carte agrandie passe devant */
 }
 
-.proj__nom {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.75rem, 2.4vw + 0.5rem, 2.375rem);
-  line-height: 1.1;
-  letter-spacing: -0.01em;
-  color: var(--encre);
-}
+/* --- Le cadre de la capture ---------------------------------------------- */
 
-.proj__secteur {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--gris-structure);
-}
-
-.proj__visiter {
-  justify-self: end;
-  font-family: var(--font-corps);
-  font-weight: 500;
-  font-size: 16px;
-  color: var(--ambre);
-  white-space: nowrap;
-}
-
-.proj:hover .proj__visiter { text-decoration: underline; text-underline-offset: 3px; }
-
-/* --- L'apercu ------------------------------------------------------------- */
-
-/* :hover et :focus-within plutot qu'un index suivi en JS : un seul apercu
-   ouvert a la fois par construction, et le clavier y a droit aussi. */
+/* Hauteur fixe pour toutes les cartes : les captures n'ont pas toutes le
+   meme format (1440 x 820 pour les unes, 800 x 960 pour les autres), et
+   object-fit les ramene au meme cadrage, cale en haut sur le heros. */
 .proj__apercu {
   display: block;
-  max-height: 0;
-  opacity: 0;
+  aspect-ratio: 16 / 10;
   overflow: hidden;
-  transition: max-height .38s cubic-bezier(.2,.7,.2,1), opacity .28s ease;
+  border: 1px solid var(--gris-brume);
+  background: var(--blanc);
+  transition: border-color var(--duree-micro) var(--courbe);
 }
 
 .proj:hover .proj__apercu,
-.proj:focus-visible .proj__apercu {
-  max-height: 760px;                     /* > 683 px + 26 px au conteneur
-                                            plein (1200 px) : la hauteur
-                                            reelle est bornee par l'image */
-  opacity: 1;
-}
+.proj:focus-visible .proj__apercu { border-color: var(--gris-structure); }
 
-/* Hauteur libre : le ratio intrinseque des captures (2880 x 1640) fixe la
-   hauteur, donc le heros de chaque site apparait en entier au lieu d'etre
-   recadre sur une bande. */
 .proj__image {
   display: block;
   width: 100%;
-  height: auto;
-  margin-bottom: 26px;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
 }
 
 .proj__gabarit {
   display: flex;
   width: 100%;
-  aspect-ratio: 2880 / 1640;
-  margin-bottom: 26px;
-}
-
-/* Gabarit raye, dans les tons de surface existants. */
-.proj__gabarit {
+  height: 100%;
   align-items: center;
   justify-content: center;
   background: repeating-linear-gradient(
     45deg,
     var(--blanc-casse) 0 10px,
     var(--gris-brume)  10px 20px);
-  border: 1px solid var(--gris-brume);
 }
 
 .proj__gabarit-texte {
@@ -3121,45 +3107,71 @@ main { position: relative; }
   padding: var(--sp-2) var(--sp-4);
 }
 
+/* --- La legende sous la capture ------------------------------------------ */
+.proj__rangee {
+  display: block;
+  padding-top: var(--sp-4);
+}
+
+.proj__nom {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 1.6vw + 0.5rem, 1.875rem);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--encre);
+}
+
+.proj__secteur {
+  display: block;
+  margin-top: var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gris-structure);
+}
+
+.proj__visiter {
+  display: inline-block;
+  margin-top: var(--sp-3);
+  min-height: 44px;                      /* cible tactile, plancher §08 */
+  line-height: 44px;
+  font-family: var(--font-corps);
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--ambre-texte);             /* §01 : jamais --ambre en texte */
+  white-space: nowrap;
+}
+
+.proj:hover .proj__visiter,
+.proj:focus-visible .proj__visiter {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .index-proj__sansjs { font-family: var(--font-corps); }
 
 @media (prefers-reduced-motion: reduce) {
+  .proj,
   .proj__apercu { transition: none; }
+  .proj:hover,
+  .proj:focus-visible { transform: none; }
 }
 
-/* --- Sous 768 px : plus de survol, tout est empile ----------------------- */
+/* --- Sous 768 px : une colonne, pas d'agrandissement --------------------- */
 
 @media (max-width: 767.98px) {
   .pf-hero { padding-block: 56px; }
 
-  .proj__rangee {
-    display: block;
-    padding-block: var(--sp-5);
+  .index-proj {
+    grid-template-columns: 1fr;
+    gap: var(--sp-7);
   }
 
-  .proj__secteur,
-  .proj__visiter { display: block; }
-  .proj__secteur { margin-top: var(--sp-2); }
-
-  /* Cible tactile : la rangee entiere, et le lien lui-meme au plancher. */
-  .proj__visiter {
-    justify-self: start;
-    margin-top: var(--sp-4);
-    min-height: 44px;
-    line-height: 44px;
-  }
-
-  /* L'apercu ne depend plus du survol : toujours visible, en tete de bloc. */
-  .proj__apercu {
-    max-height: none;
-    opacity: 1;
-    transition: none;
-  }
-
-  .proj__image,
-  .proj__gabarit { height: auto; margin-bottom: 0; }
-
-  .proj { display: flex; flex-direction: column-reverse; }
+  .proj:hover,
+  .proj:focus-visible { transform: none; }
 }
 
 /* ==========================================================================
@@ -3571,3 +3583,196 @@ main { position: relative; }
    de repere de defilement au CTA flottant, le heros collant ne pouvant plus
    jouer ce role. */
 .hero__fin { display: block; height: 0; }
+
+
+/* ==========================================================================
+   AUDIT DU 28 SEPTEMBRE 2026
+   Blocs ajoutes par les correctifs. Aucun jeton nouveau : tout vient de
+   :root, et l'ambre ne sert qu'a marquer une action.
+   ========================================================================== */
+
+/* --- Renvoi sous un service : ce qui se prend sans le site ---------------- */
+.service__renvoi {
+  margin: var(--sp-3) 0 0;
+  font: 400 15px/1.55 var(--font-corps);
+  color: var(--gris-structure);
+}
+
+.service__renvoi a {
+  color: var(--encre);
+  text-decoration: underline;
+  text-decoration-color: var(--ambre);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  transition: color var(--duree-micro) var(--courbe);
+}
+
+.service__renvoi a:hover { color: var(--ambre-texte); }
+
+/* --- Note sous la liste des modules --------------------------------------- */
+.modules__note {
+  margin: var(--sp-6) 0 0;
+  max-width: 65ch;
+  font: 400 15px/1.6 var(--font-corps);
+  color: var(--gris-structure);
+}
+
+/* --- Ligne a part dans le tableau du forfait ------------------------------
+   La receptionniste n'est pas comprise dans le prix de base. C'est la
+   colonne de droite qui le dit, « En option » au lieu d'un metier.
+
+   Le libelle reste a l'encre : --gris-structure sur --gris-brume ne donne
+   que 4,12:1, sous le plancher AA de 4,5:1. */
+.tableau__option .tableau__item { color: var(--encre); }
+
+/* --- Bandeau de la receptionniste, sur l'accueil -------------------------- */
+.recept {
+  background: var(--gris-brume);
+  padding-block: var(--sp-9);
+}
+
+.recept__contenu {
+  width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
+  margin-inline: auto;
+}
+
+.recept__eyebrow {
+  margin: 0 0 var(--sp-3);
+  font: 400 13px/1.4 var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gris-structure);
+}
+
+.recept__titre {
+  margin: 0 0 var(--sp-5);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 3vw + 0.5rem, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  color: var(--encre);
+}
+
+.recept__texte {
+  margin: 0;
+  max-width: 60ch;
+  font: 400 17px/1.6 var(--font-corps);
+  color: var(--encre);
+}
+
+.recept__suite { margin: var(--sp-6) 0 0; }
+
+/* --- Reseaux sociaux dans le pied de page --------------------------------- */
+.pied__social {
+  display: flex;
+  gap: var(--sp-2);
+  margin: var(--sp-5) 0 0;
+}
+
+.pied__social-lien {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 44px;                    /* cible tactile, plancher §08 */
+  block-size: 44px;
+  margin-inline-start: -10px;           /* l'icone reste alignee sur le texte */
+  color: var(--gris-brume);
+  transition: color var(--duree-micro) var(--courbe);
+}
+
+.pied__social-lien:first-of-type { margin-inline-start: -10px; }
+.pied__social-lien:hover { color: var(--blanc-casse); }
+
+.pied__icone {
+  inline-size: 24px;
+  block-size: 24px;
+  display: block;
+}
+
+/* --- Reponse du formulaire ------------------------------------------------ */
+.form__reponse {
+  margin: var(--sp-5) 0 0;
+  padding: var(--sp-4);
+  border: 1px solid var(--gris-structure);
+  background: var(--blanc);
+  font: 400 16px/1.6 var(--font-corps);
+  color: var(--encre);
+}
+
+.form__reponse--succes { border-color: var(--encre); }
+
+/* Pas de rouge dans la palette : l'echec se marque a l'ambre texte, comme
+   les erreurs de champ. */
+.form__reponse--echec {
+  border-color: var(--ambre-texte);
+  color: var(--ambre-texte);
+}
+
+.form__reponse a { color: inherit; }
+
+/* Le script valide avant d'envoyer : :user-invalid ne suffit pas, un champ
+   jamais touche ne le declenche pas. */
+.champ.est-invalide .champ__erreur { display: block; }
+.champ.est-invalide .champ__saisie { border-color: var(--ambre-texte); }
+
+/* --- Pages legales -------------------------------------------------------- */
+.legal { max-width: 70ch; }
+
+.legal__maj {
+  margin: 0 0 var(--sp-7);
+  font: 400 13px/1.4 var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gris-structure);
+}
+
+.legal__h2 {
+  margin: var(--sp-7) 0 var(--sp-4);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 3vw + 0.5rem, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  color: var(--encre);
+}
+
+.legal p {
+  margin: 0 0 var(--sp-4);
+  max-width: 65ch;
+  font: 400 17px/1.6 var(--font-corps);
+  color: var(--encre);
+}
+
+.legal a {
+  color: var(--encre);
+  text-decoration: underline;
+  text-decoration-color: var(--ambre);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  transition: color var(--duree-micro) var(--courbe);
+}
+
+.legal a:hover { color: var(--ambre-texte); }
+
+@media (max-width: 767px) {
+  .recept { padding-block: 56px; }
+  .legal p { font-size: 16px; }
+}
+
+/* Liens dans les reponses de la FAQ : meme regle que les liens de corps de
+   texte, §09. Sans cette regle ils heritent simplement de la couleur du
+   paragraphe et ne se voient pas. */
+.faq__reponse a {
+  color: var(--encre);
+  text-decoration: underline;
+  text-decoration-color: var(--ambre);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  transition: color var(--duree-micro) var(--courbe);
+}
+
+.faq__reponse a:hover { color: var(--ambre-texte); }
+
+/* Reponse a deux paragraphes : seul le dernier porte la marge de fin. */
+.faq__reponse p:not(:last-child) { padding-bottom: var(--sp-4); }

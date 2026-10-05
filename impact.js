@@ -1,6 +1,6 @@
-/* S-WEB — le chiffre se pose, il ne défile pas.
+/* S-WEB, le chiffre se pose, il ne défile pas.
    Une seule fois, puis l'observateur se déconnecte : jamais de rejeu.
-   900 ms — ralentissement progressif jusqu'à ~600 ms, puis deux intervalles
+   900 ms, ralentissement progressif jusqu'à ~600 ms, puis deux intervalles
    nettement plus longs, et on se pose sur la valeur déjà écrite dans le HTML.
    Le « × » n'est jamais touché : seuls les chiffres tournent. */
 

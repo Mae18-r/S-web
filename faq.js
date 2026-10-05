@@ -1,4 +1,4 @@
-/* S-WEB — FAQ en accordeon. Plusieurs reponses peuvent rester ouvertes en
+/* S-WEB, FAQ en accordeon. Plusieurs reponses peuvent rester ouvertes en
    meme temps : ouvrir l'une n'en ferme aucune autre.
 
    Le script ne fait que basculer aria-expanded et une classe ; l'ouverture
