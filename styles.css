@@ -2193,12 +2193,16 @@ main { position: relative; }
   gap: var(--sp-2) var(--sp-5);
 }
 
+/* --gris-structure sur l'Encre du pied ne donne que 3,55:1, sous le plancher
+   AA de 4,5:1. Ces liens sont obligatoires, ils doivent se lire : ils passent
+   au Gris brume (14,63:1), deja la couleur du reste du pied. Ce qui les
+   distingue des autres liens reste la mono a 12 px. */
 .pied__lien--legal {
   font-family: var(--font-mono);
   font-size: 12px;
   line-height: 1.5;
   letter-spacing: 0.02em;
-  color: var(--gris-structure);
+  color: var(--gris-brume);
 }
 
 .pied__lien--legal:hover { color: var(--blanc-casse); }
@@ -3781,3 +3785,97 @@ main { position: relative; }
    seul un robot le remplit. display:none est exige par le service, et sort
    du meme coup le champ du clavier et des lecteurs d'ecran. */
 .piege { display: none; }
+
+/* ==========================================================================
+   BANDEAU DES TEMOINS
+   Pose en bas de l'ecran, au-dessus de tout, tant que le choix n'est pas
+   fait. Construit par temoins.js, jamais ecrit dans les pages.
+
+   Les deux boutons sont secondaires, a poids egal : refuser doit etre aussi
+   simple qu'accepter, et §06 ne veut qu'un seul bouton primaire par ecran.
+   ========================================================================== */
+
+.temoins {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;                           /* au-dessus du CTA flottant (20)
+                                            et de l'en-tete (30) */
+  background: var(--blanc);
+  border-top: 1px solid var(--encre);
+  padding-block: var(--sp-5);
+  padding-bottom: calc(var(--sp-5) + env(safe-area-inset-bottom, 0px));
+}
+
+.temoins:focus { outline: none; }        /* le cadre vient de la bordure */
+
+.temoins__contenu {
+  width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
+  margin-inline: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4) var(--sp-6);
+}
+
+.temoins__texte { flex: 1 1 32ch; }
+
+.temoins__eyebrow {
+  margin: 0 0 var(--sp-2);
+  font: 400 13px/1.4 var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gris-structure);
+}
+
+.temoins__phrase {
+  margin: 0;
+  max-width: 65ch;
+  font: 400 15px/1.6 var(--font-corps);
+  color: var(--encre);
+}
+
+.temoins__phrase a {
+  color: var(--encre);
+  text-decoration: underline;
+  text-decoration-color: var(--ambre);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  transition: color var(--duree-micro) var(--courbe);
+}
+
+.temoins__phrase a:hover { color: var(--ambre-texte); }
+
+.temoins__boutons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  flex: 0 0 auto;
+}
+
+/* Le CTA flottant et la fleche de retour occupent le meme bas d'ecran :
+   ils s'effacent tant que le choix n'est pas fait. */
+.a-temoins .cta-flottant,
+.a-temoins .haut { display: none; }
+
+/* Le lien de reouverture du pied de page est un <button> : il declenche une
+   action, il ne mene nulle part. On lui retire son apparence native pour
+   qu'il se lise comme les deux liens legaux a cote. */
+.pied__lien--bouton {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  /* Pas de `font: inherit` ici : le raccourci ecraserait la mono 12 px que
+     .pied__lien--legal pose, et le bouton repasserait en Arial 17 px. */
+}
+
+@media (max-width: 639.98px) {
+  .temoins__contenu { gap: var(--sp-4); }
+  .temoins__boutons { width: 100%; }
+  .temoins__boutons .bouton { flex: 1 1 0; }
+}
