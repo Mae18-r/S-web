@@ -3,23 +3,24 @@
    Avant : action="#", aucun script. Le formulaire se rechargeait et la
    demande etait perdue sans que personne ne le sache, ni le prospect ni nous.
 
-   Deux chemins, selon POINT_ENVOI :
+   L'envoi passe par Web3Forms, qui relaie la demande vers la boite de S-WEB.
+   La cle d'acces n'est pas un secret : elle est publique par construction et
+   ne sert qu'a diriger l'envoi vers le bon compte. Ce sont le champ piege
+   `botcheck` et le quota du service qui tiennent les robots a distance.
 
-   - POINT_ENVOI rempli (Formspree, Web3Forms, fonction Vercel) : envoi en
-     arriere-plan, le visiteur ne quitte pas la page.
-   - POINT_ENVOI vide : on ouvre le logiciel de courriel du visiteur avec la
-     demande deja ecrite, et on le dit clairement a l'ecran. C'est moins bon
-     qu'un envoi direct, mais rien ne se perd en silence.
+   Avec JavaScript : envoi en arriere-plan, le visiteur ne quitte pas la page.
+   Sans JavaScript : le formulaire poste directement vers Web3Forms, qui
+   affiche sa propre page de confirmation.
 
-   Sans JavaScript, le formulaire garde son action mailto : le resultat est
-   le meme, en moins soigne.
+   Si l'envoi echoue (reseau coupe, service indisponible), on affiche
+   l'adresse courriel plutot que de laisser croire que c'est parti.
 
-   Loi 25 : ce que le formulaire fait des coordonnees est decrit dans la
-   politique de confidentialite. Si POINT_ENVOI change, cette page change. */
+   Loi 25 : le passage par Web3Forms est declare dans la politique de
+   confidentialite. Si ce point d'envoi change, cette page change. */
 (function () {
   'use strict';
 
-  var POINT_ENVOI = '';
+  var POINT_ENVOI = 'https://api.web3forms.com/submit';
   var COURRIEL = 's.webagencyca@gmail.com';
 
   var form = document.querySelector('.form');
@@ -28,20 +29,13 @@
   var anglais = (document.documentElement.lang || 'fr').slice(0, 2) === 'en';
 
   var MOTS = anglais ? {
-    sujet:   'Call request',
     envoi:   'Sending…',
     merci:   'Thank you, we have your request. We answer within 24 to 48 business hours.',
-    courriel:'Your email program just opened with your request. Send it and we will answer '
-           + 'within 24 to 48 business hours. If nothing opened, write to us at ',
     echec:   'The send failed. Write to us at ',
     envoyer: 'Send'
   } : {
-    sujet:   'Demande d’appel',
     envoi:   'Envoi en cours…',
     merci:   'Merci, votre demande est reçue. On répond en 24 à 48 h ouvrables.',
-    courriel:'Votre logiciel de courriel vient de s’ouvrir avec votre demande. Envoyez-le et '
-           + 'on vous répond en 24 à 48 h ouvrables. Si rien ne s’est ouvert, '
-           + 'écrivez-nous à ',
     echec:   'L’envoi a échoué. Écrivez-nous à ',
     envoyer: 'Envoyer'
   };
@@ -84,53 +78,9 @@
     return !premier;
   }
 
-  /* Le nom lisible d'un champ. Les boutons radio n'ont ni id ni <label for>
-     qui leur soit propre : leur intitule est la <legend> du fieldset, et leur
-     valeur le texte affiche a cote du bouton, pas l'attribut value. */
-  function intitule(champ) {
-    var etiquette = champ.id && form.querySelector('label[for="' + champ.id + '"]');
-    if (!etiquette) {
-      var groupe = champ.closest('fieldset');
-      etiquette = groupe && groupe.querySelector('legend');
-    }
-    if (!etiquette) return champ.name;
-    /* L'intitule porte aussi la bulle d'aide et la mention (facultatif).
-       On travaille sur une copie pour les retirer sans toucher a la page. */
-    var copie = etiquette.cloneNode(true);
-    [].forEach.call(copie.querySelectorAll('.aide, .champ__facultatif'), function (n) {
-      n.remove();
-    });
-    return copie.textContent.replace(/\s+/g, ' ').trim();
-  }
-
-  function valeur(champ) {
-    if (champ.type !== 'radio' && champ.type !== 'checkbox') return champ.value;
-    var visible = champ.closest('label');
-    visible = visible && visible.querySelector('.radio__texte');
-    return visible ? visible.textContent.trim() : champ.value;
-  }
-
-  function contenu() {
-    var lignes = [];
-    [].forEach.call(form.elements, function (champ) {
-      if (!champ.name || champ.type === 'submit') return;
-      if ((champ.type === 'radio' || champ.type === 'checkbox') && !champ.checked) return;
-      lignes.push(intitule(champ) + ' : ' + valeur(champ));
-    });
-    return lignes.join('\n');
-  }
-
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     if (!valide()) return;
-
-    if (!POINT_ENVOI) {
-      window.location.href = 'mailto:' + COURRIEL
-        + '?subject=' + encodeURIComponent(MOTS.sujet)
-        + '&body=' + encodeURIComponent(contenu());
-      dis(MOTS.courriel, true, 'succes');
-      return;
-    }
 
     if (bouton) bouton.disabled = true;
     if (libelle) libelle.textContent = MOTS.envoi;
@@ -140,7 +90,11 @@
       headers: { Accept: 'application/json' },
       body: new FormData(form)
     }).then(function (r) {
-      if (!r.ok) throw new Error(r.status);
+      return r.json().catch(function () { return { success: r.ok }; });
+    }).then(function (recu) {
+      /* Web3Forms porte l'echec dans le corps de la reponse autant que dans
+         le code HTTP : on verifie les deux. */
+      if (!recu || recu.success !== true) throw new Error('refus');
       form.reset();
       dis(MOTS.merci, false, 'succes');
     }).catch(function () {

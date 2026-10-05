@@ -132,8 +132,14 @@
 
       <div class="reserver__droite">
 
-        <form class="form" action="mailto:s.webagencyca@gmail.com" method="post"
-              enctype="text/plain" novalidate>
+        <form class="form" action="https://api.web3forms.com/submit" method="post" novalidate>
+
+        <input type="hidden" name="access_key" value="0a0f23d1-4bc5-4973-86af-d6e6297a0d74">
+        <input type="hidden" name="subject" value="Call request from s-webagency.com">
+        <!-- Piege a robots : Web3Forms rejette l'envoi si ce champ est rempli.
+             Il doit rester en display:none, et hors du clavier et des lecteurs
+             d'ecran. -->
+        <input class="piege" type="checkbox" name="botcheck" tabindex="-1" aria-hidden="true">
 
         <div class="champ">
           <label class="champ__label" for="entreprise">Business name</label>
@@ -151,7 +157,7 @@
 
         <div class="champ">
           <label class="champ__label" for="courriel">Email</label>
-          <input class="champ__saisie" type="email" id="courriel" name="courriel" required
+          <input class="champ__saisie" type="email" id="courriel" name="email" required
                  aria-describedby="courriel-err">
           <p class="champ__erreur" id="courriel-err"><span class="champ__croix" aria-hidden="true">&times;</span> Enter a valid email address.</p>
         </div>

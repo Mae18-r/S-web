@@ -3776,3 +3776,8 @@ main { position: relative; }
 
 /* Reponse a deux paragraphes : seul le dernier porte la marge de fin. */
 .faq__reponse p:not(:last-child) { padding-bottom: var(--sp-4); }
+
+/* Champ piege du formulaire : Web3Forms rejette l'envoi s'il est rempli, et
+   seul un robot le remplit. display:none est exige par le service, et sort
+   du meme coup le champ du clavier et des lecteurs d'ecran. */
+.piege { display: none; }
