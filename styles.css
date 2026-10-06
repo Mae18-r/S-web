@@ -4499,8 +4499,10 @@ main { position: relative; }
 
 /* --- 1. Le prix ----------------------------------------------------------- */
 
+/* Le prix est passe SOUS les trois cartes : 64 px l'en separent, la ou il
+   n'en demandait que 32 quand il suivait le H2. */
 .forfait__prix {
-  margin-top: var(--sp-6);
+  margin-top: var(--sp-8);
   transition:
     opacity var(--duree-panneau) var(--courbe),
     transform var(--duree-panneau) var(--courbe);
@@ -4530,12 +4532,33 @@ main { position: relative; }
   color: var(--encre);
 }
 
+/* Renvoi vers la note. Il reste en Encre : §02 reserve l'ambre a une action
+   ou a un nombre, et une etoile n'est ni l'un ni l'autre. Taille posee en em,
+   donc elle suit le montant a toutes les largeurs. */
+.forfait__etoile {
+  font-size: 0.34em;
+  vertical-align: super;
+  line-height: 0;
+  margin-left: 0.06em;
+}
+
+/* Ce que le prix ne comprend pas. --gris-structure ne donne que 4,12:1 sur le
+   Gris brume de la section, sous le plancher AA : on reste a l'Encre. */
+.forfait__note {
+  margin: var(--sp-4) 0 0;
+  max-width: 60ch;
+  font: 400 15px/1.55 var(--font-corps);
+  color: var(--encre);
+}
+
 .forfait__cta { margin: var(--sp-5) 0 0; }
 
 /* --- 2. Les trois piliers ------------------------------------------------- */
 
+/* Les cartes suivent desormais le H2 directement : §04 demande 32 px entre
+   un titre et son contenu, pas 64. */
 .forfait__piliers {
-  margin-top: var(--sp-8);
+  margin-top: var(--sp-6);
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--sp-5);
