@@ -919,10 +919,17 @@ main { position: relative; }
   color: inherit;
 }
 
+/* `nowrap` n'est pas cosmetique ici. Ecrit a la verticale, le titre se
+   renvoyait a la ligne quand la hauteur disponible ne suffisait pas. Or cette
+   hauteur est celle de la rangee, qui est elle-meme fixee par le plus grand
+   des titres : la mise en page se mordait la queue, et la hauteur de la
+   section changeait selon la tranche ouverte. Sans renvoi, la longueur du
+   titre vertical est une constante, et tout le reste se calcule. */
 .pilier__titre {
   margin: 0;
   writing-mode: vertical-rl;
   transform: rotate(180deg);
+  white-space: nowrap;
   font: 700 40px/1.1 var(--font-display);    /* même fonte qu'à l'ouverture */
   letter-spacing: -0.005em;
   color: inherit;
@@ -938,30 +945,56 @@ main { position: relative; }
 
 /* --- Le corps -------------------------------------------------------------- */
 
+/* Le tremblement au survol venait de la hauteur, pas de l'opacite.
+
+   Les trois panneaux n'ont pas la meme hauteur une fois ouverts : 586, 494 et
+   540 px a 1280 px de large. Avec `display: none` sur les panneaux fermes, la
+   rangee prenait la hauteur du seul panneau ouvert, donc passer d'une tranche
+   a l'autre faisait sauter la section de 92 px, et toute la page avec.
+
+   Les trois corps restent donc dans la mise en page en permanence. La rangee
+   fait alors toujours la hauteur du plus grand des trois, quelle que soit la
+   tranche ouverte : plus rien ne bouge verticalement.
+
+   `visibility` plutot qu'une opacite seule : elle sort aussi le panneau ferme
+   du clavier et des lecteurs d'ecran. Elle ne s'interpole pas, on la retarde
+   donc de la duree du fondu a la fermeture, et on la rend immediate a
+   l'ouverture. */
 .pilier__corps {
   padding: 0 var(--sp-5) var(--sp-6);
-  display: none;
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity    var(--duree-panneau) var(--courbe),
+    visibility 0s linear var(--duree-panneau);
 }
 
-/* Le corps apparaissait d'un coup, en pleine opacite, pendant que la tranche
-   s'elargissait encore sur 400 ms : le texte se composait a une largeur qui
-   n'etait pas la sienne, puis se recomposait. C'est le saut qu'on voyait.
-
-   `display` ne s'anime pas, mais une animation posee avec un retard, elle,
-   part bien au moment ou l'element devient rendu. Avec `both`, l'opacite
-   reste a zero pendant le retard : le texte ne se montre qu'une fois la
-   largeur presque atteinte, et plus rien ne se recompose a l'ecran. */
-/* Le retard vaut la duree complete de l'elargissement, pas la moitie : a
-   180 ms le texte reparaissait pendant que la colonne bougeait encore, et les
-   lignes de la liste se recomposaient a chaque image. */
 .pilier[data-ouvert="true"] .pilier__corps {
-  display: block;
-  animation: pilier-corps 200ms var(--courbe) 400ms both;
+  visibility: visible;
+  opacity: 1;
+  transition:
+    opacity    var(--duree-panneau) var(--courbe),
+    visibility 0s;
 }
 
-@keyframes pilier-corps {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+/* Pendant que piliers.js mesure les trois etats, aucune transition : sinon on
+   lirait des hauteurs en cours d'animation au lieu des hauteurs finales. La
+   mesure tient dans une seule tache, rien n'est peint entre-temps. */
+.piliers__rangee.est-mesuree .pilier,
+.piliers__rangee.est-mesuree .pilier__corps,
+.piliers__rangee.est-mesuree .pilier[data-ouvert="true"] .pilier__corps,
+.piliers__rangee.est-mesuree .icone,
+.piliers__rangee.est-mesuree .icone__trait,
+.piliers__rangee.est-mesuree .icone__plein { transition: none; }
+
+/* Largeur figee, posee par piliers.js : celle qu'aura la tranche une fois
+   ouverte. Le texte est donc compose une seule fois, a sa largeur finale, et
+   la tranche ne fait que le devoiler en s'elargissant. Sans ca il se
+   recomposait pendant l'animation et la hauteur sautait de 21 px au passage.
+   Le depassement est masque par l'overflow de la tranche. */
+.pilier__interieur {
+  width: var(--tranche-ouverte, auto);
+}
 }
 
 .pilier__desc {
@@ -1099,7 +1132,7 @@ main { position: relative; }
     display: grid;
     grid-template-rows: 0fr;
     padding: 0 var(--sp-5);
-    animation: none;                   /* le fondu du desktop ne sert plus */
+    visibility: visible;               /* c'est la rangee 0fr qui replie ici */
     opacity: 1;
     transition:
       grid-template-rows var(--duree-panneau) var(--courbe),
@@ -1110,6 +1143,9 @@ main { position: relative; }
     grid-template-rows: 1fr;
     padding-bottom: var(--sp-5);
   }
+
+  /* Empile, chaque bloc occupe toute la largeur : pas de largeur figee. */
+  .pilier__interieur { width: auto; }
 
   /* L'enfant qui porte le debordement : sans min-height: 0 la rangee 0fr
      refuserait de se refermer. */
@@ -1131,12 +1167,11 @@ main { position: relative; }
 
   .pilier,
   .pilier__corps,
+  .pilier[data-ouvert="true"] .pilier__corps,
   .pilier__declencheur::after,
   .icone,
   .icone__trait,
   .icone__plein { transition: none; }
-
-  .pilier[data-ouvert="true"] .pilier__corps { animation: none; }
 }
 
 
