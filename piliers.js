@@ -1,8 +1,9 @@
 /* S-WEB, les trois panneaux dépliants.
 
    Au-dessus de 1024 px : trois tranches côte à côte, un seul ouvert à la
-   fois, 56 % + 22 % + 22 %. Le survol ouvre, sur pointeur fin seulement ; le
-   clic et le focus font la même chose, le survol n'est jamais le seul chemin.
+   fois, 56 % + 22 % + 22 %. Le survol ouvre, sur pointeur fin seulement, et
+   uniquement quand la souris se déplace réellement, voir plus bas ; le clic
+   et le focus font la même chose, le survol n'est jamais le seul chemin.
 
    Sous 1024 px, téléphones et tablettes : les trois blocs sont repliés au
    départ et s'ouvrent au doigt, un seul à la fois. Un deuxième appui sur un
@@ -35,6 +36,10 @@
     });
   }
 
+  /* Derniere position reellement occupee par la souris, pour distinguer un
+     survol voulu d'un bord qui a defile dessous. */
+  var dernierX = null, dernierY = null;
+
   piliers.forEach(function (p) {
     var b = declencheur(p);
 
@@ -47,9 +52,23 @@
       appliquer(p);
     });
 
+    /* Le survol ouvre, mais seulement si la souris a vraiment bouge.
+
+       Ouvrir une tranche l'elargit et retrecit les autres : les bords
+       defilent alors sous un curseur immobile, le navigateur signale une
+       entree dans la tranche voisine, qui s'ouvre, qui redeplace tout. La
+       boucle s'entretient toute seule une fois la souris arretee. Mesure sur
+       un seul survol : 54 basculements, les tranches clignotaient.
+
+       Le filtre tient en une comparaison : une entree provoquee par la mise
+       en page porte exactement les memes coordonnees que la precedente,
+       puisque la souris, elle, n'a pas bouge. On l'ignore. */
     p.addEventListener('pointerenter', function (e) {
       if (empile.matches || !fin.matches) return;
       if (e.pointerType && e.pointerType !== 'mouse') return;
+      if (e.clientX === dernierX && e.clientY === dernierY) return;
+      dernierX = e.clientX;
+      dernierY = e.clientY;
       appliquer(p);
     });
 

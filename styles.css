@@ -951,9 +951,12 @@ main { position: relative; }
    part bien au moment ou l'element devient rendu. Avec `both`, l'opacite
    reste a zero pendant le retard : le texte ne se montre qu'une fois la
    largeur presque atteinte, et plus rien ne se recompose a l'ecran. */
+/* Le retard vaut la duree complete de l'elargissement, pas la moitie : a
+   180 ms le texte reparaissait pendant que la colonne bougeait encore, et les
+   lignes de la liste se recomposaient a chaque image. */
 .pilier[data-ouvert="true"] .pilier__corps {
   display: block;
-  animation: pilier-corps 260ms var(--courbe) 180ms both;
+  animation: pilier-corps 200ms var(--courbe) 400ms both;
 }
 
 @keyframes pilier-corps {
