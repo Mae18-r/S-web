@@ -4215,9 +4215,9 @@ main { position: relative; }
    Decoratives et temporaires, en attendant le photoshoot. Chaque usage porte
    un commentaire TEMPORAIRE dans le HTML.
 
-   Elles ne vont ni dans le heros, ni dans les avis, ni dans le portfolio, ni
-   sous le pilier « Les images » : y mettre de la banque d'images
-   contredirait frontalement « Jamais de banque d'images ».
+   Elles ne servent que dans la frise du processus. Ni dans le heros, ni dans
+   les piliers, ni dans les avis, ni dans le portfolio : la ou le site parle
+   de ses propres realisations, on ne montre que du reel.
 
    Pas de WebP : aucun encodeur sur la machine. Le srcset fait le travail de
    poids, avec deux largeurs par image.
@@ -4234,26 +4234,5 @@ main { position: relative; }
   border-radius: var(--radius-ui);       /* §05 : angles droits */
 }
 
-/* Dans une tranche, l'image borde le texte : elle reprend le retrait
-   horizontal du corps pour aller d'un bord a l'autre. */
-.pilier__interieur .ambiance {
-  width: calc(100% + var(--sp-5) * 2);
-  margin-inline: calc(var(--sp-5) * -1);
-  margin-top: calc(var(--sp-5) * -1);
-}
-
 /* Dans la frise, elle reste dans le bloc. */
 .process__bloc .ambiance { margin-top: var(--sp-4); }
-
-/* La carte Declic montre un telephone, donc une image en hauteur : on cadre
-   au centre et non en haut, sinon on coupe l'appareil. */
-.rea__image--portrait { object-position: center; }
-
-@media (max-width: 1023.98px) {
-  /* Empile, le corps d'une tranche n'a plus de retrait a compenser de la
-     meme facon : l'image reste dans la largeur du texte. */
-  .pilier__interieur .ambiance {
-    width: calc(100% + var(--sp-5) * 2);
-    margin-inline: calc(var(--sp-5) * -1);
-  }
-}
