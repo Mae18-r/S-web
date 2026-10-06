@@ -4046,3 +4046,150 @@ main { position: relative; }
 }
 
 .avis-invite__suite { margin: var(--sp-4) 0 0; }
+
+
+/* ==========================================================================
+   REALISATIONS — trois cartes entre les piliers et la fiche Google.
+   Memes projets, memes secteurs et memes captures que /portfolio, pour que
+   les deux pages concordent.
+
+   ECARTS DEMANDES (Mae, 2026-10-06) :
+   · §05 « angles droits, sans exception » -> rayon de 4 px sur les cartes.
+   · §14 interdit les apparitions au scroll -> les trois cartes apparaissent
+     en fondu, avec 120 ms de decalage. Borne a cette seule bande.
+   ========================================================================== */
+
+.realisations {
+  background: var(--gris-brume);
+  padding-block: var(--sp-9);            /* §04 : 96 px */
+}
+
+.realisations__contenu {
+  width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
+  margin-inline: auto;
+}
+
+.realisations__eyebrow {
+  margin: 0 0 var(--sp-3);               /* §04 : 12 px sous l'eyebrow */
+  font: 400 13px/1.4 var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gris-structure);
+}
+
+.realisations__titre {
+  margin: 0 0 var(--sp-4);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 3vw + 0.5rem, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  color: var(--encre);
+}
+
+.realisations__intro {
+  margin: 0;
+  max-width: 60ch;
+  font: 400 17px/1.6 var(--font-corps);
+  color: var(--encre);
+}
+
+.realisations__rangee {
+  margin-top: var(--sp-6);               /* §04 : 32 px entre un H2 et son contenu */
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--sp-6);                      /* 32 px */
+}
+
+/* --- Une carte ------------------------------------------------------------ */
+
+.rea {
+  display: flex;
+  flex-direction: column;
+  background: var(--blanc);              /* §02 : les cartes sont sur Blanc */
+  border: 1px solid var(--gris-brume);
+  border-radius: 4px;                    /* ecart demande, voir en-tete */
+  overflow: hidden;                      /* la capture suit l'angle */
+  transition:
+    border-color var(--duree-micro) var(--courbe),
+    opacity 500ms var(--courbe),
+    transform 500ms var(--courbe);
+}
+
+/* Au survol, la bordure fonce. Rien d'autre ne bouge : pas d'ombre, pas de
+   deplacement, pas d'agrandissement. */
+.rea:hover,
+.rea:focus-within { border-color: var(--gris-structure); }
+
+/* Etat de depart pose par realisations.js, jamais par la feuille seule :
+   sans JavaScript les cartes restent visibles. */
+.rea.est-masquee {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.rea.est-revelee {
+  opacity: 1;
+  transform: none;
+}
+
+/* La capture ne s'anime pas, elle ne reagit pas au survol : elle montre le
+   site, elle n'est pas un objet a manipuler. */
+.rea__image {
+  display: block;
+  width: 100%;
+  /* `height: auto` n'est pas decoratif : sans lui, l'attribut height="960"
+     vaut hauteur definie, les deux dimensions sont fixees et aspect-ratio est
+     ignore. La capture s'affichait alors en entier, 377 x 960, au lieu du
+     recadrage demande. */
+  height: auto;
+  aspect-ratio: 4 / 3;                   /* recadrage impose, pas de decalage */
+  object-fit: cover;
+  object-position: top center;
+  background: var(--gris-brume);         /* le temps du chargement */
+}
+
+.rea__corps { padding: var(--sp-5); }    /* 24 px */
+
+.rea__secteur {
+  margin: 0 0 var(--sp-2);
+  font: 400 12px/1.4 var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ambre-texte);             /* §02 : le seul ambre tolere en texte */
+}
+
+.rea__nom {
+  margin: 0 0 var(--sp-3);
+  font: 700 20px/1.3 var(--font-corps);  /* §03 : H3 en Arial 700 20 px */
+  color: var(--encre);
+}
+
+.rea__ligne {
+  margin: 0;
+  max-width: 40ch;
+  font: 400 15px/1.6 var(--font-corps);
+  color: var(--gris-structure);          /* 4,94:1 sur Blanc */
+}
+
+.rea__suite { margin: var(--sp-4) 0 0; }
+
+.realisations__suite {
+  margin: var(--sp-7) 0 0;               /* 48 px sous les cartes */
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rea { transition: border-color var(--duree-micro) var(--courbe); }
+  .rea.est-masquee { opacity: 1; transform: none; }
+}
+
+/* --- Sous 1024 px : les cartes s'empilent --------------------------------- */
+
+@media (max-width: 1023.98px) {
+  .realisations__rangee { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 639.98px) {
+  .realisations { padding-block: 56px; }  /* §04 : 56 px mobile */
+}
