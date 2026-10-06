@@ -1451,6 +1451,10 @@ main { position: relative; }
   color: var(--gris-structure);
 }
 
+/* En-tete centre, titre et enonce : la colonne est plus large qu'eux. */
+.process__contenu > .process__titre,
+.process__contenu > .process__intro { text-align: center; }
+
 .process__titre {
   margin: 0 0 var(--sp-5);
   font-family: var(--font-display);
@@ -1462,7 +1466,10 @@ main { position: relative; }
 }
 
 .process__intro {
-  margin: 0;
+  /* Marges automatiques en plus de l'alignement : sans elles, max-width
+     ancre le paragraphe a gauche meme dans un conteneur centre. */
+  margin-inline: auto;
+  margin-block: 0;
   max-width: 60ch;
   font: 400 17px/1.6 var(--font-corps);
   color: var(--encre);
@@ -3767,6 +3774,28 @@ main { position: relative; }
 .recept__contenu {
   width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
   margin-inline: auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+  align-items: center;
+  gap: var(--sp-7);
+}
+
+/* L'image illustre le service, pas un client : un appel pris sur un chantier,
+   c'est exactement ce que la receptionniste prend en charge. Decorative et
+   temporaire, comme celles de la frise. */
+.recept__image {
+  display: block;
+  width: 100%;
+  height: auto;                          /* sinon l'attribut height fige la
+                                            hauteur et aspect-ratio est ignore */
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: var(--radius-ui);       /* §05 : angles droits */
+}
+
+/* Sous 1024 px, l'image passe sous le texte. */
+@media (max-width: 1023.98px) {
+  .recept__contenu { grid-template-columns: 1fr; }
 }
 
 .recept__eyebrow {
