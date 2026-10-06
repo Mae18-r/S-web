@@ -1013,7 +1013,6 @@ main { position: relative; }
 .pilier__interieur {
   width: var(--tranche-ouverte, auto);
 }
-}
 
 .pilier__desc {
   margin: 0 0 var(--sp-5);
@@ -1778,66 +1777,6 @@ main { position: relative; }
 .sect__suite { margin-top: var(--sp-7); }
 
 
-/* --- 3 et 4. Tableaux ----------------------------------------------------- */
-
-.tableau {
-  width: 100%;
-  margin-top: var(--sp-6);
-  border-collapse: collapse;
-  text-align: left;
-}
-
-.tableau th,
-.tableau td {
-  padding-block: var(--sp-3);
-  border-bottom: 1px solid var(--gris-brume);
-  vertical-align: top;
-}
-
-.tableau thead th {
-  font: 400 13px/1.4 var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--gris-structure);
-  border-bottom-color: var(--gris-structure);
-}
-
-.tableau__item {
-  font: 400 15px/1.55 var(--font-corps);
-  color: var(--encre);
-  font-weight: 400;
-}
-
-.tableau__service,
-.tableau__prix {
-  font: 400 14px/1.5 var(--font-mono);
-  letter-spacing: 0.02em;
-  color: var(--gris-structure);
-  white-space: nowrap;
-}
-
-.tableau__prix { text-align: right; color: var(--encre); }
-.tableau th.tableau__prix { color: var(--gris-structure); }
-
-.prix-total {
-  margin: var(--sp-6) 0 0;
-  text-align: right;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 40px;
-  line-height: 1.1;
-  color: var(--encre);
-}
-
-.prix-note {
-  margin: var(--sp-2) 0 0;
-  text-align: right;
-  font: 400 13px/1.5 var(--font-mono);
-  letter-spacing: 0.02em;
-  color: var(--gris-structure);
-}
-
-
 /* --- 4. Modules : liste non chiffrée, deux colonnes -----------------------
    Le flux est en colonnes (1-4 à gauche, 5-8 à droite) : on lit vers le bas.
    Les rangées de la grille sont partagées, donc les filets s'alignent d'une
@@ -1886,150 +1825,6 @@ main { position: relative; }
 }
 
 
-/* --- 5. Grille des paliers ------------------------------------------------
-   Une colonne de libellés + trois colonnes de paliers sur desktop.
-   Sous 768 px : trois cartes empilées, chacune reprenant ses huit libellés.
-   Aucun défilement horizontal, aucun JS.
-   -------------------------------------------------------------------------- */
-
-.paliers {
-  display: grid;
-  grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
-  /* Une rangee d'en-tete + les huit options. Les colonnes heritent de ces
-     rangees par subgrid : chaque option se retrouve donc sur la meme ligne
-     que son libelle, quelle que soit la hauteur du texte. */
-  grid-template-rows: auto repeat(8, auto);
-  column-gap: var(--gouttiere);
-  margin-top: var(--sp-6);
-}
-
-.paliers__libelles,
-.palier {
-  grid-row: 1 / -1;
-  display: grid;
-  grid-template-rows: subgrid;
-}
-
-.palier__tete { grid-row: 1; }
-
-.palier__lignes {
-  grid-row: 2 / -1;
-  display: grid;
-  grid-template-rows: subgrid;
-  margin: 0;
-}
-
-.paliers__libelles span,
-.palier__ligne {
-  display: flex;
-  align-items: flex-start;
-  min-height: 56px;
-  padding-block: var(--sp-3);
-  border-top: 1px solid var(--gris-brume);
-  font: 400 14px/1.4 var(--font-corps);
-  color: var(--encre);
-}
-
-.paliers__libelles span:first-child,
-.palier__ligne:first-child { border-top: 1px solid var(--gris-structure); }
-
-.paliers__libelles .paliers__vide {
-  border: 0;
-  min-height: 0;
-  padding: 0;
-}
-
-.palier {
-  position: relative;
-  /* Surface claire pour les trois colonnes : l'ambre d'emphase ne passe le
-     seuil AA que sur Blanc cassé (4,94:1). Sur le gris brume de la section il
-     tombe à 4,35:1. La colonne vedette reste signalée par son étiquette. */
-  background: var(--blanc-casse);
-}
-
-/* La colonne recommandée se signale par son étiquette et un filet Encre. */
-/* Filet Ambre : trait graphique de 2 px, pas du texte — la seule forme
-   d'ambre autorisee sur fond clair (4,9:1 sur Blanc casse). */
-.palier--vedette { outline: 2px solid var(--ambre); outline-offset: 0; }
-
-/* Ecart assume : la charte dit « pas de transformation au survol ». */
-.palier { transition: transform var(--duree-micro) var(--courbe); }
-
-.palier:hover {
-  transform: scale(1.02);
-  z-index: 1;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .palier { transition: none; }
-  .palier:hover { transform: none; }
-}
-
-.palier__tete {
-  padding: var(--sp-4) var(--sp-4) var(--sp-3);
-  text-align: center;
-}
-
-.palier__tag {
-  display: inline-block;
-  margin-bottom: var(--sp-2);
-  padding: 2px var(--sp-2);
-  background: var(--ambre);            /* seul aplat ambre de la page */
-  color: var(--blanc-casse);
-  font: 400 11px/1.6 var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.palier__nom {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 20px;
-  line-height: 1.2;
-  color: var(--encre);
-}
-
-.palier__prix {
-  margin: var(--sp-1) 0 0;
-  font: 400 14px/1.5 var(--font-mono);
-  letter-spacing: 0.02em;
-  color: var(--gris-structure);
-}
-
-.palier__ligne {
-  justify-content: center;
-  padding-inline: var(--sp-3);
-  text-align: center;
-  color: var(--gris-structure);
-}
-
-.palier__ligne--fort { color: var(--ambre-texte); font-weight: 700; }
-.palier__ligne dt { display: none; }    /* desktop : libellés dans la colonne */
-.palier__ligne dd { margin: 0; }
-
-.paliers__note {
-  margin-top: var(--sp-6);
-  padding: var(--sp-5);
-  border: 1px solid var(--gris-structure);
-}
-
-.paliers__note p {
-  margin: 0 0 var(--sp-3);
-  font: 400 15px/1.6 var(--font-corps);
-  color: var(--encre);
-}
-
-.paliers__note p:last-child { margin-bottom: 0; }
-
-.paliers__note strong { font-weight: 700; }
-
-.paliers__note .note-fine {
-  font-size: 14px;
-  color: var(--gris-structure);
-}
-
-
 /* --- 6. CTA de fin -------------------------------------------------------- */
 
 .cta-fin {
@@ -2066,54 +1861,8 @@ main { position: relative; }
 }
 
 
-/* --- Paliers sous 768 px --------------------------------------------------
-   ECART DEMANDE (Mae, 2026-10-05) : les trois paliers etaient empiles, chaque
-   carte reprenant ses huit libelles. Ils restent maintenant cote a cote comme
-   sur ordinateur, et le tableau defile lateralement dans son cadre.
-
-   Le commentaire d'origine de ce bloc promettait « aucun defilement
-   horizontal ». C'est ce point-la qui saute, et lui seul : la page, elle, ne
-   defile toujours pas lateralement, seul le tableau le fait.
-
-   La colonne des libelles est collee a gauche, sinon on ne sait plus quelle
-   ligne on lit une fois le tableau pousse. */
-
-@media (max-width: 767.98px) {
-  .paliers-defilement {
-    overflow-x: auto;
-    overscroll-behavior-x: contain;
-    -webkit-overflow-scrolling: touch;
-    /* La zone de defilement part du bord de l'ecran, pas de la marge : on
-       gagne les 24 px de chaque cote pour le tableau. */
-    margin-inline: calc(var(--marge-ext) * -1);
-    padding-inline: var(--marge-ext);
-  }
-
-  .paliers {
-    min-width: 600px;                  /* 4 colonnes encore lisibles */
-    grid-template-columns: minmax(0, 150px) repeat(3, minmax(0, 1fr));
-  }
-
-  .paliers__libelles {
-    position: sticky;
-    left: 0;
-    z-index: 1;
-    background: var(--gris-brume);     /* le fond de la section, sinon les
-                                          colonnes passent dessous */
-  }
-
-  .paliers__libelles span,
-  .palier__ligne {
-    font-size: 13px;
-    min-height: 52px;
-  }
-
-  .palier__ligne { padding-inline: var(--sp-2); }
-}
-
 @media (max-width: 639.98px) {
   .sect, .cta-fin { padding-block: 56px; }
-  .prix-total { font-size: 32px; }
 }
 
 
@@ -3676,14 +3425,6 @@ main { position: relative; }
   color: var(--gris-structure);
 }
 
-/* --- Ligne a part dans le tableau du forfait ------------------------------
-   La receptionniste n'est pas comprise dans le prix de base. C'est la
-   colonne de droite qui le dit, « En option » au lieu d'un metier.
-
-   Le libelle reste a l'encre : --gris-structure sur --gris-brume ne donne
-   que 4,12:1, sous le plancher AA de 4,5:1. */
-.tableau__option .tableau__item { color: var(--encre); }
-
 /* --- Bandeau de la receptionniste, sur l'accueil -------------------------- */
 .recept {
   background: var(--gris-brume);
@@ -4486,7 +4227,6 @@ main { position: relative; }
 
 /* ==========================================================================
    LE FORFAIT DE BASE — prix en tete, trois piliers, option IA.
-   Remplace le tableau de dix-sept lignes.
 
    Tout ce qui s'anime passe par transform et opacity : aucune reprise de
    mise en page pendant la cascade.
@@ -4496,62 +4236,6 @@ main { position: relative; }
      Les deux ont ete demandes, et restent bornes a cette section.
    · §14 interdit « un hover qui deplace » -> les cartes montent de 4 px.
    ========================================================================== */
-
-/* --- 1. Le prix ----------------------------------------------------------- */
-
-/* Le prix est passe SOUS les trois cartes : 64 px l'en separent, la ou il
-   n'en demandait que 32 quand il suivait le H2. */
-.forfait__prix {
-  margin-top: var(--sp-8);
-  transition:
-    opacity var(--duree-panneau) var(--courbe),
-    transform var(--duree-panneau) var(--courbe);
-}
-
-.forfait__prix.est-masque { opacity: 0; transform: scale(0.96); }
-.forfait__prix.est-revele { opacity: 1; transform: none; }
-
-.forfait__montant {
-  margin: 0;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
-  line-height: 1.05;
-  letter-spacing: -0.01em;
-  color: var(--encre);
-  /* Les chiffres ne doivent pas changer de largeur pendant le decompte. */
-  font-variant-numeric: lining-nums tabular-nums;
-}
-
-/* --gris-structure sur le Gris brume de la section ne donne que 4,12:1, sous
-   le plancher AA. Cette ligne porte ce qui est compris dans le prix : elle
-   passe a l'Encre. */
-.forfait__sous {
-  margin: var(--sp-3) 0 0;
-  font: 400 17px/1.6 var(--font-corps);
-  color: var(--encre);
-}
-
-/* Renvoi vers la note. Il reste en Encre : §02 reserve l'ambre a une action
-   ou a un nombre, et une etoile n'est ni l'un ni l'autre. Taille posee en em,
-   donc elle suit le montant a toutes les largeurs. */
-.forfait__etoile {
-  font-size: 0.34em;
-  vertical-align: super;
-  line-height: 0;
-  margin-left: 0.06em;
-}
-
-/* Ce que le prix ne comprend pas. --gris-structure ne donne que 4,12:1 sur le
-   Gris brume de la section, sous le plancher AA : on reste a l'Encre. */
-.forfait__note {
-  margin: var(--sp-4) 0 0;
-  max-width: 60ch;
-  font: 400 15px/1.55 var(--font-corps);
-  color: var(--encre);
-}
-
-.forfait__cta { margin: var(--sp-5) 0 0; }
 
 /* --- 2. Les trois piliers ------------------------------------------------- */
 
@@ -4660,7 +4344,6 @@ main { position: relative; }
 .forfait__piliers.est-revele .fp__item:nth-child(6) .fp__coche { transition-delay: 440ms; }
 
 @media (prefers-reduced-motion: reduce) {
-  .forfait__prix,
   .fp,
   .fp__coche,
   .fp__chevron { transition: none; }
