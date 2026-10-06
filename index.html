@@ -126,15 +126,17 @@
   <section class="hero">
 
     <picture class="hero__media">
-      <!-- Pas de WebP : aucun encodeur n'est installe sur la machine. Un
-           <source> pointant un fichier absent casserait l'image, parce que
-           <picture> choisit sur le type MIME, pas sur l'existence du fichier. -->
+      <!-- Pas de WebP : aucun encodeur n'est installe sur la machine (ni cwebp,
+           ni ImageMagick, ni ffmpeg, et sips ne sait pas l'ecrire). Un <source>
+           pointant un fichier absent casserait l'image, parce que <picture>
+           choisit sur le type MIME, pas sur l'existence du fichier. Fournir le
+           WebP et il se branche ici en une ligne. -->
       <img class="hero__image"
            src="assets/Heros-web.jpg"
-           srcset="assets/Heros-web-640.jpg 640w, assets/Heros-web.jpg 928w"
+           srcset="assets/Heros-web-640.jpg 640w, assets/Heros-web.jpg 1296w"
            sizes="100vw"
-           alt="Site d'un paysagiste affich&eacute; sur un ordinateur portable et sur un t&eacute;l&eacute;phone"
-           width="928" height="1152" fetchpriority="high" decoding="async">
+           alt="Le site de la Clinique Param&eacute;dika affich&eacute; sur un ordinateur portable et sur un t&eacute;l&eacute;phone."
+           width="1296" height="1616" fetchpriority="high" decoding="async">
     </picture>
 
     <div class="hero__voile" aria-hidden="true"></div>
@@ -156,7 +158,10 @@
       <p class="hero__note">Trente minutes, aucune pr&eacute;paration.</p>
     </div>
 
-    <p class="hero__credit">Maquette de prospection, paysagiste de Gatineau</p>
+    <!-- La l&eacute;gende nomme un site livr&eacute;. Si paramedika n'est pas encore en ligne
+         publiquement, &eacute;crire &laquo; Site livr&eacute;, clinique de Gatineau &raquo; sans le nom
+         jusqu'&agrave; la mise en ligne. -->
+    <p class="hero__credit">Clinique Param&eacute;dika &middot; soins param&eacute;dicaux, Gatineau</p>
   </section>
 
   <span class="hero__fin" aria-hidden="true"></span>
