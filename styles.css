@@ -943,7 +943,23 @@ main { position: relative; }
   display: none;
 }
 
-.pilier[data-ouvert="true"] .pilier__corps { display: block; }
+/* Le corps apparaissait d'un coup, en pleine opacite, pendant que la tranche
+   s'elargissait encore sur 400 ms : le texte se composait a une largeur qui
+   n'etait pas la sienne, puis se recomposait. C'est le saut qu'on voyait.
+
+   `display` ne s'anime pas, mais une animation posee avec un retard, elle,
+   part bien au moment ou l'element devient rendu. Avec `both`, l'opacite
+   reste a zero pendant le retard : le texte ne se montre qu'une fois la
+   largeur presque atteinte, et plus rien ne se recompose a l'ecran. */
+.pilier[data-ouvert="true"] .pilier__corps {
+  display: block;
+  animation: pilier-corps 260ms var(--courbe) 180ms both;
+}
+
+@keyframes pilier-corps {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
 
 .pilier__desc {
   margin: 0 0 var(--sp-5);
@@ -1006,9 +1022,17 @@ main { position: relative; }
 .pilier[data-ouvert="true"] .icone__plein { opacity: 1; }
 
 
-/* --- Mobile : tout est déplié, aucune interaction ------------------------- */
+/* --- Telephone et tablette : trois blocs colores, replies, cliquables ------
+   ECART DEMANDE (Mae, 2026-10-06) : sous 1024 px les trois tranches etaient
+   depliees d'office et les declencheurs desactives. Elles deviennent un
+   accordeon : tout est replie au depart, on ouvre au doigt, un seul a la
+   fois. Le seuil passe de 768 a 1024 px, donc les tablettes aussi.
 
-@media (max-width: 767.98px) {
+   La hauteur s'anime par grid-template-rows 0fr -> 1fr, comme la FAQ : aucune
+   hauteur magique a tenir a jour, le contenu dicte la sienne.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 1023.98px) {
   .piliers { padding-block: 56px; }
 
   .piliers__rangee { flex-direction: column; }
@@ -1016,25 +1040,80 @@ main { position: relative; }
   .pilier,
   .pilier[data-ouvert="true"] { flex: 1 1 auto; }
 
+  /* Grille plutot que rangee : l'icone a gauche, le numero au-dessus du
+     titre, le chevron a droite. En simple rangee, « 01 · Construction » et
+     « Le site » se renvoyaient a la ligne chacun de leur cote. */
   .pilier__declencheur,
   .pilier[data-ouvert="true"] .pilier__declencheur {
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "icone numero chevron"
+      "icone titre  chevron";
     align-items: center;
-    gap: var(--sp-4);
-    cursor: default;
+    column-gap: var(--sp-4);
+    row-gap: var(--sp-1);
+    text-align: left;
+    cursor: pointer;                   /* il s'ouvre : le curseur le dit */
     padding: var(--sp-5);
+    min-height: 44px;                  /* cible tactile, plancher §15 */
+  }
+
+  .pilier__declencheur .icone { grid-area: icone; }
+  .pilier__numero            { grid-area: numero; white-space: nowrap; }
+  .pilier__declencheur::after { grid-area: chevron; }
+
+  /* Chevron : la seule chose qui dise, au repos, que le bloc s'ouvre.
+     Trace a la bordure, donc il suit la couleur du texte de chaque tranche. */
+  .pilier__declencheur::after {
+    content: '';
+    justify-self: end;
+    inline-size: 10px;
+    block-size: 10px;
+    margin-block-start: -5px;          /* le chevron pointe sous son centre */
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    transition: transform var(--duree-panneau) var(--courbe);
+  }
+
+  .pilier[data-ouvert="true"] .pilier__declencheur::after {
+    transform: rotate(-135deg);
+    margin-block-start: 5px;
   }
 
   /* Même fonte display que sur desktop, à une taille qui tient dans le bloc. */
   .pilier__titre,
   .pilier[data-ouvert="true"] .pilier__titre {
+    grid-area: titre;
     writing-mode: horizontal-tb;
     transform: none;
     font: 700 24px/1.15 var(--font-display);
   }
 
   .pilier__corps,
-  .pilier[data-ouvert="true"] .pilier__corps { display: block; padding: 0 var(--sp-5) var(--sp-5); }
+  .pilier[data-ouvert="true"] .pilier__corps {
+    display: grid;
+    grid-template-rows: 0fr;
+    padding: 0 var(--sp-5);
+    animation: none;                   /* le fondu du desktop ne sert plus */
+    opacity: 1;
+    transition:
+      grid-template-rows var(--duree-panneau) var(--courbe),
+      padding-bottom     var(--duree-panneau) var(--courbe);
+  }
+
+  .pilier[data-ouvert="true"] .pilier__corps {
+    grid-template-rows: 1fr;
+    padding-bottom: var(--sp-5);
+  }
+
+  /* L'enfant qui porte le debordement : sans min-height: 0 la rangee 0fr
+     refuserait de se refermer. */
+  .pilier__interieur {
+    overflow: hidden;
+    min-height: 0;
+  }
 
   .icone,
   .pilier[data-ouvert="true"] .icone { width: 32px; height: 32px; }
@@ -1048,9 +1127,13 @@ main { position: relative; }
   .hero { position: relative; }        /* pas de recouvrement au défilement */
 
   .pilier,
+  .pilier__corps,
+  .pilier__declencheur::after,
   .icone,
   .icone__trait,
   .icone__plein { transition: none; }
+
+  .pilier[data-ouvert="true"] .pilier__corps { animation: none; }
 }
 
 
@@ -1082,18 +1165,6 @@ main { position: relative; }
    jamais sortir de la colonne. */
 .impact__gauche { grid-column: 1 / span 5; }
 .impact__droite { grid-column: 7 / span 6; }   /* 6 colonnes, une de gouttière */
-
-
-/* --- Attribution — requise et permanente (§03 eyebrow) ------------------- */
-
-.impact__source {
-  margin: 0 0 var(--sp-5);
-  text-align: center;                  /* meme axe que le chiffre */
-  font: 400 13px/1.4 var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--gris-structure);
-}
 
 
 /* --- Le chiffre ----------------------------------------------------------
@@ -3534,9 +3605,13 @@ main { position: relative; }
 .impact__anneaux {
   position: absolute;
   left: 50%;
-  /* Cale verticalement sur l'encre des chiffres, pas sur la boite de ligne :
-     l'offset est mesure a la sonde de ligne de base. */
-  top: calc(50% + 0.076em);
+  /* Cale verticalement sur l'encre reelle de « 2,7 x », pas sur la boite de
+     ligne. Mesure a la sonde de ligne de base plus les metriques canvas :
+     l'encre va de 45 px au-dessus de la ligne de base a 11 px en dessous
+     (corps 80 px), soit un centre a 0,184 em sous le centre de la boite.
+     L'ancienne valeur de 0,076 em sous-corrigeait : le nombre tombait bas
+     dans les anneaux, surtout sur telephone ou la figure occupe l'ecran. */
+  top: calc(50% + 0.184em);
   transform: translate(-50%, -50%);
   /* Agrandis sans toucher au corps des chiffres : 3,3 em font 475 px a
      144 px, pour une colonne de 486. Ils restent donc dans la colonne. */

@@ -1,6 +1,14 @@
 /* S-WEB, les trois panneaux dépliants.
-   Un seul ouvert à la fois : 56 % + 22 % + 22 %. Sous 768 px tout est déplié
-   et les déclencheurs sont désactivés, la mise en page mobile n'a pas d'états. */
+
+   Au-dessus de 1024 px : trois tranches côte à côte, un seul ouvert à la
+   fois, 56 % + 22 % + 22 %. Le survol ouvre, sur pointeur fin seulement ; le
+   clic et le focus font la même chose, le survol n'est jamais le seul chemin.
+
+   Sous 1024 px, téléphones et tablettes : les trois blocs sont repliés au
+   départ et s'ouvrent au doigt, un seul à la fois. Un deuxième appui sur un
+   bloc ouvert le referme, ce qu'on attend d'un accordéon et que la version
+   large n'autorise pas, elle qui doit toujours garder une tranche ouverte
+   pour que la répartition 56/22/22 tienne. */
 
 (function () {
   'use strict';
@@ -11,11 +19,15 @@
   var piliers = [].slice.call(rangee.querySelectorAll('.pilier'));
   if (!piliers.length) return;
 
-  var etroit = window.matchMedia('(max-width: 767.98px)');
+  /* Même seuil que la feuille de style : au-delà, les tranches sont côte à
+     côte ; en deçà, elles sont empilées et repliées. */
+  var empile = window.matchMedia('(max-width: 1023.98px)');
+  var fin = window.matchMedia('(min-width: 1024px) and (pointer: fine)');
 
   function declencheur(p) { return p.querySelector('.pilier__declencheur'); }
 
-  function ouvrir(cible) {
+  /* `cible` peut être null : tout se referme. Seul l'empilement s'en sert. */
+  function appliquer(cible) {
     piliers.forEach(function (p) {
       var actif = p === cible;
       p.dataset.ouvert = actif ? 'true' : 'false';
@@ -23,66 +35,61 @@
     });
   }
 
-  /* Le survol ouvre, sur pointeur fin uniquement. Le clic et le focus font la
-     même chose : le survol n'est jamais le seul chemin. */
-  var fin = window.matchMedia('(min-width: 768px) and (pointer: fine)');
-
   piliers.forEach(function (p) {
     var b = declencheur(p);
 
     b.addEventListener('click', function () {
-      if (etroit.matches) return;          /* pas d'états sous 768 px */
-      ouvrir(p);
+      if (empile.matches) {
+        /* Bascule : un bloc ouvert se referme si on le réappuie. */
+        appliquer(p.dataset.ouvert === 'true' ? null : p);
+        return;
+      }
+      appliquer(p);
     });
 
     p.addEventListener('pointerenter', function (e) {
-      if (etroit.matches || !fin.matches) return;
+      if (empile.matches || !fin.matches) return;
       if (e.pointerType && e.pointerType !== 'mouse') return;
-      ouvrir(p);
+      appliquer(p);
     });
 
-    /* Parité clavier : tabuler jusqu'à une tranche l'ouvre, comme le survol. */
+    /* Parité clavier : tabuler jusqu'à une tranche l'ouvre, comme le survol.
+       Empilé, on ne le fait pas : tabuler ne doit pas déplier sous le doigt. */
     b.addEventListener('focus', function () {
-      if (etroit.matches) return;
-      ouvrir(p);
+      if (empile.matches) return;
+      appliquer(p);
     });
   });
 
   /* Flèches gauche/droite entre les onglets, comme un jeu d'onglets. */
   rangee.addEventListener('keydown', function (e) {
-    if (etroit.matches) return;
+    if (empile.matches) return;
     if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
     var i = piliers.indexOf(e.target.closest('.pilier'));
     if (i < 0) return;
     var suivant = piliers[(i + (e.key === 'ArrowRight' ? 1 : piliers.length - 1)) % piliers.length];
-    ouvrir(suivant);
+    appliquer(suivant);
     declencheur(suivant).focus();
     e.preventDefault();
   });
 
-  /* Sous 768 px : tout ouvert, plus aucun déclencheur actionnable. */
   function ajuster() {
-    var mobile = etroit.matches;
+    /* Les déclencheurs restent actionnables des deux côtés du seuil : c'est
+       justement ce qui manquait à la version empilée. */
+    piliers.forEach(function (p) { declencheur(p).disabled = false; });
 
-    if (mobile) {
-      piliers.forEach(function (p) {
-        var b = declencheur(p);
-        b.disabled = true;
-        p.dataset.ouvert = 'true';
-        b.removeAttribute('aria-expanded');
-      });
+    if (empile.matches) {
+      appliquer(null);                 /* tout replié */
       return;
     }
 
-    piliers.forEach(function (p) { declencheur(p).disabled = false; });
-
-    /* En repassant du mobile au desktop, les trois tranches sont ouvertes :
-       il faut en garder exactement une, sinon la répartition 56/22/22 casse. */
+    /* En repassant de l'empilement aux tranches, aucune n'est ouverte : il en
+       faut exactement une, sinon la répartition 56/22/22 casse. */
     var ouvertes = piliers.filter(function (p) { return p.dataset.ouvert === 'true'; });
-    ouvrir(ouvertes.length === 1 ? ouvertes[0] : piliers[0]);
+    appliquer(ouvertes.length === 1 ? ouvertes[0] : piliers[0]);
   }
 
   ajuster();
-  if (etroit.addEventListener) etroit.addEventListener('change', ajuster);
-  else etroit.addListener(ajuster);
+  if (empile.addEventListener) empile.addEventListener('change', ajuster);
+  else empile.addListener(ajuster);
 })();
