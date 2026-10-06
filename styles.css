@@ -569,11 +569,17 @@ main { display: block; }
   height: 88vh;
   min-height: 640px;
   max-height: 900px;
-  display: flex;
+  /* Grille et non plus boite flexible : l'eyebrow occupe une premiere rangee
+     calee en haut, juste sous le bandeau de menu, et tout le reste se centre
+     dans la rangee restante. En boite flexible il partait au centre avec le
+     titre. La colonne est posee explicitement, sinon la grille se reduit a la
+     largeur de son contenu et le centrage horizontal saute. */
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
   align-items: center;
-  justify-content: center;
+  padding-top: var(--sp-5);              /* 24 px sous le bandeau */
   overflow: hidden;                      /* borne l'image et le voile */
-
 }
 
 .hero__media,
@@ -601,13 +607,21 @@ main { display: block; }
 .hero__contenu {
   position: relative;                    /* passe au-dessus du voile */
   z-index: 1;
-  width: min(900px, 100% - var(--marge-ext) * 2);
+  /* Elargi de 900 px au conteneur : c'est ce qui permet au titre de monter.
+     Le sous-titre garde son max-width de 55ch, il ne s'etire pas avec. */
+  width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
   margin-inline: auto;
   text-align: center;
 }
 
+/* Premiere rangee de la grille du heros, donc en haut de l'ecran. Il porte
+   desormais son propre cadrage : il n'est plus dans .hero__contenu. */
 .hero__eyebrow {
-  margin: 0 0 var(--sp-5);
+  position: relative;                    /* passe au-dessus du voile */
+  z-index: 1;
+  width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
+  margin: 0 auto;
+  text-align: center;
   font-family: var(--font-mono);
   font-size: 13px;
   line-height: 1.4;
@@ -621,18 +635,21 @@ main { display: block; }
   margin: 0 0 var(--sp-6);               /* H1 -> sous-titre : 32 px */
   font-family: var(--font-display);
   font-weight: 700;
-  /* Plafond remesure a l'ecran, les notes precedentes etaient fausses : la
-     colonne fait 900 px et non 1200, et la ligne la plus large n'est pas de
-     16,44 em mais de 13,388 em (l'anglaise « We deliver what it takes to
-     grow. » ; la francaise fait 12,589 em).
+  /* ECART DEMANDE (Mae, 2026-10-06) : §03 plafonne le H1 a 4rem. Le titre
+     etait deja a ce plafond ; monter plus haut sort de la charte.
 
-     A 900 px de colonne, l'anglaise tient donc jusqu'a 67 px et la francaise
-     jusqu'a 71 px. On plafonne a 4rem, soit 64 px : trois pixels de marge
-     sous la limite, et le titre reste sur deux lignes dans les deux langues.
+     La ligne la plus large est l'anglaise « We deliver what it takes to
+     grow. », mesuree a 13,388 em (la francaise fait 12,589 em). A 900 px de
+     colonne elle ne passait pas 67 px, d'ou l'elargissement de
+     .hero__contenu au conteneur : a 1200 px elle tient jusqu'a 89 px.
 
-     Le minimum reste a 2,5rem : §03 interdit la fonte d'affichage sous
-     28 px. */
-  font-size: clamp(2.5rem, 5vw, 4rem);
+     On plafonne a 5rem, soit 80 px, ce qui laisse 129 px de marge en
+     anglais. Les deux langues restent sur deux lignes a toute largeur ou le
+     plafond joue.
+
+     Le minimum ne bouge pas : §03 interdit la fonte d'affichage sous 28 px,
+     et sous 1028 px de fenetre la colonne est la meme qu'avant. */
+  font-size: clamp(2.5rem, 5vw, 5rem);
   line-height: 1.05;
   letter-spacing: -0.01em;
   color: var(--blanc-casse);
@@ -799,7 +816,7 @@ main { display: block; }
 
 
 @media (max-width: 639.98px) {
-  .hero { padding-block: 56px 232px; }   /* §04 : 56 px + bande */
+  .hero { padding-block: var(--sp-5) 232px; }   /* eyebrow en haut + bande */
   .hero__sous { font-size: 16px; }
 }
 
@@ -1758,67 +1775,6 @@ main { position: relative; }
 }
 
 
-/* --- 2. Les trois services ------------------------------------------------ */
-
-.service {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  column-gap: var(--gouttiere);
-  padding-block: 72px;
-  border-top: 1px solid var(--gris-brume);   /* filet entre services, pas en tête de section */
-}
-
-.service:first-of-type { padding-top: var(--sp-8); border-top: 0; }
-
-.service__tete { grid-column: 1 / span 5; }
-.service__liste-col { grid-column: 7 / span 6; }
-
-.service__label {
-  margin: 0 0 var(--sp-3);
-  font: 400 13px/1.4 var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--ambre-texte);
-}
-
-.service__titre {
-  margin: 0 0 var(--sp-4);
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.75rem, 3vw + 0.5rem, 2.5rem);
-  line-height: 1.15;
-  letter-spacing: -0.005em;
-  color: var(--encre);
-}
-
-.service__pourquoi {
-  margin: 0;
-  max-width: 55ch;
-  font: 400 17px/1.6 var(--font-corps);
-  color: var(--encre);
-}
-
-.service__liste {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.service__liste li + li { border-top: 1px solid var(--gris-brume); }
-
-.service__liste li {
-  padding-block: var(--sp-3);
-  font: 400 14px/1.5 var(--font-mono);
-  letter-spacing: 0.02em;
-  color: var(--encre);
-}
-
-.service__nest {
-  margin: var(--sp-5) 0 0;
-  font: 400 15px/1.55 var(--font-corps);
-  color: var(--gris-structure);
-}
-
 .sect__suite { margin-top: var(--sp-7); }
 
 
@@ -2110,14 +2066,6 @@ main { position: relative; }
 }
 
 
-/* --- Repli mobile --------------------------------------------------------- */
-
-@media (max-width: 1023.98px) {
-  .service__tete,
-  .service__liste-col { grid-column: 1 / -1; }
-  .service__liste-col { margin-top: var(--sp-5); }
-}
-
 /* --- Paliers sous 768 px --------------------------------------------------
    ECART DEMANDE (Mae, 2026-10-05) : les trois paliers etaient empiles, chaque
    carte reprenant ses huit libelles. Ils restent maintenant cote a cote comme
@@ -2165,7 +2113,6 @@ main { position: relative; }
 
 @media (max-width: 639.98px) {
   .sect, .cta-fin { padding-block: 56px; }
-  .service { padding-block: 48px; }
   .prix-total { font-size: 32px; }
 }
 
@@ -2724,17 +2671,6 @@ main { position: relative; }
 .sect--centre .sect__contenu { text-align: center; }
 
 .sect--centre .sect__intro { margin-inline: auto; }   /* la colonne de 60ch se recentre */
-
-/* --- Apparition en fondu des trois services -------------------------------
-   §14 proscrit les apparitions au defilement generalisees ; ecart demande.
-   Fondu seul, 400 ms, une seule fois par bloc. */
-
-.service.est-masque { opacity: 0; will-change: opacity; }
-
-.service.est-revele {
-  opacity: 1;
-  transition: opacity 400ms var(--courbe);
-}
 
 /* --- Numéro de téléphone cliquable ----------------------------------------
    Le numéro est une donnée avant d'être un lien : il garde la couleur de sa
@@ -3731,24 +3667,6 @@ main { position: relative; }
    Blocs ajoutes par les correctifs. Aucun jeton nouveau : tout vient de
    :root, et l'ambre ne sert qu'a marquer une action.
    ========================================================================== */
-
-/* --- Renvoi sous un service : ce qui se prend sans le site ---------------- */
-.service__renvoi {
-  margin: var(--sp-3) 0 0;
-  font: 400 15px/1.55 var(--font-corps);
-  color: var(--gris-structure);
-}
-
-.service__renvoi a {
-  color: var(--encre);
-  text-decoration: underline;
-  text-decoration-color: var(--ambre);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 3px;
-  transition: color var(--duree-micro) var(--courbe);
-}
-
-.service__renvoi a:hover { color: var(--ambre-texte); }
 
 /* --- Note sous la liste des modules --------------------------------------- */
 .modules__note {

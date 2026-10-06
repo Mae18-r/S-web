@@ -48,6 +48,22 @@
   if (empile.addEventListener) empile.addEventListener('change', ajuster);
   else empile.addListener(ajuster);
 
+  /* Les trois cartes portent les ancres #site, #images et #plan, visees par la
+     colonne Services du pied sur toutes les pages. Sous 1024 px deux d'entre
+     elles sont repliees : on ouvre celle qu'on vient chercher, sinon le lien
+     amene devant un panneau ferme. */
+  function ouvreLAncre() {
+    var id = location.hash.slice(1);
+    if (!id) return;
+    var c = document.getElementById(id);
+    if (!c || c.className.indexOf('fp') === -1) return;
+    c.dataset.ouvert = 'true';
+    c.querySelector('.fp__declencheur').setAttribute('aria-expanded', 'true');
+  }
+
+  ouvreLAncre();
+  window.addEventListener('hashchange', ouvreLAncre);
+
   if (doux || !window.IntersectionObserver) return;
 
   /* --- La cascade -------------------------------------------------------- */
