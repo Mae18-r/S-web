@@ -621,17 +621,18 @@ main { display: block; }
   margin: 0 0 var(--sp-6);               /* H1 -> sous-titre : 32 px */
   font-family: var(--font-display);
   font-weight: 700;
-  /* Titre agrandi : la colonne passe de 900 px au conteneur (1200 px), ce qui
-     laisse le titre monter à 4,375rem tout en tenant sur deux lignes. Ligne la
-     plus large des deux langues : « We deliver what it takes to grow. » =
-     16,437 em, soit 73,0 px au maximum à 1200 px de colonne.
-     Le minimum reste à 1,75rem : §03 interdit Zaria sous 28 px (il faudrait
-     19,9 px pour tenir deux lignes à 375 px). Deux lignes jusqu'à ~508 px. */
-  /* Plafond a 3,375rem (54 px) et non 4rem : la ligne la plus large est
-     l'anglaise « We deliver what it takes to grow. », mesuree a 16,44 em.
-     A 64 px elle demande 1053 px, la colonne en fait 900 : le titre
-     retombait sur quatre lignes au lieu des deux voulues. */
-  font-size: clamp(2.5rem, 5vw, 3.375rem);
+  /* Plafond remesure a l'ecran, les notes precedentes etaient fausses : la
+     colonne fait 900 px et non 1200, et la ligne la plus large n'est pas de
+     16,44 em mais de 13,388 em (l'anglaise « We deliver what it takes to
+     grow. » ; la francaise fait 12,589 em).
+
+     A 900 px de colonne, l'anglaise tient donc jusqu'a 67 px et la francaise
+     jusqu'a 71 px. On plafonne a 4rem, soit 64 px : trois pixels de marge
+     sous la limite, et le titre reste sur deux lignes dans les deux langues.
+
+     Le minimum reste a 2,5rem : §03 interdit la fonte d'affichage sous
+     28 px. */
+  font-size: clamp(2.5rem, 5vw, 4rem);
   line-height: 1.05;
   letter-spacing: -0.01em;
   color: var(--blanc-casse);

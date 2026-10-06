@@ -28,6 +28,12 @@
 
   var anglais = (document.documentElement.lang || 'fr').slice(0, 2) === 'en';
 
+  /* `novalidate` est pose ici, pas dans le HTML : sans JavaScript, le
+     navigateur doit garder la main et refuser un envoi incomplet. Le mettre
+     dans la page desactivait la verification pour tout le monde, y compris
+     quand ce script ne tourne pas. */
+  form.noValidate = true;
+
   var MOTS = anglais ? {
     envoi:   'Sending…',
     merci:   'Thank you, we have your request. We answer within 24 to 48 business hours.',
