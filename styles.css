@@ -1712,6 +1712,11 @@ main { position: relative; }
 
 .lien-action:hover { color: var(--ambre-texte); }
 
+/* Sous la frise du processus. Aligne a gauche comme .piliers__suite, sur le
+   bord des blocs d'etapes : l'en-tete de la section est centre, pas la frise
+   qu'il surmonte. */
+.process__suite { margin: var(--sp-7) 0 0; }
+
 /* Aligné sur le bord gauche du panneau 01, jamais centré. */
 .piliers__suite {
   width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
