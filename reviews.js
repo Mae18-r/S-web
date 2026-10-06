@@ -12,15 +12,15 @@
 
   var AVIS = {
     fr: [
-      { rating: 5, label: 'Client vérifié',
+      { rating: 5, label: 'Moctar, X.Vision',
         text: '« Une entreprise professionnelle, sérieuse et à l’écoute de ses clients. Une expérience très satisfaisante, avec un service de qualité et un accompagnement efficace du début à la fin. Je recommande vivement S-WEB pour son professionnalisme et la qualité de son travail. »' },
-      { rating: 5, label: 'Client vérifié',
+      { rating: 5, label: 'Wallace, Média Connexion',
         text: '« Très rapide, et excellent. »' }
     ],
     en: [
-      { rating: 5, label: 'Verified client',
+      { rating: 5, label: 'Moctar, X.Vision',
         text: '“A professional, serious company that listens to its clients. A very satisfying experience, with quality service and effective support from start to finish. I highly recommend S-WEB for its professionalism and the quality of its work.”' },
-      { rating: 5, label: 'Verified client',
+      { rating: 5, label: 'Wallace, Média Connexion',
         text: '“Very fast, and excellent.”' }
     ]
   };

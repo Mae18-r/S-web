@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Contact &middot; S-WEB</title>
-<meta name="description" content="Joindre S-WEB à Ottawa-Gatineau : téléphone, courriel et réponse en 24 à 48 h ouvrables. Français et anglais.">
+<meta name="description" content="Joindre S-WEB à Ottawa-Gatineau : téléphone, courriel, ou le formulaire pour être rappelé. Réponse en 24 à 48 h ouvrables, en français et en anglais.">
 <link rel="canonical" href="https://www.s-webagency.com/contact">
 <link rel="alternate" hreflang="fr" href="https://www.s-webagency.com/contact">
 <link rel="alternate" hreflang="en" href="https://www.s-webagency.com/en/contact">
@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="S-WEB Agency">
 <meta property="og:locale" content="fr_CA">
 <meta property="og:title" content="Contact · S-WEB">
-<meta property="og:description" content="Joindre S-WEB à Ottawa-Gatineau : téléphone, courriel et réponse en 24 à 48 h ouvrables. Français et anglais.">
+<meta property="og:description" content="Joindre S-WEB à Ottawa-Gatineau : téléphone, courriel, ou le formulaire pour être rappelé. Réponse en 24 à 48 h ouvrables, en français et en anglais.">
 <meta property="og:url" content="https://www.s-webagency.com/contact">
 <meta property="og:image" content="https://www.s-webagency.com/assets/Heros-web.jpg">
 <meta property="og:image:width" content="928">
@@ -71,7 +71,7 @@
 
     <p class="telephone"><a class="lien-tel" href="tel:+16134109391">(613)&nbsp;410-9391</a></p>
 
-    <a class="bouton bouton--secondaire entete__cta" href="/reserver-un-appel">Nous joindre</a>
+    <a class="bouton bouton--secondaire entete__cta" href="/contact#reserver">Nous joindre</a>
   </div>
 
   <div class="panneau" id="menu-mobile">
@@ -95,7 +95,7 @@
       <p class="telephone"><a class="lien-tel" href="tel:+16134109391">(613)&nbsp;410-9391</a></p>
     </div>
 
-    <a class="bouton bouton--secondaire panneau__cta" href="/reserver-un-appel">Nous joindre</a>
+    <a class="bouton bouton--secondaire panneau__cta" href="/contact#reserver">Nous joindre</a>
   </div>
 </header>
 
@@ -147,7 +147,7 @@
       <p class="contact__meta">R&eacute;ponse en 24 &agrave; 48&nbsp;h ouvrables &middot; Fran&ccedil;ais et anglais &middot; Ottawa&ndash;Gatineau</p>
 
       <div class="contact__actions">
-        <a class="bouton bouton--primaire" href="/reserver-un-appel">
+        <a class="bouton bouton--primaire" href="/contact#reserver">
           <span class="bouton__texte">R&eacute;server un appel</span>
           <svg class="bouton__fleche" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.25"/></svg>
         </a>
@@ -173,6 +173,110 @@
       </div>
     </div>
 
+  </section>
+
+  <section class="reserver" id="reserver">
+    <div class="reserver__contenu">
+
+      <div class="reserver__gauche">
+        <div class="reserver__colle">
+          <p class="reserver__eyebrow">R&eacute;server un appel</p>
+          <h2 class="reserver__h2">On est pr&ecirc;ts &agrave; vous aider</h2>
+          <p class="reserver__intro">On vous rappelle dans les 24 &agrave; 48&nbsp;h pour un appel-conseil, sans engagement.</p>
+
+        </div>
+      </div>
+
+      <div class="reserver__droite">
+
+        <form class="form" action="https://api.web3forms.com/submit" method="post" novalidate>
+
+        <input type="hidden" name="access_key" value="0a0f23d1-4bc5-4973-86af-d6e6297a0d74">
+        <input type="hidden" name="subject" value="Demande d'appel depuis s-webagency.com">
+        <!-- Piege a robots : Web3Forms rejette l'envoi si ce champ est rempli.
+             Il doit rester en display:none, et hors du clavier et des lecteurs
+             d'ecran. -->
+        <input class="piege" type="checkbox" name="botcheck" tabindex="-1" aria-hidden="true">
+
+        <div class="champ">
+          <label class="champ__label" for="entreprise">Nom de l'entreprise</label>
+          <input class="champ__saisie" type="text" id="entreprise" name="entreprise" required
+                 aria-describedby="entreprise-err">
+          <p class="champ__erreur" id="entreprise-err"><span class="champ__croix" aria-hidden="true">&times;</span> Ce champ est requis.</p>
+        </div>
+
+        <div class="champ">
+          <label class="champ__label" for="nom">Votre nom</label>
+          <input class="champ__saisie" type="text" id="nom" name="nom" required
+                 aria-describedby="nom-err">
+          <p class="champ__erreur" id="nom-err"><span class="champ__croix" aria-hidden="true">&times;</span> Ce champ est requis.</p>
+        </div>
+
+        <div class="champ">
+          <label class="champ__label" for="courriel">Courriel</label>
+          <input class="champ__saisie" type="email" id="courriel" name="email" required
+                 aria-describedby="courriel-err">
+          <p class="champ__erreur" id="courriel-err"><span class="champ__croix" aria-hidden="true">&times;</span> Entrez une adresse courriel valide.</p>
+        </div>
+
+        <div class="champ">
+          <label class="champ__label" for="telephone">T&eacute;l&eacute;phone</label>
+          <input class="champ__saisie" type="tel" id="telephone" name="telephone" required
+                 aria-describedby="telephone-err">
+          <p class="champ__erreur" id="telephone-err"><span class="champ__croix" aria-hidden="true">&times;</span> Ce champ est requis.</p>
+        </div>
+
+        <div class="champ">
+          <div class="champ__tete">
+            <label class="champ__label" for="domaine">Domaine d'activit&eacute;</label>
+            <span class="aide"><button class="aide__bouton" type="button" aria-label="Aide">?</button><span class="aide__bulle" id="domaine-aide" role="tooltip">Toiture, clinique, paysagement, commerce, esth&eacute;tique&hellip;</span></span>
+          </div>
+          <input class="champ__saisie" type="text" id="domaine" name="domaine" required
+                 aria-describedby="domaine-aide domaine-err">
+          <p class="champ__erreur" id="domaine-err"><span class="champ__croix" aria-hidden="true">&times;</span> Ce champ est requis.</p>
+        </div>
+
+        <div class="champ">
+          <div class="champ__tete">
+            <label class="champ__label" for="zone">Zone desservie</label>
+            <span class="aide"><button class="aide__bouton" type="button" aria-label="Aide">?</button><span class="aide__bulle" id="zone-aide" role="tooltip">Les villes ou quartiers o&ugrave; vous travaillez.</span></span>
+          </div>
+          <input class="champ__saisie" type="text" id="zone" name="zone" required
+                 aria-describedby="zone-aide zone-err">
+          <p class="champ__erreur" id="zone-err"><span class="champ__croix" aria-hidden="true">&times;</span> Ce champ est requis.</p>
+        </div>
+
+        <fieldset class="champ champ--groupe" aria-describedby="logo-aide">
+          <legend class="champ__label">Avez-vous d&eacute;j&agrave; un logo&nbsp;? <span class="champ__facultatif">(facultatif)</span> <span class="aide"><button class="aide__bouton" type="button" aria-label="Aide">?</button><span class="aide__bulle" id="logo-aide" role="tooltip">&Ccedil;a nous dit si l'identit&eacute; fait partie du projet.</span></span></legend>
+          <div class="radios">
+            <label class="radio"><input class="radio__saisie" type="radio" name="logo" value="oui"><span class="radio__texte">Oui</span></label>
+            <label class="radio"><input class="radio__saisie" type="radio" name="logo" value="non"><span class="radio__texte">Non</span></label>
+            <label class="radio"><input class="radio__saisie" type="radio" name="logo" value="refaire"><span class="radio__texte">&Agrave; refaire</span></label>
+          </div>
+        </fieldset>
+
+        <div class="champ">
+          <div class="champ__tete">
+            <label class="champ__label" for="details">Dites-nous en plus <span class="champ__facultatif">(facultatif)</span></label>
+            <span class="aide"><button class="aide__bouton" type="button" aria-label="Aide">?</button><span class="aide__bulle" id="details-aide" role="tooltip">Ce qui bloque en ce moment, ce que vous aimeriez, ce que vous avez d&eacute;j&agrave;.</span></span>
+          </div>
+          <textarea class="champ__saisie champ__zone" id="details" name="details" rows="5" aria-describedby="details-aide"></textarea>
+        </div>
+
+        <div class="form__envoi">
+          <button class="bouton bouton--primaire" type="submit">
+            <span class="bouton__texte">Envoyer</span>
+            <svg class="bouton__fleche" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.25"/></svg>
+          </button>
+          <p class="form__delai">On r&eacute;pond en 24 &agrave; 48&nbsp;h.</p>
+        </div>
+
+        <p class="form__vie-privee">Vos coordonn&eacute;es servent uniquement &agrave; vous r&eacute;pondre. On ne les partage pas et on ne vous inscrit &agrave; aucune infolettre.</p>
+        </form>
+
+      </div>
+
+    </div>
   </section>
 
 </main>
@@ -245,6 +349,7 @@
 
 <script src="menu.js" defer></script>
 <script src="haut.js" defer></script>
+<script src="formulaire.js" defer></script>
 <script src="temoins.js" defer></script>
 </body>
 </html>

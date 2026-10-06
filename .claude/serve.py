@@ -25,6 +25,23 @@ class SansCache(http.server.SimpleHTTPRequestHandler):
         self.send_header("Expires", "0")
         super().end_headers()
 
+    # Memes redirections que vercel.json : la page de reservation a fusionne
+    # avec la page Contact. Sans ca, l'ancienne adresse renvoie 404 en local
+    # alors qu'elle redirige en production, et on croit a une regression.
+    REDIRECTIONS = {
+        "/reserver-un-appel": "/contact#reserver",
+        "/en/book-a-call": "/en/contact#reserver",
+    }
+
+    def do_GET(self):
+        cible = self.REDIRECTIONS.get(self.path.rstrip("/"))
+        if cible:
+            self.send_response(301)
+            self.send_header("Location", cible)
+            self.end_headers()
+            return
+        super().do_GET()
+
     def translate_path(self, path):
         chemin = super().translate_path(path)
         if not os.path.exists(chemin) and os.path.isfile(chemin + ".html"):

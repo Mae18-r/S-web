@@ -1284,6 +1284,9 @@ main { position: relative; }
    et le titre est du grand texte. */
 .impact__titre {
   margin: 0 0 var(--sp-5);
+  text-align: center;                    /* le titre etait colle au bord gauche
+                                            de sa colonne, qui est plus large
+                                            que lui */
   font-family: var(--font-display);
   font-weight: 700;
   font-size: clamp(1.75rem, 3vw + 0.5rem, 2.5rem);
@@ -2396,13 +2399,16 @@ main { position: relative; }
   color: var(--gris-structure);
 }
 
-.reserver__h1 {
+/* Le formulaire vit desormais sur la page Contact, qui a deja son H1 :
+   l'intitule de la section est donc un H2. Il garde le corps d'un titre de
+   section, §03, et non celui d'un H1. */
+.reserver__h2 {
   margin: 0 0 var(--sp-5);
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(2.5rem, 5vw, 3.5rem);
-  line-height: 1.05;
-  letter-spacing: -0.01em;
+  font-size: clamp(1.75rem, 3vw + 0.5rem, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.005em;
   color: var(--encre);
 }
 
@@ -4039,7 +4045,11 @@ main { position: relative; }
 }
 
 .avis-invite__texte {
-  margin: 0;
+  /* Sans les marges automatiques, la largeur maximale fige le paragraphe a
+     gauche pendant que le label et le lien, eux, sont centres : son centre
+     tombait 140 px a gauche de celui du bloc. */
+  margin-inline: auto;
+  margin-block: 0;
   max-width: 55ch;
   font: 400 17px/1.6 var(--font-corps);
   color: var(--encre);

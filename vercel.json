@@ -1,4 +1,16 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "cleanUrls": true
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "/reserver-un-appel",
+      "destination": "/contact#reserver",
+      "permanent": true
+    },
+    {
+      "source": "/en/book-a-call",
+      "destination": "/en/contact#reserver",
+      "permanent": true
+    }
+  ]
 }
