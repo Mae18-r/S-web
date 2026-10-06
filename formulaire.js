@@ -47,6 +47,70 @@
   reponse.hidden = true;
   form.appendChild(reponse);
 
+  /* --- Modules choisis sur la page Services -----------------------------
+     La selection arrive en parametre d'adresse et, a defaut, dans
+     localStorage. On pre-remplit la zone de texte plutot que d'ajouter un
+     champ : la demande arrive ainsi dans le courriel comme le reste, sans
+     traitement particulier.
+
+     On n'ecrase jamais ce que la personne a deja ecrit. */
+  /* Table explicite plutot qu'un slug remis en forme : « reservation-en-ligne »
+     redonnerait « Reservation » sans accent. Les slugs sont stables, la table
+     ne bouge que si un module change de nom. */
+  var NOMS = anglais ? {
+    'reservation-en-ligne': 'Online booking connected to your system',
+    'formulaires-soumission': 'Quote request forms',
+    'pages-de-service': 'Service pages, one per treatment or per product',
+    'paiement-cartes-cadeaux': 'Payments and gift cards',
+    'boutique-en-ligne': 'Online store',
+    'promotions-autonomes': 'Promotions you edit yourself',
+    'rappels-automatises': 'Automated reminders and follow-ups',
+    'acces-autonome-contenu': 'Self-serve access to your content',
+    'calculatrice-financement': 'Financing calculator',
+    'receptionniste-ia': 'AI receptionist'
+  } : {
+    'reservation-en-ligne': 'R\u00e9servation en ligne branch\u00e9e \u00e0 votre syst\u00e8me',
+    'formulaires-soumission': 'Formulaires de demande de soumission',
+    'pages-de-service': 'Pages de service, une par traitement ou par produit',
+    'paiement-cartes-cadeaux': 'Paiement et cartes cadeaux',
+    'boutique-en-ligne': 'Boutique en ligne',
+    'promotions-autonomes': 'Promotions que vous modifiez vous-m\u00eame',
+    'rappels-automatises': 'Automatisation des rappels et des suivis',
+    'acces-autonome-contenu': 'Acc\u00e8s autonome \u00e0 votre contenu',
+    'calculatrice-financement': 'Calculatrice de financement',
+    'receptionniste-ia': 'R\u00e9ceptionniste IA'
+  };
+
+  function nomsDesModules() {
+    var bruts = [];
+    try {
+      var p = new URLSearchParams(window.location.search).get('modules');
+      if (p) bruts = p.split(',');
+    } catch (e) { /* adresse illisible, on passe */ }
+    if (!bruts.length) {
+      try {
+        var m = localStorage.getItem('sweb-modules');
+        if (m) bruts = m.split(',');
+      } catch (e) { /* tant pis */ }
+    }
+    return bruts.filter(Boolean);
+  }
+
+  function preremplit() {
+    var zone = form.querySelector('textarea');
+    var slugs = nomsDesModules();
+    if (!zone || !slugs.length || zone.value.trim()) return;
+
+    var noms = slugs.map(function (s) { return NOMS[s] || s; });
+
+    zone.value = (anglais
+      ? 'Hello, I am interested in the following modules: '
+      : 'Bonjour, je suis int\u00e9ress\u00e9(e) par les modules suivants : ')
+      + noms.join(', ') + '.';
+  }
+
+  preremplit();
+
   var bouton = form.querySelector('button[type="submit"]');
   var libelle = bouton && bouton.querySelector('.bouton__texte');
 
@@ -96,6 +160,7 @@
          le code HTTP : on verifie les deux. */
       if (!recu || recu.success !== true) throw new Error('refus');
       form.reset();
+      try { localStorage.removeItem('sweb-modules'); } catch (e) { /* tant pis */ }
       dis(MOTS.merci, false, 'succes');
     }).catch(function () {
       dis(MOTS.echec, true, 'echec');

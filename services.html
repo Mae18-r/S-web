@@ -229,18 +229,139 @@
       <h2 class="sect__titre">Le site s'adapte &agrave; ce que vous vendez.</h2>
       <p class="sect__intro">Un forfait de base identique pour tous, et des fonctions ajout&eacute;es selon votre m&eacute;tier. On en discute &agrave; l'appel d&eacute;couverte, et tout ce qui s'ajoute est chiffr&eacute; dans la soumission avant que vous vous engagiez.</p>
 
-      <ul class="modules__liste">
-          <li>R&eacute;servation en ligne branch&eacute;e &agrave; votre syst&egrave;me</li>
-          <li>Paiement et cartes cadeaux</li>
-          <li>Calculatrice de financement</li>
-          <li>Promotions que vous modifiez vous-m&ecirc;me</li>
-          <li>Boutique en ligne, sur Shopify ou sur la plateforme que vous avez d&eacute;j&agrave;</li>
-          <li>Formulaires de demande de soumission</li>
-          <li>Automatisation des rappels et des suivis</li>
-          <li>Pages de service, une par traitement ou par produit</li>
-          <li>Acc&egrave;s autonome &agrave; votre contenu, avec formation</li>
-          <li>Logo et identit&eacute; visuelle, sur soumission</li>
-      </ul>
+      <div class="modules__groupes">
+      <div class="grp" data-ouvert="true">
+        <h3 class="grp__entete">
+          <button class="grp__declencheur" type="button" aria-expanded="true" aria-controls="grp-demandes">
+            <svg class="grp__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M 3 5 H 21 V 19 H 3 Z"/><path d="M 3 13 H 8 L 10 15 H 14 L 16 13 H 21"/></svg>
+            <span class="grp__titre">Recevoir plus de demandes</span>
+            <span class="grp__compte">3 modules</span>
+            <svg class="grp__chevron" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M 5 9 L 12 16 L 19 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/></svg>
+          </button>
+        </h3>
+        <div class="grp__panneau" id="grp-demandes">
+          <ul class="grp__liste">
+          <li class="mod" data-slug="reservation-en-ligne" data-nom="Réservation en ligne branchée à votre système">
+            <svg class="mod__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M 3.5 5.5 H 20.5 V 20 H 3.5 Z"/><path d="M 3.5 10 H 20.5"/><path d="M 8 3 V 7"/><path d="M 16 3 V 7"/></svg>
+            <p class="mod__badge">Populaire</p>
+            <h4 class="mod__nom">Réservation en ligne branchée à votre système</h4>
+            <p class="mod__benefice">Vos clients réservent pendant que vous travaillez.</p>
+            <button class="mod__ajout" type="button" aria-pressed="false">
+              <svg class="mod__coche" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" stroke-linejoin="miter"><path d="M 5 12.5 L 10 17.5 L 19 7"/></svg><span class="mod__ajout-texte">Ajouter &agrave; ma demande</span>
+            </button>
+          </li>
+          <li class="mod" data-slug="formulaires-soumission" data-nom="Formulaires de demande de soumission">
+            <svg class="mod__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M 4.5 3.5 H 19.5 V 20.5 H 4.5 Z"/><path d="M 8 8.5 H 16"/><path d="M 8 12.5 H 16"/><path d="M 8 16.5 H 12.5"/></svg>
+            <h4 class="mod__nom">Formulaires de demande de soumission</h4>
+            <p class="mod__benefice">Des demandes qualifiées, pas des appels dans le vide.</p>
+            <button class="mod__ajout" type="button" aria-pressed="false">
+              <svg class="mod__coche" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" stroke-linejoin="miter"><path d="M 5 12.5 L 10 17.5 L 19 7"/></svg><span class="mod__ajout-texte">Ajouter &agrave; ma demande</span>
+            </button>
+          </li>
+          <li class="mod" data-slug="pages-de-service" data-nom="Pages de service, une par traitement ou par produit">
+            <svg class="mod__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M 7 3.5 H 20.5 V 17 H 7 Z"/><path d="M 3.5 7 V 20.5 H 17"/></svg>
+            <h4 class="mod__nom">Pages de service, une par traitement ou par produit</h4>
+            <p class="mod__benefice">Chaque soin, chaque service a sa page qui se référence sur Google.</p>
+            <button class="mod__ajout" type="button" aria-pressed="false">
+              <svg class="mod__coche" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" stroke-linejoin="miter"><path d="M 5 12.5 L 10 17.5 L 19 7"/></svg><span class="mod__ajout-texte">Ajouter &agrave; ma demande</span>
+            </button>
+          </li>
+          </ul>
+        </div>
+      </div>
+      <div class="grp" data-ouvert="true">
+        <h3 class="grp__entete">
+          <button class="grp__declencheur" type="button" aria-expanded="true" aria-controls="grp-vendre">
+            <svg class="grp__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M 3 6 H 6 L 8.5 16 H 19"/><path d="M 6.5 9 H 21 L 19.5 16"/><path d="M 9 19.5 H 10.5 V 21 H 9 Z"/><path d="M 16 19.5 H 17.5 V 21 H 16 Z"/></svg>
+            <span class="grp__titre">Vendre sans y penser</span>
+            <span class="grp__compte">3 modules</span>
+            <svg class="grp__chevron" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M 5 9 L 12 16 L 19 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/></svg>
+          </button>
+        </h3>
+        <div class="grp__panneau" id="grp-vendre">
+          <ul class="grp__liste">
+          <li class="mod" data-slug="paiement-cartes-cadeaux" data-nom="Paiement et cartes cadeaux">
+            <svg class="mod__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M 3 6 H 21 V 18 H 3 Z"/><path d="M 3 10 H 21"/><path d="M 6.5 14.5 H 11"/></svg>
+            <p class="mod__badge">Populaire</p>
+            <h4 class="mod__nom">Paiement et cartes cadeaux</h4>
+            <p class="mod__benefice">Encaissez avant le rendez-vous, même à 23 h.</p>
+            <button class="mod__ajout" type="button" aria-pressed="false">
+              <svg class="mod__coche" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" stroke-linejoin="miter"><path d="M 5 12.5 L 10 17.5 L 19 7"/></svg><span class="mod__ajout-texte">Ajouter &agrave; ma demande</span>
+            </button>
+          </li>
+          <li class="mod" data-slug="boutique-en-ligne" data-nom="Boutique en ligne, sur Shopify ou votre plateforme">
+            <svg class="mod__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M 4 9.5 H 20 V 20 H 4 Z"/><path d="M 4 9.5 L 6 4 H 18 L 20 9.5"/><path d="M 9.5 14 H 14.5"/></svg>
+            <h4 class="mod__nom">Boutique en ligne, sur Shopify ou votre plateforme</h4>
+            <p class="mod__benefice">Vendez vos produits même quand la boutique est fermée.</p>
+            <button class="mod__ajout" type="button" aria-pressed="false">
+              <svg class="mod__coche" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" stroke-linejoin="miter"><path d="M 5 12.5 L 10 17.5 L 19 7"/></svg><span class="mod__ajout-texte">Ajouter &agrave; ma demande</span>
+            </button>
+          </li>
+          <li class="mod" data-slug="promotions-autonomes" data-nom="Promotions que vous modifiez vous-même">
+            <svg class="mod__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M 3.5 3.5 H 12 L 20.5 12 L 12 20.5 L 3.5 12 Z"/><path d="M 7.5 7 H 9 V 8.5 H 7.5 Z" fill="currentColor" stroke="none"/></svg>
+            <h4 class="mod__nom">Promotions que vous modifiez vous-même</h4>
+            <p class="mod__benefice">Lancez une promo sans nous appeler.</p>
+            <button class="mod__ajout" type="button" aria-pressed="false">
+              <svg class="mod__coche" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" stroke-linejoin="miter"><path d="M 5 12.5 L 10 17.5 L 19 7"/></svg><span class="mod__ajout-texte">Ajouter &agrave; ma demande</span>
+            </button>
+          </li>
+          </ul>
+        </div>
+      </div>
+      <div class="grp" data-ouvert="true">
+        <h3 class="grp__entete">
+          <button class="grp__declencheur" type="button" aria-expanded="true" aria-controls="grp-temps">
+            <svg class="grp__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M 3.5 12 A 8.5 8.5 0 1 0 20.5 12 A 8.5 8.5 0 1 0 3.5 12 Z"/><path d="M 12 6.5 V 12 L 16 14.5"/></svg>
+            <span class="grp__titre">Gagner du temps</span>
+            <span class="grp__compte">3 modules</span>
+            <svg class="grp__chevron" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M 5 9 L 12 16 L 19 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/></svg>
+          </button>
+        </h3>
+        <div class="grp__panneau" id="grp-temps">
+          <ul class="grp__liste">
+          <li class="mod" data-slug="rappels-automatises" data-nom="Automatisation des rappels et des suivis">
+            <svg class="mod__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M 13.5 3 L 6 13 H 11.5 L 10.5 21 L 18 11 H 12.5 Z"/></svg>
+            <p class="mod__badge">Populaire</p>
+            <h4 class="mod__nom">Automatisation des rappels et des suivis</h4>
+            <p class="mod__benefice">Moins de rendez-vous manqués, sans y penser.</p>
+            <button class="mod__ajout" type="button" aria-pressed="false">
+              <svg class="mod__coche" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" stroke-linejoin="miter"><path d="M 5 12.5 L 10 17.5 L 19 7"/></svg><span class="mod__ajout-texte">Ajouter &agrave; ma demande</span>
+            </button>
+          </li>
+          <li class="mod" data-slug="acces-autonome-contenu" data-nom="Accès autonome à votre contenu, avec formation">
+            <svg class="mod__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M 3 6.5 H 21 V 17.5 H 3 Z"/><path d="M 6.5 10 H 8"/><path d="M 11 10 H 13"/><path d="M 16 10 H 17.5"/><path d="M 8 14 H 16"/></svg>
+            <h4 class="mod__nom">Accès autonome à votre contenu, avec formation</h4>
+            <p class="mod__benefice">Changez un texte ou un prix vous-même, en deux minutes.</p>
+            <button class="mod__ajout" type="button" aria-pressed="false">
+              <svg class="mod__coche" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" stroke-linejoin="miter"><path d="M 5 12.5 L 10 17.5 L 19 7"/></svg><span class="mod__ajout-texte">Ajouter &agrave; ma demande</span>
+            </button>
+          </li>
+          <li class="mod" data-slug="calculatrice-financement" data-nom="Calculatrice de financement">
+            <svg class="mod__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M 5 3.5 H 19 V 20.5 H 5 Z"/><path d="M 8 7.5 H 16"/><path d="M 8.5 12 H 10"/><path d="M 14 12 H 15.5"/><path d="M 8.5 16 H 10"/><path d="M 14 16 H 15.5"/></svg>
+            <h4 class="mod__nom">Calculatrice de financement</h4>
+            <p class="mod__benefice">Vos clients voient leurs mensualités sans vous appeler.</p>
+            <button class="mod__ajout" type="button" aria-pressed="false">
+              <svg class="mod__coche" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" stroke-linejoin="miter"><path d="M 5 12.5 L 10 17.5 L 19 7"/></svg><span class="mod__ajout-texte">Ajouter &agrave; ma demande</span>
+            </button>
+          </li>
+          </ul>
+        </div>
+      </div>
+      </div>
+
+      <div class="vedette" data-slug="receptionniste-ia" data-nom="Réceptionniste IA">
+        <p class="vedette__badge">En option &middot; sur abonnement</p>
+        <h3 class="vedette__titre">Et vos appels, qui y répond ?</h3>
+        <p class="vedette__texte">La réceptionniste IA répond en français et en anglais, jour et nuit. Tarif sur devis selon vos besoins.</p>
+        <div class="vedette__actions">
+          <button class="mod__ajout" type="button" aria-pressed="false">
+            <svg class="mod__coche" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" stroke-linejoin="miter"><path d="M 5 12.5 L 10 17.5 L 19 7"/></svg><span class="mod__ajout-texte">Ajouter &agrave; ma demande</span>
+          </button>
+          <a class="lien-action" href="https://demo.s-webagency.com/fr" target="_blank" rel="noopener">Essayer la d&eacute;mo de 90 secondes&nbsp;&rarr;</a>
+        </div>
+      </div>
+
+      <p class="modules__identite">Besoin d'un logo ou d'une identit&eacute; visuelle&nbsp;? C'est le m&eacute;tier de X&euml;cc, notre p&ocirc;le identit&eacute;, sur soumission.</p>
 
       <p class="modules__note">Sur les pages de service, l'adresse de chaque page existante est conserv&eacute;e ou redirig&eacute;e, et vos textes sont repris plut&ocirc;t que remplac&eacute;s. L'acc&egrave;s autonome au contenu ne remplace pas l'entretien mensuel.</p>
 
@@ -417,6 +538,7 @@
 <script src="menu.js" defer></script>
 <script src="haut.js" defer></script>
 <script src="services.js" defer></script>
+<script src="modules.js" defer></script>
 <script src="temoins.js" defer></script>
 </body>
 </html>

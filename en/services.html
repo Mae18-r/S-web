@@ -229,18 +229,139 @@
       <h2 class="sect__titre">The site adapts to what you sell.</h2>
       <p class="sect__intro">The same base package for everyone, with features added to fit your trade. We discuss it on the discovery call, and anything added is priced in the proposal before you commit.</p>
 
-      <ul class="modules__liste">
-          <li>Online booking connected to your system</li>
-          <li>Payments and gift cards</li>
-          <li>Financing calculator</li>
-          <li>Promotions you edit yourself</li>
-          <li>Online store, on Shopify or on the platform you already use</li>
-          <li>Quote request forms</li>
-          <li>Automated reminders and follow-ups</li>
-          <li>Service pages, one per treatment or per product</li>
-          <li>Self-serve access to your content, training included</li>
-          <li>Logo and visual identity, on quote</li>
-      </ul>
+      <div class="modules__groupes">
+      <div class="grp" data-ouvert="true">
+        <h3 class="grp__entete">
+          <button class="grp__declencheur" type="button" aria-expanded="true" aria-controls="grp-demandes">
+            <svg class="grp__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M 3 5 H 21 V 19 H 3 Z"/><path d="M 3 13 H 8 L 10 15 H 14 L 16 13 H 21"/></svg>
+            <span class="grp__titre">Get more enquiries</span>
+            <span class="grp__compte">3 modules</span>
+            <svg class="grp__chevron" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M 5 9 L 12 16 L 19 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/></svg>
+          </button>
+        </h3>
+        <div class="grp__panneau" id="grp-demandes">
+          <ul class="grp__liste">
+          <li class="mod" data-slug="reservation-en-ligne" data-nom="Online booking connected to your system">
+            <svg class="mod__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M 3.5 5.5 H 20.5 V 20 H 3.5 Z"/><path d="M 3.5 10 H 20.5"/><path d="M 8 3 V 7"/><path d="M 16 3 V 7"/></svg>
+            <p class="mod__badge">Popular</p>
+            <h4 class="mod__nom">Online booking connected to your system</h4>
+            <p class="mod__benefice">Your clients book while you work.</p>
+            <button class="mod__ajout" type="button" aria-pressed="false">
+              <svg class="mod__coche" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" stroke-linejoin="miter"><path d="M 5 12.5 L 10 17.5 L 19 7"/></svg><span class="mod__ajout-texte">Add to my request</span>
+            </button>
+          </li>
+          <li class="mod" data-slug="formulaires-soumission" data-nom="Quote request forms">
+            <svg class="mod__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M 4.5 3.5 H 19.5 V 20.5 H 4.5 Z"/><path d="M 8 8.5 H 16"/><path d="M 8 12.5 H 16"/><path d="M 8 16.5 H 12.5"/></svg>
+            <h4 class="mod__nom">Quote request forms</h4>
+            <p class="mod__benefice">Qualified enquiries, not calls into the void.</p>
+            <button class="mod__ajout" type="button" aria-pressed="false">
+              <svg class="mod__coche" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" stroke-linejoin="miter"><path d="M 5 12.5 L 10 17.5 L 19 7"/></svg><span class="mod__ajout-texte">Add to my request</span>
+            </button>
+          </li>
+          <li class="mod" data-slug="pages-de-service" data-nom="Service pages, one per treatment or per product">
+            <svg class="mod__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M 7 3.5 H 20.5 V 17 H 7 Z"/><path d="M 3.5 7 V 20.5 H 17"/></svg>
+            <h4 class="mod__nom">Service pages, one per treatment or per product</h4>
+            <p class="mod__benefice">Every treatment, every service gets its own page that ranks on Google.</p>
+            <button class="mod__ajout" type="button" aria-pressed="false">
+              <svg class="mod__coche" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" stroke-linejoin="miter"><path d="M 5 12.5 L 10 17.5 L 19 7"/></svg><span class="mod__ajout-texte">Add to my request</span>
+            </button>
+          </li>
+          </ul>
+        </div>
+      </div>
+      <div class="grp" data-ouvert="true">
+        <h3 class="grp__entete">
+          <button class="grp__declencheur" type="button" aria-expanded="true" aria-controls="grp-vendre">
+            <svg class="grp__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M 3 6 H 6 L 8.5 16 H 19"/><path d="M 6.5 9 H 21 L 19.5 16"/><path d="M 9 19.5 H 10.5 V 21 H 9 Z"/><path d="M 16 19.5 H 17.5 V 21 H 16 Z"/></svg>
+            <span class="grp__titre">Sell without thinking about it</span>
+            <span class="grp__compte">3 modules</span>
+            <svg class="grp__chevron" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M 5 9 L 12 16 L 19 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/></svg>
+          </button>
+        </h3>
+        <div class="grp__panneau" id="grp-vendre">
+          <ul class="grp__liste">
+          <li class="mod" data-slug="paiement-cartes-cadeaux" data-nom="Payments and gift cards">
+            <svg class="mod__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M 3 6 H 21 V 18 H 3 Z"/><path d="M 3 10 H 21"/><path d="M 6.5 14.5 H 11"/></svg>
+            <p class="mod__badge">Popular</p>
+            <h4 class="mod__nom">Payments and gift cards</h4>
+            <p class="mod__benefice">Get paid before the appointment, even at 11 pm.</p>
+            <button class="mod__ajout" type="button" aria-pressed="false">
+              <svg class="mod__coche" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" stroke-linejoin="miter"><path d="M 5 12.5 L 10 17.5 L 19 7"/></svg><span class="mod__ajout-texte">Add to my request</span>
+            </button>
+          </li>
+          <li class="mod" data-slug="boutique-en-ligne" data-nom="Online store, on Shopify or your own platform">
+            <svg class="mod__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M 4 9.5 H 20 V 20 H 4 Z"/><path d="M 4 9.5 L 6 4 H 18 L 20 9.5"/><path d="M 9.5 14 H 14.5"/></svg>
+            <h4 class="mod__nom">Online store, on Shopify or your own platform</h4>
+            <p class="mod__benefice">Sell your products even when the shop is closed.</p>
+            <button class="mod__ajout" type="button" aria-pressed="false">
+              <svg class="mod__coche" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" stroke-linejoin="miter"><path d="M 5 12.5 L 10 17.5 L 19 7"/></svg><span class="mod__ajout-texte">Add to my request</span>
+            </button>
+          </li>
+          <li class="mod" data-slug="promotions-autonomes" data-nom="Promotions you edit yourself">
+            <svg class="mod__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M 3.5 3.5 H 12 L 20.5 12 L 12 20.5 L 3.5 12 Z"/><path d="M 7.5 7 H 9 V 8.5 H 7.5 Z" fill="currentColor" stroke="none"/></svg>
+            <h4 class="mod__nom">Promotions you edit yourself</h4>
+            <p class="mod__benefice">Launch a promotion without calling us.</p>
+            <button class="mod__ajout" type="button" aria-pressed="false">
+              <svg class="mod__coche" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" stroke-linejoin="miter"><path d="M 5 12.5 L 10 17.5 L 19 7"/></svg><span class="mod__ajout-texte">Add to my request</span>
+            </button>
+          </li>
+          </ul>
+        </div>
+      </div>
+      <div class="grp" data-ouvert="true">
+        <h3 class="grp__entete">
+          <button class="grp__declencheur" type="button" aria-expanded="true" aria-controls="grp-temps">
+            <svg class="grp__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M 3.5 12 A 8.5 8.5 0 1 0 20.5 12 A 8.5 8.5 0 1 0 3.5 12 Z"/><path d="M 12 6.5 V 12 L 16 14.5"/></svg>
+            <span class="grp__titre">Save time</span>
+            <span class="grp__compte">3 modules</span>
+            <svg class="grp__chevron" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M 5 9 L 12 16 L 19 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter"/></svg>
+          </button>
+        </h3>
+        <div class="grp__panneau" id="grp-temps">
+          <ul class="grp__liste">
+          <li class="mod" data-slug="rappels-automatises" data-nom="Automated reminders and follow-ups">
+            <svg class="mod__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M 13.5 3 L 6 13 H 11.5 L 10.5 21 L 18 11 H 12.5 Z"/></svg>
+            <p class="mod__badge">Popular</p>
+            <h4 class="mod__nom">Automated reminders and follow-ups</h4>
+            <p class="mod__benefice">Fewer missed appointments, without thinking about it.</p>
+            <button class="mod__ajout" type="button" aria-pressed="false">
+              <svg class="mod__coche" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" stroke-linejoin="miter"><path d="M 5 12.5 L 10 17.5 L 19 7"/></svg><span class="mod__ajout-texte">Add to my request</span>
+            </button>
+          </li>
+          <li class="mod" data-slug="acces-autonome-contenu" data-nom="Self-serve access to your content, training included">
+            <svg class="mod__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M 3 6.5 H 21 V 17.5 H 3 Z"/><path d="M 6.5 10 H 8"/><path d="M 11 10 H 13"/><path d="M 16 10 H 17.5"/><path d="M 8 14 H 16"/></svg>
+            <h4 class="mod__nom">Self-serve access to your content, training included</h4>
+            <p class="mod__benefice">Change a text or a price yourself, in two minutes.</p>
+            <button class="mod__ajout" type="button" aria-pressed="false">
+              <svg class="mod__coche" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" stroke-linejoin="miter"><path d="M 5 12.5 L 10 17.5 L 19 7"/></svg><span class="mod__ajout-texte">Add to my request</span>
+            </button>
+          </li>
+          <li class="mod" data-slug="calculatrice-financement" data-nom="Financing calculator">
+            <svg class="mod__icone" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter"><path d="M 5 3.5 H 19 V 20.5 H 5 Z"/><path d="M 8 7.5 H 16"/><path d="M 8.5 12 H 10"/><path d="M 14 12 H 15.5"/><path d="M 8.5 16 H 10"/><path d="M 14 16 H 15.5"/></svg>
+            <h4 class="mod__nom">Financing calculator</h4>
+            <p class="mod__benefice">Your clients see their monthly payments without calling you.</p>
+            <button class="mod__ajout" type="button" aria-pressed="false">
+              <svg class="mod__coche" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" stroke-linejoin="miter"><path d="M 5 12.5 L 10 17.5 L 19 7"/></svg><span class="mod__ajout-texte">Add to my request</span>
+            </button>
+          </li>
+          </ul>
+        </div>
+      </div>
+      </div>
+
+      <div class="vedette" data-slug="receptionniste-ia" data-nom="AI receptionist">
+        <p class="vedette__badge">Optional &middot; on subscription</p>
+        <h3 class="vedette__titre">And your calls, who answers them?</h3>
+        <p class="vedette__texte">The AI receptionist answers in French and English, day and night. Priced on quote, according to your needs.</p>
+        <div class="vedette__actions">
+          <button class="mod__ajout" type="button" aria-pressed="false">
+            <svg class="mod__coche" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="square" stroke-linejoin="miter"><path d="M 5 12.5 L 10 17.5 L 19 7"/></svg><span class="mod__ajout-texte">Add to my request</span>
+          </button>
+          <a class="lien-action" href="https://demo.s-webagency.com/en" target="_blank" rel="noopener">Hear the 90-second demo&nbsp;&rarr;</a>
+        </div>
+      </div>
+
+      <p class="modules__identite">Need a logo or a visual identity? That is X&euml;cc's trade, our identity arm, on quote.</p>
 
       <p class="modules__note">On service pages, every existing page address is kept or redirected, and your texts are carried over rather than replaced. Self-serve access to your content does not replace monthly maintenance.</p>
 
@@ -417,6 +538,7 @@
 <script src="../menu.js" defer></script>
 <script src="../haut.js" defer></script>
 <script src="../services.js" defer></script>
+<script src="../modules.js" defer></script>
 <script src="../temoins.js" defer></script>
 </body>
 </html>

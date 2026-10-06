@@ -4265,3 +4265,308 @@ main { position: relative; }
 
 /* Dans la frise, elle reste dans le bloc. */
 .process__bloc .ambiance { margin-top: var(--sp-4); }
+
+
+/* ==========================================================================
+   MODULES — trois panneaux depliants, cartes selectionnables, barre de choix.
+   Remplace la liste a plat de dix items en trois colonnes.
+
+   Sans JavaScript : les trois panneaux restent ouverts et toutes les cartes
+   restent lisibles. L'etat replie est pose par modules.js.
+   ========================================================================== */
+
+.modules__groupes { margin-top: var(--sp-6); }
+
+/* --- Un groupe ------------------------------------------------------------ */
+
+.grp { border-top: 1px solid var(--gris-structure); }
+.grp:last-of-type { border-bottom: 1px solid var(--gris-structure); }
+
+.grp__entete { margin: 0; }
+
+/* Le declencheur occupe toute la largeur : la cible tactile est la ligne
+   entiere, jamais le seul texte. */
+.grp__declencheur {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  width: 100%;
+  min-height: 64px;                      /* au-dessus du plancher de 44 px, §15 */
+  padding-block: var(--sp-4);
+  background: none;
+  border: 0;
+  color: var(--encre);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.grp__icone {
+  flex: none;
+  inline-size: 24px;
+  block-size: 24px;
+  color: var(--encre);
+}
+
+.grp__titre {
+  flex: 1 1 auto;
+  font: 700 20px/1.3 var(--font-corps);  /* §03 : H3 en Arial 700 20 px */
+}
+
+.grp__compte {
+  flex: none;
+  font: 400 13px/1.4 var(--font-mono);
+  letter-spacing: 0.02em;
+  color: var(--gris-structure);
+}
+
+.grp__chevron {
+  flex: none;
+  color: var(--gris-structure);
+  transition: transform var(--duree-panneau) var(--courbe);
+}
+
+.grp[data-ouvert="true"] .grp__chevron { transform: rotate(180deg); }
+
+/* Meme mecanique que la FAQ : 0fr -> 1fr, aucune hauteur magique a tenir. */
+.grp__panneau {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--duree-panneau) var(--courbe);
+}
+
+.grp[data-ouvert="true"] .grp__panneau { grid-template-rows: 1fr; }
+
+.grp__liste {
+  overflow: hidden;
+  min-height: 0;                         /* sans quoi la rangee 0fr refuse de
+                                            se refermer */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* --- Une carte module ----------------------------------------------------- */
+
+.grp[data-ouvert="true"] .grp__liste {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--sp-5);
+  padding-bottom: var(--sp-6);
+}
+
+.mod {
+  display: flex;
+  flex-direction: column;
+  padding: var(--sp-5);
+  background: var(--blanc);
+  border: 1px solid var(--gris-brume);
+  transition: border-color var(--duree-micro) var(--courbe);
+}
+
+.mod[data-choisi="true"] { border-color: var(--ambre); }
+
+.mod__icone {
+  inline-size: 28px;
+  block-size: 28px;
+  color: var(--encre);
+  margin-bottom: var(--sp-4);
+}
+
+.mod__badge {
+  margin: 0 0 var(--sp-2);
+  font: 400 11px/1.4 var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ambre-texte);             /* §02 : le seul ambre tolere en texte */
+}
+
+.mod__nom {
+  margin: 0 0 var(--sp-2);
+  font: 700 17px/1.35 var(--font-corps);
+  color: var(--encre);
+}
+
+.mod__benefice {
+  margin: 0 0 var(--sp-5);
+  flex: 1 1 auto;                        /* pousse le bouton en bas, les cartes
+                                            s'alignent sur une meme ligne */
+  font: 400 15px/1.6 var(--font-corps);
+  color: var(--gris-structure);          /* 4,94:1 sur Blanc */
+}
+
+.mod__ajout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  align-self: flex-start;
+  min-height: 44px;                      /* cible tactile, §15 */
+  padding-inline: var(--sp-4);
+  background: none;
+  border: 1px solid var(--encre);
+  border-radius: var(--radius-ui);
+  color: var(--encre);
+  font: 500 15px/1.2 var(--font-corps);
+  cursor: pointer;
+  transition:
+    background-color var(--duree-micro) var(--courbe),
+    border-color var(--duree-micro) var(--courbe),
+    color var(--duree-micro) var(--courbe);
+}
+
+.mod__ajout:hover { background: var(--encre); color: var(--blanc-casse); }
+
+[data-choisi="true"] .mod__ajout {
+  background: var(--ambre);
+  border-color: var(--ambre);
+  color: var(--blanc-casse);             /* l'Encre tombe a 3,18:1 sur l'ambre */
+}
+
+/* La coche n'apparait qu'une fois la carte choisie. Un trace SVG, pas un
+   caractere : §16 interdit les emoji. */
+.mod__coche {
+  inline-size: 16px;
+  block-size: 16px;
+  display: none;
+}
+
+[data-choisi="true"] .mod__coche { display: block; }
+
+/* --- La carte vedette ----------------------------------------------------- */
+
+.vedette {
+  margin-top: var(--sp-7);
+  padding: var(--sp-6);
+  background: var(--encre);
+  color: var(--blanc-casse);
+}
+
+.vedette__badge {
+  margin: 0 0 var(--sp-3);
+  font: 400 11px/1.4 var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ambre-sur-sombre);        /* sur fond Encre, l'ambre vif passe */
+}
+
+.vedette__titre {
+  margin: 0 0 var(--sp-4);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 2vw + 0.5rem, 2rem);
+  line-height: 1.15;
+  color: var(--blanc-casse);
+}
+
+.vedette__texte {
+  margin: 0 0 var(--sp-5);
+  max-width: 60ch;
+  font: 400 17px/1.6 var(--font-corps);
+  color: var(--gris-brume);
+}
+
+.vedette__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-5);
+}
+
+/* Sur l'Encre, le bouton et le lien s'inversent. */
+.vedette .mod__ajout { border-color: var(--blanc-casse); color: var(--blanc-casse); }
+.vedette .mod__ajout:hover { background: var(--blanc-casse); color: var(--encre); }
+.vedette[data-choisi="true"] .mod__ajout {
+  background: var(--ambre-sur-sombre);
+  border-color: var(--ambre-sur-sombre);
+  color: var(--encre);
+}
+
+.vedette .lien-action { color: var(--gris-brume); }
+.vedette .lien-action:hover { color: var(--blanc-casse); }
+
+/* --- Note identite -------------------------------------------------------- */
+
+.modules__identite {
+  margin: var(--sp-6) 0 0;
+  max-width: 65ch;
+  font: 400 15px/1.6 var(--font-corps);
+  color: var(--gris-structure);
+}
+
+/* --- La barre de selection ------------------------------------------------
+   Construite par modules.js : elle n'a de sens que si le JavaScript tourne.
+   -------------------------------------------------------------------------- */
+
+.barre-sel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;                           /* au-dessus de la fleche de retour */
+  background: var(--encre);
+  padding-block: var(--sp-4);
+  padding-bottom: calc(var(--sp-4) + env(safe-area-inset-bottom, 0px));
+}
+
+.barre-sel__contenu {
+  width: min(var(--conteneur-max), 100% - var(--marge-ext) * 2);
+  margin-inline: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+}
+
+.barre-sel__compte {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sp-4);
+  font: 400 15px/1.5 var(--font-corps);
+  color: var(--blanc-casse);
+}
+
+.barre-sel__effacer {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: 400 13px/1.5 var(--font-mono);
+  letter-spacing: 0.02em;
+  color: var(--gris-brume);              /* 14,63:1 sur l'Encre */
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.barre-sel__effacer:hover { color: var(--blanc-casse); }
+
+/* La fleche de retour occupe le meme bas d'ecran : elle s'efface. La place
+   sous la page est reservee par modules.js, a la hauteur reelle de la barre :
+   sans ca elle recouvrirait les liens legaux du pied. */
+.a-barre-sel .haut { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .grp__panneau,
+  .grp__chevron,
+  .mod,
+  .mod__ajout { transition: none; }
+}
+
+/* --- Sous 1024 px --------------------------------------------------------- */
+
+@media (max-width: 1023.98px) {
+  .grp[data-ouvert="true"] .grp__liste { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 639.98px) {
+  .grp[data-ouvert="true"] .grp__liste { grid-template-columns: 1fr; }
+
+  .grp__compte { display: none; }        /* la ligne respire a 390 px */
+
+  .barre-sel__contenu { justify-content: stretch; }
+  .barre-sel__cta { width: 100%; justify-content: center; }
+}
