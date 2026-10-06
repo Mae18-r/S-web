@@ -3997,3 +3997,52 @@ main { position: relative; }
   .temoins__boutons { width: 100%; }
   .temoins__boutons .bouton { flex: 1 1 0; }
 }
+
+/* --- Invitation a laisser un avis ----------------------------------------
+   Un lien, pas un formulaire integre : l'integration Tally demande leur
+   script, donc une dependance et un service tiers charge sur chaque page. Le
+   site n'en charge aucun aujourd'hui, et la politique de confidentialite le
+   dit noir sur blanc. Un lien ne transmet rien tant qu'on ne clique pas.
+   -------------------------------------------------------------------------- */
+
+/* Dans le pied de page, sur l'Encre. */
+.pied__avis {
+  grid-column: 1 / -1;
+  margin: var(--sp-8) 0 0;
+  font: 400 15px/1.6 var(--font-corps);
+  color: var(--gris-brume);              /* 14,63:1 sur l'Encre */
+}
+
+.pied__avis-lien {
+  color: var(--gris-brume);
+  text-decoration: underline;
+  text-decoration-color: var(--ambre);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  transition: color var(--duree-micro) var(--courbe);
+}
+
+.pied__avis-lien:hover { color: var(--blanc-casse); }
+
+/* Le pied__bas suit immediatement : sa marge de 64 px ferait double emploi. */
+.pied__avis + .pied__bas { margin-top: var(--sp-5); }
+
+/* Sur la page Contact, meme vocabulaire que le bloc « Nous suivre ». */
+.avis-invite { margin-top: var(--sp-8); }
+
+.avis-invite__label {
+  margin: 0 0 var(--sp-3);
+  font: 400 13px/1.4 var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gris-structure);
+}
+
+.avis-invite__texte {
+  margin: 0;
+  max-width: 55ch;
+  font: 400 17px/1.6 var(--font-corps);
+  color: var(--encre);
+}
+
+.avis-invite__suite { margin: var(--sp-4) 0 0; }
