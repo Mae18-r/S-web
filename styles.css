@@ -4050,13 +4050,6 @@ main { position: relative; }
   color: var(--encre);
 }
 
-.realisations__intro {
-  margin: 0;
-  max-width: 60ch;
-  font: 400 17px/1.6 var(--font-corps);
-  color: var(--encre);
-}
-
 .realisations__rangee {
   margin-top: var(--sp-6);               /* §04 : 32 px entre un H2 et son contenu */
   display: grid;
