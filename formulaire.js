@@ -1,26 +1,34 @@
 /* S-WEB, envoi du formulaire de demande d'appel.
 
-   Avant : action="#", aucun script. Le formulaire se rechargeait et la
-   demande etait perdue sans que personne ne le sache, ni le prospect ni nous.
+   La demande part vers le webhook du CRM de S-WEB (Twenty), en JSON, avec la
+   mention source: SITE_WEB qui dit d'ou vient la fiche. Web3Forms ne sert
+   plus : sa cle a ete retiree de la page.
 
-   L'envoi passe par Web3Forms, qui relaie la demande vers la boite de S-WEB.
-   La cle d'acces n'est pas un secret : elle est publique par construction et
-   ne sert qu'a diriger l'envoi vers le bon compte. Ce sont le champ piege
-   `botcheck` et le quota du service qui tiennent les robots a distance.
+   L'adresse du webhook est publique par construction, comme l'etait la cle
+   precedente. C'est le champ piege `botcheck` qui tient les robots a
+   distance : rempli, on n'envoie rien et on affiche quand meme le merci,
+   pour ne pas apprendre au robot a quoi ressemble un refus.
+
+   Le CRM n'a que sept champs. Le domaine d'activite, la reponse sur le logo
+   et le texte libre n'en ont pas : ils sont assembles dans `message`, pour
+   qu'aucune reponse du formulaire ne se perde en route.
 
    Avec JavaScript : envoi en arriere-plan, le visiteur ne quitte pas la page.
-   Sans JavaScript : le formulaire poste directement vers Web3Forms, qui
-   affiche sa propre page de confirmation.
+   Sans JavaScript : le formulaire poste vers la meme adresse, mais encode en
+   formulaire et non en JSON. Les noms des champs du HTML ont donc ete alignes
+   sur ceux du webhook (prenom, courriel, source, langue) pour que ce chemin
+   ait une chance d'aboutir. A VERIFIER : si le webhook n'accepte que du JSON,
+   ce chemin sans JavaScript n'arrive pas.
 
    Si l'envoi echoue (reseau coupe, service indisponible), on affiche
    l'adresse courriel plutot que de laisser croire que c'est parti.
 
-   Loi 25 : le passage par Web3Forms est declare dans la politique de
-   confidentialite. Si ce point d'envoi change, cette page change. */
+   Loi 25 : la destination est declaree dans la politique de confidentialite.
+   Si ce point d'envoi change, cette page change. */
 (function () {
   'use strict';
 
-  var POINT_ENVOI = 'https://api.web3forms.com/submit';
+  var POINT_ENVOI = 'https://twenty-production-ad61.up.railway.app/webhooks/workflows/6134c0ed-a527-44da-9d28-9614836f4da3/5f16e2ef-796e-4607-b72c-79c8b5c9ff93';
   var COURRIEL = 's.webagencyca@gmail.com';
 
   var form = document.querySelector('.form');
@@ -38,12 +46,16 @@
     envoi:   'Sending…',
     merci:   'Thank you, we have your request. We answer within 24 to 48 business hours.',
     echec:   'The send failed. Write to us at ',
-    envoyer: 'Send'
+    envoyer: 'Send',
+    /* La valeur des boutons radio reste en francais dans le HTML des deux
+       langues : on la traduit ici seulement pour l'ecrire dans la fiche. */
+    logo:    { oui: 'yes', non: 'no', refaire: 'to redo' }
   } : {
     envoi:   'Envoi en cours…',
     merci:   'Merci, votre demande est reçue. On répond en 24 à 48 h ouvrables.',
     echec:   'L’envoi a échoué. Écrivez-nous à ',
-    envoyer: 'Envoyer'
+    envoyer: 'Envoyer',
+    logo:    { oui: 'oui', non: 'non', refaire: 'à refaire' }
   };
 
   /* Zone de reponse, annoncee aux lecteurs d'ecran des qu'elle se remplit. */
@@ -148,23 +160,61 @@
     return !premier;
   }
 
+  /* --- Le message ---------------------------------------------------------
+     Le CRM attend un seul champ libre. On y replie les reponses qui n'ont pas
+     de case a eux, en les nommant, pour qu'elles restent lisibles dans la
+     fiche. Une reponse vide ne laisse pas de ligne vide derriere elle. */
+  function valeur(nom) {
+    var champ = form.elements[nom];
+    if (!champ) return '';
+    /* Un groupe de boutons radio renvoie une RadioNodeList, dont `.value` est
+       celui du bouton coche, ou '' si aucun ne l'est. */
+    return (champ.value || '').trim();
+  }
+
+  function message() {
+    var lignes = [];
+    var domaine = valeur('domaine');
+    var logo = valeur('logo');
+    var details = valeur('details');
+
+    if (domaine) lignes.push((anglais ? 'Industry: ' : "Domaine d'activit\u00e9 : ") + domaine);
+    if (logo) lignes.push((anglais ? 'Logo: ' : 'Logo : ') + (MOTS.logo[logo] || logo));
+    if (details) lignes.push((lignes.length ? '\n' : '') + details);
+
+    return lignes.join('\n');
+  }
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
+
+    /* Le piege : on remercie sans rien envoyer. */
+    var piege = form.elements['botcheck'];
+    if (piege && piege.checked) { dis(MOTS.merci, false, 'succes'); return; }
+
     if (!valide()) return;
 
     if (bouton) bouton.disabled = true;
     if (libelle) libelle.textContent = MOTS.envoi;
 
+    var demande = {
+      source: 'SITE_WEB',
+      entreprise: valeur('entreprise'),
+      prenom: valeur('prenom'),
+      courriel: valeur('courriel'),
+      telephone: valeur('telephone'),
+      message: message(),
+      langue: anglais ? 'EN' : 'FR'
+    };
+
     fetch(POINT_ENVOI, {
       method: 'POST',
-      headers: { Accept: 'application/json' },
-      body: new FormData(form)
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(demande)
     }).then(function (r) {
-      return r.json().catch(function () { return { success: r.ok }; });
-    }).then(function (recu) {
-      /* Web3Forms porte l'echec dans le corps de la reponse autant que dans
-         le code HTTP : on verifie les deux. */
-      if (!recu || recu.success !== true) throw new Error('refus');
+      /* Le webhook ne renvoie pas de corps exploitable : c'est le code HTTP
+         qui fait foi, et lui seul. */
+      if (!r.ok) throw new Error(String(r.status));
       form.reset();
       try { localStorage.removeItem('sweb-modules'); } catch (e) { /* tant pis */ }
       dis(MOTS.merci, false, 'succes');

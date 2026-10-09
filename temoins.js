@@ -32,7 +32,7 @@
      En le remplissant, il faut AUSSI ajouter Google Analytics a la politique
      de confidentialite, dans les deux langues : la loi 25 demande de dire
      quels renseignements partent et vers qui. Le site n'a pour l'instant
-     aucun service tiers a declarer en dehors de Web3Forms. */
+     aucun service tiers a declarer en dehors du CRM qui recoit le formulaire. */
   var MESURE = '';
 
   var CLE = 'sweb-temoins';
