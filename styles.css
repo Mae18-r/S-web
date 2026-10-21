@@ -1042,18 +1042,26 @@ main { position: relative; }
    Ouvert : aplat, 64 px, le fond passant en négatif. Jamais d'ambre.
    -------------------------------------------------------------------------- */
 
+/* La boite fait 64 px dans les deux etats et c'est une mise a l'echelle, non
+   `width`/`height`, qui donne les 28 px de l'etat ferme.
+
+   Animer la taille animait la mise en page : a chaque image l'en-tete
+   changeait de hauteur, et la rangee avec. Au basculement, la tranche qui se
+   referme cumulait son icone encore grande et son titre redevenu vertical,
+   soit 294 + 360 = 654 px, au-dessus des 629 px reserves par piliers.js. La
+   section sursautait de 25 px puis redescendait pendant tout le glissement.
+   `transform` ne touche pas a la mise en page : la hauteur ne bouge plus. */
 .icone {
   display: block;
   flex: none;
-  width: 28px;
-  height: 28px;
+  width: 64px;
+  height: 64px;
   color: inherit;
-  transition:
-    width  400ms var(--courbe),
-    height 400ms var(--courbe);
+  transform: scale(0.4375);              /* 28 / 64 */
+  transition: transform 400ms var(--courbe);
 }
 
-.pilier[data-ouvert="true"] .icone { width: 64px; height: 64px; }
+.pilier[data-ouvert="true"] .icone { transform: none; }
 
 .icone__trait {
   fill: none;
@@ -1171,8 +1179,9 @@ main { position: relative; }
     min-height: 0;
   }
 
+  /* Empile : taille unique dans les deux etats, donc aucune animation. */
   .icone,
-  .pilier[data-ouvert="true"] .icone { width: 32px; height: 32px; }
+  .pilier[data-ouvert="true"] .icone { width: 64px; height: 64px; transform: scale(0.5); }
 
   .icone__trait { opacity: 0; }
   .icone__plein { opacity: 1; }
@@ -1780,6 +1789,22 @@ main { position: relative; }
 
 
 .sect__suite { margin-top: var(--sp-7); }
+
+/* Fin de la section Modules : un bouton plein, pas un lien souligne.
+
+   La section est une longue liste de boutons secondaires « Ajouter a ma
+   demande ». Terminer par un lien de meme poids que le corps de texte ne
+   disait pas ou cliquer ensuite. Le bouton plein tranche sur eux et devient
+   la seule action primaire de la page.
+
+   ECART A SURVEILLER : §06 veut un seul bouton primaire visible par ecran.
+   Celui-ci tombe a 421 px du bouton de la bande finale, donc les deux sont a
+   l'ecran ensemble sur un ecran courant. Ils ne portent pas le meme libelle :
+   ici « Demander une soumission », qui suit la liste des modules et reprend
+   le mot de la barre de selection ; la-bas « Reserver un appel », l'appel de
+   fin de page. Ils sont aussi sur deux fonds differents, clair ici, sombre
+   la-bas. La barre collante, elle, n'apparait qu'une fois un module choisi. */
+.sect__suite--bouton { margin-top: var(--sp-8); }
 
 
 /* --- 4. Modules : liste non chiffrée, deux colonnes -----------------------

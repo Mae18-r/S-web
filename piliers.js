@@ -159,20 +159,41 @@
     appliquer(ouvertes.length === 1 ? ouvertes[0] : piliers[0]);
   }
 
-  function tout() { ajuster(); poseLargeurOuverte(); poseHauteur(); }
+  /* Les deux mesures ne dependent que de la LARGEUR. On retient la derniere
+     observee et on sort si elle n'a pas bouge.
+
+     Sans ce garde-fou, la section ne glissait jamais : elle sautait.
+     L'observateur surveille le parent de la rangee, dont la hauteur change
+     des qu'une autre tranche s'ouvre. Chaque clic le reveillait donc, et
+     poseHauteur() pose `transition: none` le temps de mesurer. Pose une
+     dizaine de millisecondes apres le debut de l'animation, cette coupure
+     l'annulait avant sa premiere image : mesure sur un changement de tranche,
+     flex-grow passait de 2,545 a 1 en une seule image et aucun evenement
+     `transitionrun` n'etait emis. La routine tournait deux fois par clic.
+
+     `force` sert aux cas ou la largeur ne change pas mais les mesures si :
+     l'amorce, le passage du seuil empile, et l'arrivee de la police. */
+  var derniereLargeur = null;
+
+  function mesure(force) {
+    var largeur = rangee.clientWidth;
+    if (!force && largeur === derniereLargeur) return;
+    derniereLargeur = largeur;
+    poseLargeurOuverte();
+    poseHauteur();
+  }
+
+  function tout() { ajuster(); mesure(true); }
 
   tout();
   if (empile.addEventListener) empile.addEventListener('change', tout);
   else empile.addListener(tout);
 
-  /* La largeur depend de celle de la rangee : on la recalcule quand elle
-     change, redimensionnement comme arrivee de la police. */
-  function remesure() { poseLargeurOuverte(); poseHauteur(); }
-
   /* ResizeObserver sur la rangee s'auto-declencherait, puisqu'on change sa
      hauteur : on observe donc son parent, dont la largeur commande tout. */
-  if (window.ResizeObserver) new ResizeObserver(remesure).observe(rangee.parentNode);
-  else window.addEventListener('resize', remesure);
+  if (window.ResizeObserver) new ResizeObserver(function () { mesure(false); }).observe(rangee.parentNode);
+  else window.addEventListener('resize', function () { mesure(false); });
 
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(remesure);
+  /* La police change les metriques sans changer la largeur : on force. */
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { mesure(true); });
 })();
