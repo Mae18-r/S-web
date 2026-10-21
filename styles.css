@@ -1867,6 +1867,36 @@ main { position: relative; }
 
 .cta-fin :focus-visible { outline-color: var(--blanc-casse); }
 
+/* Image a gauche, l'appel a droite. Meme mecanique que la bande
+   receptionniste, colonnes inversees : la ligne de texte reste a droite, donc
+   le titre, l'enonce, le bouton et le telephone se lisent d'un bloc.
+   La colonne d'image est la plus etroite, le texte garde sa mesure. */
+.cta-fin__grille {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--sp-8);
+}
+
+.cta-fin__image {
+  display: block;
+  width: 100%;
+  height: auto;                          /* sinon l'attribut height fige la
+                                            hauteur et aspect-ratio est ignore */
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: var(--radius-ui);       /* §05 : angles droits */
+}
+
+/* Une seule colonne sous 900 px : l'image passe au-dessus du titre, comme
+   dans la frise du processus. */
+@media (max-width: 899.98px) {
+  .cta-fin__grille {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--sp-6);
+  }
+}
+
 .cta-fin__titre {
   margin: 0 0 var(--sp-4);
   font-family: var(--font-display);
